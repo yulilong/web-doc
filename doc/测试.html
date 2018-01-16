@@ -1,0 +1,155 @@
+<div id="repo-content" class="aui-page-panel-content forks-enabled can-create" data-module="repo/index">
+        
+  <section id="wiki">
+    <header>
+      <h1>
+        
+
+<a href="/yulilong/my_wiki/wiki/browse/" class="root">my_wiki</a>
+/
+
+  
+    
+      <span class="file-name">Mac下sublime编辑器设置</span>
+    
+  
+
+      </h1>
+      
+
+
+  <div class="wiki-toolbar">
+    <div class="aui-buttons">
+      <a href="/yulilong/my_wiki/wiki/Mac%E4%B8%8Bsublime%E7%BC%96%E8%BE%91%E5%99%A8%E8%AE%BE%E7%BD%AE" class="aui-button" aria-pressed="true" resolved="">查看</a>
+      <a href="/yulilong/my_wiki/wiki/history/Mac%E4%B8%8Bsublime%E7%BC%96%E8%BE%91%E5%99%A8%E8%AE%BE%E7%BD%AE" class="aui-button history" resolved="">历史</a>
+      
+        <a href="/yulilong/my_wiki/wiki/edit/Mac%E4%B8%8Bsublime%E7%BC%96%E8%BE%91%E5%99%A8%E8%AE%BE%E7%BD%AE" class="aui-button edit" resolved="">编辑</a>
+      
+    </div>
+    
+      <div class="aui-buttons">
+        <a href="/yulilong/my_wiki/wiki/delete/Mac%E4%B8%8Bsublime%E7%BC%96%E8%BE%91%E5%99%A8%E8%AE%BE%E7%BD%AE" class="aui-button delete" resolved="">删除</a>
+      </div>
+    
+  </div>
+
+
+
+    </header>
+    
+      
+        <section id="wiki-content" class="wiki-content">
+          
+            <div class="toc">
+<ul>
+<li><a href="#markdown-header-package-control">一、安装Package Control</a><ul>
+<li><a href="#markdown-header-1-sublimectrl-view-show-console">1. 打开sublime，按ctrl+`` 快捷键，或者在菜单栏：View -&gt; Show Console`打开控制台。</a></li>
+<li><a href="#markdown-header-2">2. 复制下面代码回车</a></li>
+<li><a href="#markdown-header-3-sublime-text-preferences-package-control">3. 检查是否安装成功：Sublime Text -&gt; Preferences -&gt; Package Control</a></li>
+</ul>
+</li>
+<li><a href="#markdown-header-sublime-package-control">二、sublime 使用Package Control安装插件</a><ul>
+<li><a href="#markdown-header-1-shift-command-p-sublime-text-preferences-package-controlpackage-control">1. 使用快捷键shift + command + p或 Sublime Text -&gt; Preferences -&gt; Package Control打开Package Control</a></li>
+<li><a href="#markdown-header-2-install-package">2. 输入Install Package，选择安装包。</a></li>
+<li><a href="#markdown-header-3-sublime">3. 输入需要安装的包名，在出来的选项中找到包，点击后，会自动安装，安装进度看sublime左下角的进度提示</a></li>
+<li><a href="#markdown-header-4-usersdragonlibraryapplication-supportsublime-text-3installed-packages">4. 包的安装路径:/Users/dragon/Library/Application Support/Sublime Text 3/Installed Packages</a></li>
+</ul>
+</li>
+<li><a href="#markdown-header-">三、删除插件、更新插件</a><ul>
+<li><a href="#markdown-header-1-shift-command-p-sublime-text-preferences-package-controlpackage-control_1">1. 使用快捷键shift + command + p或 Sublime Text -&gt; Preferences -&gt; Package Control打开Package Control</a></li>
+<li><a href="#markdown-header-2_1">2. 删除插件</a><ul>
+<li><a href="#markdown-header-1-package-control-remove-packagepackage-contremove-package">①. 在Package Control 中 输入Remove Package选择Package Cont:Remove Package</a></li>
+<li><a href="#markdown-header-2_2">②，在里面选择需要的删除插件名字，点击即可删除</a></li>
+</ul>
+</li>
+<li><a href="#markdown-header-3">3. 更新插件</a><ul>
+<li><a href="#markdown-header-1-package-control-upgrade-packagespackage-contupgradeoverwrite-all-packages">① 在Package Control 中 输入upgrade packages选择Package Cont:Upgrade/Overwrite All Packages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#markdown-header-_1">四、一些包插件</a></li>
+</ul>
+</div>
+<h2 id="markdown-header-package-control"><strong>一、安装Package Control</strong></h2>
+<p>在安装之前需要自导sublime的版本，打开finder，按快捷键<code>shift + command + .</code>显示隐藏文件，选择用户下的资源库，  <br>
+选择<code>Application Support</code> 文件夹，在里面找到<code>sublime Text 3</code> 文件夹，看名字就只到是哪个版本的了。    </p>
+<p>安装<code>Package Control</code>参考链接： <a href="https://packagecontrol.io/installation" rel="nofollow">https://packagecontrol.io/installation</a>    </p>
+<h3 id="markdown-header-1-sublimectrl-view-show-console">1. 打开sublime，按<code>ctrl+`` 快捷键，或者在菜单栏：</code>View -&gt; Show Console`打开控制台。</h3>
+<h3 id="markdown-header-2">2. 复制下面代码回车</h3>
+<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">urllib.request</span><span class="o">,</span><span class="nn">os</span><span class="o">,</span><span class="nn">hashlib</span><span class="p">;</span> <span class="n">h</span> <span class="o">=</span> <span class="s1">'6f4c264a24d933ce70df5dedcf1dcaee'</span> <span class="o">+</span> <span class="s1">'ebe013ee18cced0ef93d5f746d80ef60'</span><span class="p">;</span> <span class="n">pf</span> <span class="o">=</span> <span class="s1">'Package Control.sublime-package'</span><span class="p">;</span> <span class="n">ipp</span> <span class="o">=</span> <span class="n">sublime</span><span class="o">.</span><span class="n">installed_packages_path</span><span class="p">();</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">install_opener</span><span class="p">(</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">build_opener</span><span class="p">(</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">ProxyHandler</span><span class="p">())</span> <span class="p">);</span> <span class="n">by</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span> <span class="s1">'http://packagecontrol.io/'</span> <span class="o">+</span> <span class="n">pf</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">' '</span><span class="p">,</span> <span class="s1">'%20'</span><span class="p">))</span><span class="o">.</span><span class="n">read</span><span class="p">();</span> <span class="n">dh</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">by</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">();</span> <span class="k">print</span><span class="p">(</span><span class="s1">'Error validating download (got </span><span class="si">%s</span><span class="s1"> instead of </span><span class="si">%s</span><span class="s1">), please try manual install'</span> <span class="o">%</span> <span class="p">(</span><span class="n">dh</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span> <span class="k">if</span> <span class="n">dh</span> <span class="o">!=</span> <span class="n">h</span> <span class="k">else</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">ipp</span><span class="p">,</span> <span class="n">pf</span><span class="p">),</span> <span class="s1">'wb'</span> <span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">by</span><span class="p">)</span>
+</pre></div>
+
+
+<h3 id="markdown-header-3-sublime-text-preferences-package-control">3. 检查是否安装成功：<code>Sublime Text -&gt; Preferences -&gt; Package Control</code></h3>
+<p>点击Preferences。如果安装成功了，Package Settings 、Package Control会出现在菜单里了。 <br>
+安装参考链接：<a href="https://jingyan.baidu.com/article/455a99508b7ccda1662778e0.html" rel="nofollow">https://jingyan.baidu.com/article/455a99508b7ccda1662778e0.html</a>    </p>
+<h2 id="markdown-header-sublime-package-control"><strong>二、sublime 使用Package Control安装插件</strong></h2>
+<h3 id="markdown-header-1-shift-command-p-sublime-text-preferences-package-controlpackage-control">1. 使用快捷键<code>shift + command + p</code>或 <code>Sublime Text -&gt; Preferences -&gt; Package Control</code>打开Package Control</h3>
+<h3 id="markdown-header-2-install-package">2. 输入<code>Install Package</code>，选择安装包。</h3>
+<h3 id="markdown-header-3-sublime">3. 输入需要安装的包名，在出来的选项中找到包，点击后，会自动安装，安装进度看sublime左下角的进度提示</h3>
+<h3 id="markdown-header-4-usersdragonlibraryapplication-supportsublime-text-3installed-packages">4. 包的安装路径:<code>/Users/dragon/Library/Application Support/Sublime Text 3/Installed Packages</code></h3>
+<h2 id="markdown-header-"><strong>三、删除插件、更新插件</strong></h2>
+<h3 id="markdown-header-1-shift-command-p-sublime-text-preferences-package-controlpackage-control_1">1. 使用快捷键<code>shift + command + p</code>或 <code>Sublime Text -&gt; Preferences -&gt; Package Control</code>打开Package Control</h3>
+<h3 id="markdown-header-2_1">2. 删除插件</h3>
+<h4 id="markdown-header-1-package-control-remove-packagepackage-contremove-package">①. 在Package Control 中 输入<code>Remove Package</code>选择<code>Package Cont:Remove Package</code></h4>
+<h4 id="markdown-header-2_2">②，在里面选择需要的删除插件名字，点击即可删除</h4>
+<h3 id="markdown-header-3">3. 更新插件</h3>
+<h4 id="markdown-header-1-package-control-upgrade-packagespackage-contupgradeoverwrite-all-packages">① 在Package Control 中 输入<code>upgrade packages</code>选择<code>Package Cont:Upgrade/Overwrite All Packages</code></h4>
+<h2 id="markdown-header-_1"><strong>四、一些包插件</strong></h2>
+<div class="codehilite"><pre><span></span>Typescript Syntax: 
+typescript语法  
+
+SublimeLinter：代码校验插件，支持 HTML、CSS、JS、PHP、Java、C++ 等16种语言；
+
+Alignment：代码对齐插件；
+
+Git：整合 Git 功能的插件；
+
+BracketHighlighter： 括号高亮匹配
+
+emmet:  HTML 中使用CSS样式语法，然后使用 tab键直接生成对应html元素
+</pre></div>
+          
+        </section>
+      
+    
+
+    
+      <p class="revision-date">
+        
+          更新于 <time datetime="2018-01-02T22:50:11+08:00" title="2 January 2018 22:50">2018-01-02</time>
+        
+      </p>
+    
+  </section>
+
+        
+        
+        
+          <script id="image-upload-template" type="text/html">
+  
+
+<form id="upload-image" method="POST"
+    
+      action="/xhr/yulilong/my_wiki/image-upload/"
+    >
+  <input type='hidden' name='csrfmiddlewaretoken' value='zgl8NjEcgKvytARkzRbnvAEPDKSqudNARJdPRxARsneptzhbQ9mYTT6oDjSrdfNZ' />
+
+  <div class="drop-target">
+    <p class="centered">拖拽图像到这</p>
+  </div>
+
+  
+  <div>
+    <button class="aui-button click-target">选择一个图像</button>
+    <input name="file" type="file" class="hidden file-target"
+           accept="image/jpeg, image/gif, image/png" />
+    <input type="submit" class="hidden">
+  </div>
+</form>
+
+
+</script>
+        
+      </div>
