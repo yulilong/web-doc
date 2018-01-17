@@ -32,7 +32,7 @@ html {
   right: 0;
   left: 300px;
   bottom: 0;
-  overflow-y: auto;
+  overflow: hidden;
   color: #000;
   background: #fff;
   /* padding: 20px 0 0 20px; */
