@@ -66,7 +66,7 @@ input元素支持[全局属性](https://developer.mozilla.org/zh-CN/docs/Web/HTM
         HTML5新增：  <br>
         2. `audio/*`音频文件 <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"> <br>
         3. `video/*`视频文件 <img src="https://github.com/yulilong/web-doc/blob/master/img/HTML5-icon.jpg" height="15px"> <br>
-        4. `image/*`图片文件 <br>
+        4. `image/*`图片文件 <img src="http://p1ibqa9uh.bkt.clouddn.com/18-1-18/22359500.jpg" height="15px"> <br>
       </td>
       <td>如果该元素的 type 属性的值是file,则该属性表明了服务器端可接受的文件类型；否则它将被忽略。该属性的值必须为一个逗号分割的列表,包含了多个唯一的内容类型声明</td>
     </tr>
