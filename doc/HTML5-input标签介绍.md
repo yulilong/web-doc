@@ -22,39 +22,30 @@ HTML`<input>`元素用于为基于Web的表单创建交互式控件，以便接�
 
 input元素支持[全局属性](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Global_attributes)，以及以下属性。     
 
-<table>
+
+  <table>
     <tr>
-        <th>属性</th>
-        <th>值</th>
-        <th>描述</th>
+        <th width="130px">属性</th> <th>值</th> <th>描述</th>
     </tr>
     <tr>
         <td>type </td>
         <td>
-          text  <br>
-          password  <br>
-          button  <br>
-          radio   <br>
-          checkbox   <br>
-          file   <br>
-          hidden   <br>
-          image   <br>
-          reset   <br>
-          submit   <br>
-          HTML5新增：  <br>
-          date   <br>
-          datetime   <br>
-          datetime-local  <br>
-          time    <br>
-          week    <br>
-          month    <br>
-          color    <br>
-          email    <br>
-          number    <br>
-          range    <br>
-          tel <br>
-          url <br>
-          search <br>
+          text  <br>password  <br>button  <br>radio   <br>
+          checkbox   <br>file   <br>hidden   <br>
+          image   <br>reset   <br>submit   <br>
+          date <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px">  <br>
+          datetime <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px">  <br>
+          datetime-local <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"> <br>
+          time  <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px">  <br>
+          week  <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px">  <br>
+          month <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px">   <br>
+          color <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px">   <br>
+          email  <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px">  <br>
+          number <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px">   <br>
+          range  <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px">  <br>
+          tel <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"><br>
+          url <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"><br>
+          search <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"><br>
         </td>
         <td>规定 input 元素的类型，如果这个属性没有指定，默认的类型是 text。</td>
     </tr>
@@ -65,21 +56,143 @@ input元素支持[全局属性](https://developer.mozilla.org/zh-CN/docs/Web/HTM
         一个有效的 MIME 类型 <br>
         HTML5新增：  <br>
         2. `audio/*`音频文件 <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"> <br>
-        3. `video/*`视频文件 <img src="https://github.com/yulilong/web-doc/blob/master/img/HTML5-icon.jpg" height="15px"> <br>
-        4. `image/*`图片文件 <img src="http://p1ibqa9uh.bkt.clouddn.com/18-1-18/22359500.jpg" height="15px"> <br>
+        3. `video/*`视频文件 <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"> <br>
+        4. `image/*`图片文件 <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"> <br>
       </td>
       <td>如果该元素的 type 属性的值是file,则该属性表明了服务器端可接受的文件类型；否则它将被忽略。该属性的值必须为一个逗号分割的列表,包含了多个唯一的内容类型声明</td>
     </tr>
-  </table> 
+    <tr>
+      <td>autocomplete <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"> </td>
+      <td> on: 自动填充值 <br> off: 用户必须手动填值 <br> </td>
+      <td>这个属性表示这个控件的值是否可被浏览器自动填充。如果type属性的值是hidden、checkbox、radio、file，或为按钮类型（button、submit、reset、image），则本属性被忽略。</td>
+    </tr>
+    <tr>
+      <td>autofocus <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"></td>
+      <td>autofocus</td>
+      <td>在页面加载时具有焦点（自动获得焦点），除非用户将其覆盖，例如通过键入不同的控件。文档中只有一个表单元素可以具有autofocus属性，它是一个布尔值。 如果type属性设置为隐藏则不能应用</td>
+    </tr>
+    <tr>
+      <td>checked</td> <td>checked</td>
+      <td>该属性表示该控件为默认选中状态，如果input标签type属性值为radio或checkbox才有效，其他无效。</td>
+    </tr>
+    <tr>
+      <td>disabled </td> <td>disabled </td>
+      <td>这个布尔属性表示此表单控件不可用。并且，禁用的控件的值在提交表单时也不会被提交。如果 type 属性为  hidden，此属性将被忽略。</td>
+    </tr>
+    <tr>
+      <td>form <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"></td>
+      <td>同一文档中&lt;form&gt;元素的id</td>
+      <td>如果未指定此属性，则此&lt;input&gt;元素必须是&lt;form&gt;元素的后代。 该属性使您可以将&lt;input&gt;元素放置在文档中的任何位置，而不仅仅是作为其表单元素的后代。</td>
+    </tr>
+    <tr>
+      <td>formaction <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"></td>
+      <td>URL</td>
+      <td>覆盖表单的 action 属性。只有 type="submit" 以及 type="image"才有效。</td>
+    </tr>
+    <tr>
+      <td>formenctype <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"></td>
+      <td>
+        application/x-www-form-urlencoded ：在发送前对所有字符进行编码（默认）。 <br>
+        multipart/form-data : 不对字符编码。当使用有文件上传控件的表单时，该值是必需的。 <br>
+        text/plain: 将空格转换为 "+" 符号，但不编码特殊字符。 <br>
+      </td>
+      <td>覆盖表单的 enctype 属性。只有 type="submit" 以及 type="image"才有效。</td>
+    </tr>
+    <tr>
+      <td>formmethod <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"></td>
+      <td>get <br> post <br></td>
+      <td>覆盖表单的 method 属性。只有 type="submit" 以及 type="image"才有效。</td>
+    </tr>
+    <tr>
+      <td>formnovalidate <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"></td>
+      <td>novalidate</td>
+      <td>覆盖表单的 novalidate 属性。如果使用该属性，则提交表单时不进行验证。</td>
+    </tr>
+    <tr>
+      <td>formtarget <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"></td>
+      <td>
+        _blank :在新窗口中将表单提交到文档。 <br> _self: 在同一框架中将表单提交到文档。（默认）<br>
+        _parent: 在父框架中将表单提交到文档。<br> _top: 在整个窗口中将表单提交到文档。
+      </td>
+      <td>覆盖表单的 target 属性。只有 type="submit" 以及 type="image"才有效。</td>
+    </tr>
+    <tr>
+      <td>height  <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"></td>
+      <td>长度单位</td>
+      <td>定义 input 字段的高度。（适用于 type="image"）</td>
+    </tr>
+    <tr>
+      <td>width <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"></td>
+      <td>长度单位</td>
+      <td>定义 input 字段的宽度 。（适用于 type="image"）</td>
+    </tr>
+    <tr>
+      <td>list  <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"></td>
+      <td>datalist-id</td>
+      <td>引用包含输入字段的预定义选项的 datalist 。</td>
+    </tr>
+    <tr>
+      <td>max  <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"></td>
+      <td>number <br> date</td>
+      <td>规定输入字段的最大值。请与 "min" 属性配合使用，来创建合法值的范围。</td>
+    </tr>
+    <tr>
+      <td>maxlength </td> <td>number </td> <td>规定输入字段中的字符的最大长度。</td>
+    </tr>
+    <tr>
+      <td>max  <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"></td>
+      <td>number <br> date</td>
+      <td>规定输入字段的最小值。请与 "max" 属性配合使用，来创建合法值的范围。</td>
+    </tr>
+    <tr>
+      <td>multiple  <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"></td>
+      <td> </td>
+      <td>该属性指示用户能否输入多个值。这个属性仅在type属性为email或file的时候生效 ; 否则被忽视.</td>
+    </tr>
+    <tr>
+      <td>name </td> <td>field_name </td> <td>定义 input 元素的名称。与表单数据一起提交。</td>
+    </tr>
+    <tr>
+      <td>pattern  <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"></td>
+      <td>正则表达式 </td>
+      <td>检查控件值的正则表达式.。pattern必须匹配整个值，而不仅仅是某些子集。当类型属性的值为text, search, tel, url 或 email时，此属性适用，否则将被忽略。</td>
+    </tr>
+    <tr>
+      <td>placeholder  <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"></td>
+      <td>text文本 </td>
+      <td>提示用户输入框的作用。用于提示的占位符文本不能包含回车或换行。仅适用于当type 属性为text, search, tel, url or email时; 否则会被忽略。</td>
+    </tr>
+    <tr>
+      <td>readonly </td>
+      <td>readonly </td>
+      <td>规定输入字段为只读。如果控件的 type 属性为hidden, range, color, checkbox, radio, file 或 type时，此属性会被忽略。</td>
+    </tr>
+    <tr>
+      <td>required</td>
+      <td>required</td>
+      <td>这个属性指定用户在提交表单之前必须为该元素填充值. 当type属性是hidden,image或者按钮类型(submit,reset,button)时不可使用. :optional 和 :required CSS 伪元素的样式将可以被该字段应用作外观.</td>
+    </tr>
+    <tr>
+      <td>size</td> <td></td>
+      <td>控件的初始大小。以像素为单位。但当type  属性为text 或 password时, 它表示输入的字符的长度。从HTML5开始, 此属性仅适用于当 type 属性为 text, search, tel, url, email,或 password；否则会被忽略。 此外，它的值必须大于0。 如果未指定大小，则使用默认值20。 </td>
+    </tr>
+    <tr>
+      <td>src</td> <td>URL</td>
+      <td>如果type属性的值是image, 这个属性指定了按钮图片的路径; 否则它被忽视.</td>
+    </tr>
+    <tr>
+      <td>step  <img src="https://yulilong.github.io/web-doc/img/HTML5-icon.jpg" height="15px"></td>
+      <td>number </td>
+      <td>使用min和max 属性来限制可以设置数字或日期时间值的增量。它可以是任意字符串或是正浮点数。如果此属性未设置，则控件仅接受大于最小步长值的倍数的值。</td>
+    </tr>
+    <tr>
+      <td>value</td> <td>URL</td>
+      <td>控件的初始值. type 属性是radio或checkbox时value必填，其他的是可选的。</td>
+    </tr>
+  </table>
 
 
-
-| 名称      | 介绍           |
-|----------|:---------------|
-| type     | input控件类型的显示。如果这个属性没有指定，默认的类型是 text。 |
-
-
-### type   
+### type属性中值的介绍   
 
 控件类型的显示。如果这个属性没有指定，默认的类型是 text。可用的值包括：   
 
@@ -169,8 +282,34 @@ HTML5新增加的值：
 
 测试网站见上面。   
 
+### type属性值的兼容性   
+
+| 值      | IE    | Edge     | Firefox | Chrome | Safari | Opera | 
+|------:|:------|:-----|:-----|:-----|:-----|:-----|
+| [date, time, datetime-local, month & week](https://caniuse.com/#search=date) | 不支持（6~11） | 13以上 | 57以上部分支持 | 25以上 | 不支持 | 10.1以上 | 
+| [color](https://caniuse.com/#search=color%20input) | 不支持（6~11）| 14以上 | 29以上 | 20以上 | 11以上 | 17以上 |  
+| [Email, telephone & URL](https://caniuse.com/#search=Email,%20telephone%20%26%20URL) | 10以上 | 12以上 | 4以上 | 5以上 | 5以上 | 10.1以上 |    
 
 
+
+
+
+
+
+
+
+
+
+
+
+### 其他信息   
+
+|       |      |
+|------:|:------|
+|百度统计浏览器市场份额 |  http://tongji.baidu.com/data/browser    
+| Opera 浏览器 | http://www.opera.com/zh-cn  、   http://www.oupeng.com/     |
+| Firefox 浏览器 | http://www.firefox.com.cn/   
+| Chrome 浏览器（需科学上网）  | https://www.google.cn/chrome/browser/desktop/index.html    
 
 
 
