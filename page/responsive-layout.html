@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="https://cdn.bootcss.com/bootstrap/4.0.0-beta.3/css/bootstrap.css" rel="stylesheet">
+  <title>responsive1</title>
+  <style>
+    .content {
+      padding: 0 15px;
+      margin: 0 auto;
+    }
+
+    .box {
+      border: 10px solid #f4f4f4;
+      color: #666;
+      padding: 0;
+      font-size: 16px;
+      padding-left: 80px;
+      height: 90px;
+      background: #fff;
+      /*background: #fff url(https://yulilong.github.io/web-doc/img/HTML5-icon.jpg) no-repeat 12px center;*/
+      /*background-size: 80px 80px;*/
+      background-size: contain;
+    }
+
+    .box.show {
+      height: 600px;
+      background: #fff;
+    }
+
+    /*自己实现的盒模型样式*/
+    .ct {
+      padding: 0 15px;
+      margin: 0 auto;
+      display: flex;    /*Flex 是 Flexible Box 的缩写，意为"弹性布局"，用来为盒状模型提供最大的灵活性。*/
+      flex-wrap: wrap;  /*wrap：换行，第一行在上方*/
+    }
+    * {
+      box-sizing: border-box; /*IE盒模型*/
+    }
+    .xs-12 {
+      -webkit-box-flex: 0;
+      -ms-flex: 0 0 100%;
+      flex: 0 0 100%;  /*放大比例: 0 不放大， 缩小比例：0 不缩小， 占用空间： 100% 全部占用*/
+      max-width: 100%;
+    }
+
+    @media (min-width: 768px) {
+      .md-6 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 50%;
+        flex: 0 0 50%;
+        max-width: 50%;
+      }
+    }
+    @media (min-width: 992px) {
+      .lg-3 {
+        -webkit-box-flex: 0;
+        flex: 0 0 25%;
+        max-width: 25%;
+      }
+    }
+    
+    /*动画 按钮 水波纹
+    参考链接：http://sc.chinaz.com/info/160312595889.htm
+    */
+    .test {
+      width: 400px;  
+      height: 400px;
+      position: absolute;  
+      top: 30px;  
+      left: 30px;  
+      /*right: 0;  
+      margin: 0 auto;  */
+      border: 1px solid;
+    }
+    
+    .btn {
+      border: 1px solid;
+      position: absolute;
+      width:50px;
+      height:50px;
+      top: calc(50% - 25px);
+      right: calc(50% - 25px);
+      background: #65affa;
+      border-radius:50%;
+      z-index:10;
+    }
+    
+    .animation1 {
+      position: absolute;
+      border-radius:50%; 
+      /* -webkit-animation:water 4s infinite;  */ 
+      -webkit-animation:water linear 3s infinite 2s;
+    }
+    .animation2 {
+      position: absolute;
+      border-radius:50%;
+      -webkit-animation:water linear 3s infinite 1s;  
+      /* -webkit-animation-delay:1s;  */ 
+    }
+    .animation3 {
+      position: absolute;
+      border-radius:50%;
+      -webkit-animation:water linear 3s infinite 0s;  
+      /* -webkit-animation-delay:2s; */  
+    }
+    .animation4 {
+      position: absolute;
+      border-radius:50%;
+      -webkit-animation:water 4s infinite;  
+      -webkit-animation-delay:3s;  
+    }
+    
+    
+    @-webkit-keyframes water {
+      0% {
+        opacity: 1;
+        width:50px;
+        height:50px;
+        background: #59B5FC;
+        top: calc(50% - 25px);
+        left: calc(50% - 25px); 
+      }
+      100% {
+        opacity: 0;
+        width:300px;
+        height:300px;
+        top: 50px;
+        left: 50px;
+      }
+    }
+  
+
+    
+  </style>
+</head>
+
+<body>
+  <div>
+    <div class="content row">
+      <div class="box col-lg-3 col-md-6 col-xs-12">使用bootstrap样式实现响应式布局</div>
+      <div class="box col-lg-3 col-md-6 col-xs-12"></div>
+      <div class="box col-lg-3 col-md-6 col-xs-12"></div>
+      <div class="box col-lg-3 col-md-6 col-xs-12"></div>
+      <div class="box show col-md-6 col-xs-12">
+        <p>就随便写点什么吧哈哈。。。。。。。</p>
+        <p>就随便写点什么吧哈哈。。。。。。。</p>
+        <p>就随便写点什么吧哈哈。。。。。。。</p>
+        <p>就随便写点什么吧哈哈。。。。。。。</p>
+        <p>就随便写点什么吧哈哈。。。。。。。</p>
+      </div>
+      <div class="box show col-md-6 col-xs-12">
+        <p>就随便写点什么吧哈哈。。。。。。。</p>
+        <p>就随便写点什么吧哈哈。。。。。。。</p>
+        <p>就随便写点什么吧哈哈。。。。。。。</p>
+        <p>就随便写点什么吧哈哈。。。。。。。</p>
+        <p>就随便写点什么吧哈哈。。。。。。。</p>
+      </div>
+    </div>
+  </div>
+  <!-- 自己实现的响应式布局   -->
+  <!-- <div>没有使用bootstrap样式 实现的响应式布局：<br> <br></div> -->
+  <div>
+    <div class="ct">
+      <div class="box lg-3 md-6 xs-12">没有使用bootstrap样式实现响应式布局</div>
+      <div class="box lg-3 md-6 xs-12"></div>
+      <div class="box lg-3 md-6 xs-12"></div>
+      <div class="box lg-3 md-6 xs-12"></div>
+      <div class="box show md-6 xs-12">
+        <p>就随便写点什么吧哈哈。。。。。。。</p>
+        <p>就随便写点什么吧哈哈。。。。。。。</p>
+        <p>就随便写点什么吧哈哈。。。。。。。</p>
+        <p>就随便写点什么吧哈哈。。。。。。。</p>
+        <p>就随便写点什么吧哈哈。。。。。。。</p>
+      </div>
+      <div class="box show md-6 xs-12">
+        <p>就随便写点什么吧哈哈。。。。。。。</p>
+        <p>就随便写点什么吧哈哈。。。。。。。</p>
+        <p>就随便写点什么吧哈哈。。。。。。。</p>
+        <p>就随便写点什么吧哈哈。。。。。。。</p>
+        <p>就随便写点什么吧哈哈。。。。。。。</p>
+      </div>
+    </div>
+  </div>
+  <!-- 水波纹按钮 -->
+  <div>水波纹动画：<br><br></div>
+  <div style="position: relative;">
+    <div class="test">
+      <div class="btn"></div>
+      <div class="animation1"></div>
+      <div class="animation2"></div>
+      <div class="animation3"></div>
+      <!-- <div class="animation4"></div> -->
+    </div>
+  </div>
+  
+</body>
+
+</html>
