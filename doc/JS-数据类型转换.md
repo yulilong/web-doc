@@ -30,7 +30,7 @@ JavaScript是一种动态类型语言，变量没有类型限制，可以随时�
 
 | 参数类型  | 转为数值的规则                                               | 举例                                           |
 | --------- | ------------------------------------------------------------ | ---------------------------------------------- |
-| Number    | 不变                                                         | `Number(123) => 123`                           |
+| Number    | 不变                                                         | `Number(123) // 123`                           |
 | String    | 如果可以被解析，转为相应数值，否则为NaN，空串和空白符( 空格、制表符、换页符和换行符)转为0 | '123' => 123, '12ab' => NaN, '' =>0, '\n' => 0 |
 | Boolean   | true：1，false：0                                            | true => 1, false => 0                          |
 | undefined | 转为 NaN                                                     | undefined => NaN                               |
@@ -108,12 +108,13 @@ rseFloat('dsss')				// NaN
 
 | 参数类型  | 返回结果                                              | 举例                             |
 | --------- | ----------------------------------------------------- | -------------------------------- |
-| Number    | 转为相应的字符串                                      | String(123) => "123"             |
-| String    | 不变                                                  | String('abc') => "abc"           |
-| Boolean   | true： "true", false: "false"                         | String(true) => "true"           |
-| undefined | "undefined"                                           | String(undefined) => "undefined" |
-| null      | " null"                                               | String(null) => "null"           |
-| Object    | `{a: 1}`: "[object Object]",  数组:  数组的字符串形式 | [1,2,3] => "1, 2, 3"             |
+| Number    | 转为相应的字符串                                      | String(123) // "123"             |
+| String    | 不变                                                  | String('abc') // "abc"           |
+| Boolean   | true： "true", false: "false"                         | String(true) // "true"           |
+| undefined | "undefined"                                           | String(undefined) // "undefined" |
+| null      | " null"                                               | String(null) // "null"           |
+| Object    | `{a: 1}`: "[object Object]",  数组:  数组的字符串形式 | String([1, 2, 3]) // "1, 2, 3"   |
+| NaN       | "NaN"                                                 | String(NaN)  // NaN"             |
 
 - String对于对象的转换规则：
 
