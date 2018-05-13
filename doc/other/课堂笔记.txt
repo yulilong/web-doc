@@ -1,0 +1,737 @@
+CSS一行三个快元素样式： http://js.jirengu.com/naqom/1/edit?html,css,output
+
+一张背景图片放多个图标：http://js.jirengu.com/lowunodati/1/edit?html,css,output
+---------------------------------------------
+2018-01-11 晚上直播 笔记
+
+1. 要预习
+
+颜色： 
+红色 #ff0000，rbg(255,0,0) #f00
+Rgb 样式 ff红，
+绿色 #00ff00 rbg(0,255,0) #0f0
+蓝色 # 0000ff rbg(0,0,255) #00f
+rbg(0,0,255)
+
+白色 #fff
+黑色 #000
+#ffaa00 可缩写 #fa0
+
+rgba(f,f,f,0.5) 多了一个透明度 1不透明 0 透明
+
+单位
+
+高度 
+height：100%
+高度是继承父级元素的高度，那么父元素高度也要设置高度才能生效。
+
+-----------------------------------
+2018-01-14 CSS-常见样式2.md
+
+隐藏or透明
+opacity: 0 ; 透明度为0，整体
+visibility: hidden ; 和opacity:0 类似
+display:none; 消失，不占用位置
+background-color: rgba(0，0，0，0.2) 只是背景色透明
+
+
+
+
+
+去掉span标签之间的空隙： 父元素`font-size: 0;`, span标签`font-size: 16px;`
+
+Line-height: 1.5; // 是font-size字体的1.5倍
+1.5 跟150% 有区别：
+百分比： 继承的时候先计算，然后把计算的值继承下去,继承的固定的值。
+1.5的话：是继承的倍数，直接把倍数继承下去，继承的是倍数
+
+Line-height的作用， 实现单行文本文字在行中垂直居中：
+Width: 40px;
+Line-height: 40px;
+
+
+一行平均排列三个元素：
+.box {
+Height: 100px;
+border: 10px solid red;
+Background: black;
+}
+
+计算宽度：减号两边必须要有空格
+Width: calc(33.33% - 20px);
+
+box-sizing：
+http://js.jirengu.com/naqom/1/edit
+
+
+
+---------------------------------------------
+2018-01-16 CSS浮动讲解
+清除浮动
+ IE6 7 不支持 伪元素::after
+
+可使用 *zoom： 1； 触发BFC，达到清除浮动效果。
+hadlayout：
+
+相邻的bfc不会解决合并
+overflow: hidden; 也可以清除浮动，也是触发了BFC
+元素本身就是浮动元素，也不需要清除浮动。BFC 
+display: inline-block; 也可以清除浮动。触发了BFC导致清除了浮动
+
+
+
+外边距合并
+
+相邻的块级元素外边距会合并，这是规定，
+父子元素外边距合并
+父子元素中间没有border或者padding 也会外边距合并， 
+
+自我合并：
+如果元素没有内容，则margin会自我合并。
+
+阻止合并：
+对于父子：1，加边框（解决父子，不能解决相邻的）， 2加padding，
+
+---------------------------------------------
+2018-01-18 定位讲解
+
+Relative应用： 自己位置的微调， 2，为子元素绝对定位设置。
+Absolute应用： 元素特殊位置，
+绝对定位：absolute、fixed 只关注这2个。
+
+---------------------------------------------
+2018-01-21 晚上直播课 垂直居中 伪类与伪元素 
+
+内联元素单行文本溢出加... 无效，这个是因为span元素宽度是有内容撑起来的，并没有产生浮动，所有无效。
+
+Vertical-align
+
+块元素设置高度height，则父级也需要设置高度才能生效
+
+
+伪元素  使用 单：  和双冒号：： 都可以，双冒号是CSS3写法
+
+---------------------------------------------
+2018-01-23 晚上直播课 页面CSS-布局的发展.md、页面CSS-布局(上).md、CSS-编码规范.md
+
+http://js.jirengu.com/bibowukume/1/edit?html,css,output   单栏布局代码示例
+
+单栏布局： 从上到下排列就好 div margin： 0 auto； 
+双栏布局： 左边float，右边div加 margin-left
+三栏布局： 左边float，右边float，中间div 加 margin-left， margin-right；
+
+CSS-布局(下).md 没有讲  
+CSS-编码规范 简单的说说
+
+---------------------------------------------
+2018-01-25 晚上直播  字体图标  浏览器兼容
+
+
+CSS-浏览器兼容.md
+
+HTML 注释：
+IE6 在注释中可以使用特殊语法使浏览器显示注释里面语句。
+<!--[if IE 6]>
+    <p>You are using Internet Explorer 6.</p>
+    <![endif]-->
+
+
+Js能力检测 就是一个工具， 
+
+之前讲的知识点回顾：
+HTML标签介绍， CSS选择器 、优先级，样式介绍，
+Inline-block 之间有缝隙的原因：字体之间空格，
+box-sizing: IE盒模型   
+Float span设置浮动后可以触发行内元素拥有块级元素特性，
+盒模型外边距合并 ，BFC： float， 绝对定位、overflow不为hidden的
+绝对定位，z-index 只有定位元素有效。
+布局：流式布局 
+字体图标、浏览器兼容
+
+---------------------------------------------
+2018-01-28 晚上直播 HTML、CSS知识网页实战
+
+
+简书首页编写实战
+
+
+
+
+
+---------------------------------------------
+2018-02-04 晚上直播 JS第一节课  走进JavaScript
+
+http://book.jirengu.com/fe/%E5%89%8D%E7%AB%AF%E5%9F%BA%E7%A1%80/Javascript/
+
+网页是什么
+JavaScirpt 发展历史
+浏览器渲染机制
+
+CSS JS ：CSS是异步加载，不阻塞HTML加载，JS同步加载，阻塞html
+CSS不会阻塞HTML加载，遇到CSS就会立刻请求，然后页面接着执行，加载完毕后渲染效果。
+JS会阻塞HTML加载， 浏览器遇到JS代码会立即加载并执行，等执行完毕后才接着加载
+JS是顺序加载的
+<script src="a.js?=4"></script>
+<script src="b.js?=8"></script>
+<script src="c.js?=1"></script>
+
+浏览器是先加载A.js运行，然后在执行 b,js,最后在执行c.js
+
+在script中 有个 async语句，可以实现异步加载：<script async src="a.js?=4"></script>
+async： 谁先加载完就执行谁，
+<script async src="a.js?=4"></script>
+<script async src="b.js?=8"></script>
+<script async src="c.js?=1"></script>
+c.js
+A.js
+C.js
+defer 延迟加载， 顺序执行，等页面渲染完毕后再执行JS
+<script defer src="a.js?=4"></script>
+<script defer src="b.js?=8"></script>
+<script defer src="c.js?=1"></script>
+A.js
+B.js
+C.js
+
+白屏&FOUC (Flash of Unstyled Content) 无样式内容闪烁：
+白屏： chrome 在CSS没有加载好，所以不绘画页面， 火狐浏览器则异步加载CSS，加载好了就渲染CSS，也就是不会有白屏
+Chrome浏览器不管把样式放在header还是 body 后面都是要先加载样式后才渲染页面。
+
+解决： 
+尽量加快CSS加载的时间， 比如吧CSS放在header标签中。压缩CSS
+
+老师推荐的书：
+javascript 高级程序设计
+
+---------------------------------------------
+2018-02-06 晚上直播 JS基本概念  数据类型
+
+Mac系统下打开 chrome浏览器的控制台快捷键： cmd + option + I
+Shift + 回车 是 控制台的换行
+
+Chrome 调试,语句,表达式,变量，变量提升（var 声明的才会有提升），标识符命名规则，注释，区块。
+
+数据类型：
+
+运算符：
+
+相同原始类型 === 对比是  true， 相同的对象变量 === 对比是 false， 因为对象变量里面的是对象的地址，
+
+---------------------------------------------
+2018-02-08 晚上直播  
+运算符优先级
+流程控制语句： if switch while do-while for for-in break和continue
+
+---------------------------------------------
+2018-02-22 晚上直播
+
+变量声明提前： var function 都是提前，function会声明和赋值一起提前
+
+函数作用域：
+
+作用域链：
+寻找变量的定义出先从当前作用域寻找，如果没找到，在从当前作用域的词法作用域寻找。
+词法作用域：声明变量的作用域
+1. 函数在执行的过程中，先从自己内部找变量
+2. 如果找不到，再从创建当前函数所在的作用域去找, 以此往上
+3. 注意找的是变量的当前的状态
+
+
+http://book.jirengu.com/fe/前端基础/Javascript/引用类型.html
+基本类型值（数值、布尔值、字符串、null和undefined）：指的是保存在栈内存中的简单数据段；
+引用类型值（对象、数组、函数、正则）：指的是那些保存在堆内存中的对象，变量中保存的实际上只是一个指针，这个指针执行内存中的另一个位置，由该位置保存对象
+
+函数的参数传递：
+参数是基本类型，那么在函数里修改变量不会影响外边的变量，
+参数是引用类型，那么在函数里修改变量，外边的变量值也会变动
+
+引用类型的浅拷贝和深拷贝
+
+---------------------------------------------
+2018-02-25 晚上直播  json与对象 Array数组
+
+
+http://book.jirengu.com/fe/前端基础/Javascript/json.html
+
+
+var company = {
+    name: '饥人谷',
+    age: 3,
+    sayHello: function(){
+        console.log('hello world')
+    }
+}
+
+获取对象的值
+console.log(company.name)
+console.log(company['name'])
+
+注意：如果使用数组角标形式的时候 键一定要使用引号，如果没有引号则表示一个变量，如：
+
+for(var key in company){
+    console.log(key)
+    console.log(company[key])  // 这里key就是变量
+}
+
+elete命令用于删除对象的属性，删除成功后返回true。
+delete company.name
+
+
+对象的所有键名都是字符串，所以加不加引号都可以。对象的每一个“键名”又称为“属性”（property），
+
+
+全局变量都是window里面的属性
+var a = 3 等价于window.a
+
+
+JSON.stringify() 是ES5才出现的.
+
+对象字面量： var obj = {a:1, b: 2}   这是字面量
+
+
+http://book.jirengu.com/fe/前端基础/Javascript/数组.html
+数组超过长度可以使用角标赋值。
+
+数组的创建： 1，new   2， 字面量var b = [1, 2, 'hello'];
+
+属性length不仅可以获取数组长度，还可以对length赋值，此时length赋值后是对数组进行截取
+
+for(var i =0; i<b.length; i++) 去全部遍历数组的内容
+for(var i in b) console.log(b[i])  会自动会略数组中值为undefined 的数组
+
+array.push() 会返回新数组的长度， pop没有返回值
+
+---------------------------------------------
+2018-02-27 晚上直播  ES5数组拓展   字符串 math Date
+
+http://book.jirengu.com/fe/前端基础/Javascript/es5array.html
+http://book.jirengu.com/fe/前端基础/Javascript/字符串.html
+http://book.jirengu.com/fe/前端基础/Javascript/math.html
+http://book.jirengu.com/fe/前端基础/Javascript/date.html
+
+ES6字符串新增： 
+`` 可以引用多行、可以插入变量
+var str = `
+wewe
+dddd
+`
+字符串模板：
+var name = 'vikey'
+var str = `
+
+你好 ${name}
+`
+
+---------------------------------------------
+2018-03-01 晚上直播  date时间  正则表达式
+
+JS作用域链&JS引用类型 习题讲解
+
+http://book.jirengu.com/fe/前端基础/Javascript/date.html
+
+注意 使用 d.getMonth() 返回的是月份减去1（从0开始计算月）
+
+去年的今天是星期几：
+d = new Date();
+d.setFullYear(d.getFullYear() - 1)
+d.getDay() // 得到的就是星期几
+
+三十天前的日期：
+new Date(Date().now() - 30*24*60*60*1000)
+
+距离 2019-01-01 00:00:00 还剩多少天多少小时多少分多少秒:
+d = new Date();
+d.getTime() - Date.now();
+
+某个时间距离现在：
+ 刚刚 (距当前时间小于一分钟)
+
+---------------------------------------------
+2018-03-04 晚上直播 正则表达式 正则相关方法 定时器
+
+作业讲解： JS对象、JSON、数组客观题
+http://book.jirengu.com/fe/前端基础/Javascript/定时器.html
+
+
+贪婪模式与非贪婪模式
+贪婪模式： 在匹配过程中，尽可能多的去匹配
+
+定时器：
+setTimeout：等待一段时间后执行代码，返回一个ID，通过这个ID关闭这个定时器。clearTimeout()
+setInterval： 每隔一段时间就执行一次代码， 无线循环下去， 可使用返回自ID关闭 clearInterval()
+并发模型与事件循环：
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/EventLoop
+
+---------------------------------------------
+2018-03-06 晚上直播  DOM
+
+作业讲解： ES5数组 & 字符串 & Math & Date  
+
+http://book.jirengu.com/fe/前端基础/Javascript/dom.html
+
+定时器继续讲解：单线程模型 函数节流
+
+---------------------------------------------
+2018-03-08 晚上直播  dom  事件
+
+作业讲解：正则表达式
+
+http://book.jirengu.com/fe/前端基础/Javascript/event.html
+dom 操作
+要记住
+document.createElement 
+document.appendChild 
+dom.getAttribute 
+dom.setAttribute
+
+document.querySelector('p').style.color = 'red'： 内联样式
+使用getComputedStyle获取元素计算后的样式，
+
+使用JS批量修改HTML样式：
+style = 
+
+---------------------------------------------
+2018-03-11 晚上直播  事件
+
+习题讲解： setTimeout用法 & 任务队列异步函数节流：https://xiedaimala.com/courses/0bea00de-21f6-4b84-8cff-da09cd2a80b5/tasks/ac13d2f7-4065-4222-b44b-30bf77d0bd3e
+
+所有浏览器都能用
+var btnClick = document.getElementById('btnClick');
+    btnClick.onclick = function showMessage() {}   解绑事件： btnClick.onclick = null； 即可
+
+IE9以上才能用，
+var btnClick = document.getElementById('btnClick');
+    btnClick.addEventListener('click', function() {}); 解绑事件使用removeEventListener
+
+addEventListener比 onclick的有点
+功能更强大一些， 有第三个参数，如果是true表示在捕获阶段调用事件处理程序，如果是false，则是在事件冒泡阶段处理
+
+addEventListener可以对事件进行多次绑定，onclick只能绑定一次，绑定多次后，只有最后一个生效
+
+第一： 事件模型： 捕获、冒泡、
+第二： 绑定事件 onclick  addEventListener
+第三：阻止事件传递 stopPropagation();
+
+阻止事件捕获、冒泡： e.stopPropagation();
+
+事件代理： 上层元素去处理子代事件，叫事件代理
+直播讲解：
+http://js.jirengu.com/jerodoleca/1/edit?html,js,console,output
+http://js.jirengu.com/qufowezode/1/edit?html,js,console,output
+http://js.jirengu.com/jerodoleca/1/edit?html,js,console,output
+
+dblclick 双击左键
+mouseover 鼠标放上的事件
+
+---------------------------------------------
+2018-03-13 晚上直播  实战
+
+原生JS tab切换表单效果：
+http://jsbin.com/sonuga/edit?html,output
+http://js.jirengu.com/zuhuk/2/edit
+http://js.jirengu.com/zuhuk/2/edit
+
+模态框、dialog对话款、弹窗：
+http://js.jirengu.com/yagawikawu/1/edit?html,js,output
+
+<div class="modal" data-target="register"> ： 中 data-target是自定义属性
+
+---------------------------------------------
+2018-03-15 晚上直播  动画 BOM 存储 性能优化
+
+http://book.jirengu.com/fe/前端基础/Javascript/动画.html
+http://book.jirengu.com/fe/前端基础/Javascript/bom.html
+http://book.jirengu.com/fe/前端基础/Javascript/存储.html
+
+
+BOM(Browser Object Model) 是指浏览器对象模型
+
+localStorage：
+设置一个值：
+localStorage['name'] = 'dragon' 或 localStorage.setItem('userinfo','123');
+删除一个值：
+delete localStorage.name  或 localStorage.removeItem('userinfo');
+localStorage跟浏览器相关。
+
+session： 是服务器在用户登陆成功后保存的状态（记录用户信息）， 成功后会返回给浏览器一个编号，浏览器存到cookie中，
+下次在发送请求后，API请求会把浏览器所有cookie都自动带上的
+服务器给浏览器种上cookie存放用户信息，用来识别发送请求的用户是谁。这种用户识别的方式被称为Session
+
+性能优化：
+优化思路：1. 加载的优化。 2.体验的优化。
+加载的优化： 1. 网络越快越好。 2.东西体积越少越好。 3.东西数量越少越好。 4. 服务器处理越快越好。 5.能重复利用的最好重复利用。
+提样的优化： 1.只给用户暂时需要的东西。 2. 别让用户感觉卡顿。 3. 动画不要卡。
+
+---------------------------------------------
+2018-03-18 晚上直播  ajax node.js搭建服务器
+
+http://book.jirengu.com/fe/前端基础/Javascript/ajax.html    
+
+用node前要安装 https://nodejs.org/en/
+node文件：server.js 里面是JS语法， 写完后 终端运行node ch0/server.js
+
+---------------------------------------------
+2018-03-20 晚上直播 ajax
+
+http://book.jirengu.com/fe/前端基础/Javascript/ajax.html
+
+跟后端交互：
+
+form表单提交： 这个提交会页面跳转
+
+var xhr = new XMLHttpRequest()
+xhr.open('GET', 'http://api.jirengu.com/weather.php', true) ；第三个参数是是否异步，true异步，false同步。
+
+GET的参数直接拼接在URL里面。
+
+xhr.open('POST', '/register', true) 这里第二个参数可以直接拼接在当前网址后面：http://book.com/register
+
+POST参数在send里面： xhr.send('username=jirengu&password=123456')
+
+http://js.jirengu.com/jewivinido/1/edit?html,js
+
+http知识推荐的书：图解HTTP
+
+---------------------------------------------
+2018-03-22（周四） 晚上直播 跨域
+
+http://book.jirengu.com/fe/前端基础/Javascript/跨域.html
+
+
+node 中的包去https://www.npmjs.com/ 里面找（http、fs、path、url）
+
+课堂讲解的代码： jsonp解决跨域
+http://js.jirengu.com/gidimiyota/1/edit?html,js,output
+
+
+降域：
+同一个页面，有一个iframe标签，同一个王者
+
+---------------------------------------------
+2018-03-25（周日） 晚上直播 ajax实战 做一个天气预报  以及 加载更多效果
+
+饥人谷开放 API:http://api.jirengu.com/
+
+获得天气简单接口：http://api.jirengu.com/getWeather.php
+http://weixin.jirengu.com/weather
+天气预报UI：
+https://cdn.dribbble.com/users/86061/screenshots/1081917/whereto_small.jpg
+字体图标：
+iconfont.cn
+
+---------------------------------------------
+2018-03-27（周二） 做一个天气预报 加载更多
+
+天气预报代码展示：projects/weather/index.html
+http://book.jirengu.com/jirengu-inc/js-works/
+
+https://github.com/jirengu-inc/js-works
+
+loadmore    
+
+---------------------------------------------
+2018-03-29（周四） 闭包
+
+立即执行函数：
+function fn(i) {console.log(i)}
+fn(7);
+等价于
+(function(i){console.log(i)}) (3)
+就是立即执行函数等价于：
+(function(i){
+  console.log(i)
+}(5))
+闭包主要作用是 1 封装数据 2 暂存数据，
+
+---------------------------------------------
+2018-04-01（周日）jQuery
+
+
+jQuery有两种操作
+1，选择一个选择进行操作
+2.直接执行一些方法
+
+---------------------------------------------
+2018-04-03 晚上直播 (周二) jQuery 事件、动画
+
+天气参数接口
+study_javascript_in_jirengu.com
+
+http://weixin.jiregu.com/weather?key=study_javascript_in_jirengu.com
+天气参数接口
+
+dribbble.com
+https://dribbble.com/search?q=weather
+
+
+
+---------------------------------------------
+2018-04-08（周日）豆瓣电影网站实战
+
+---------------------------------------------
+2018-04-10（周二）豆瓣电影网站实战二
+
+https://zhuanlan.zhihu.com/p/22412047
+
+---------------------------------------------
+2018-04-12（周四）面向对象 原型 原型链
+课件地址：
+http://book.jirengu.com/fe/前端进阶/面向对象/理解对象.html
+
+用JS实现TAB效果：
+http://js.jirengu.com/yabet/1/edit?html,output
+
+
+Array.prototype = [1,2,3].__proto__
+[1,2,3].sort()   ==> [1,2,3].__proto__.sort()  ===> Array.prototype.sort()
+
+Array 是 Function 创建的
+Array.__proto__ === Function.prototype
+Function.__proto__ === Function.prototype
+Array.prototype这个对象是 Object 这个函数创建的
+Array.prototype.__proto__ === Object.prototype
+
+Object.prototype.__proto__  === null
+
+-----------
+[1, 2,3].valueOf()
+[1,2,3]本身找
+[1,2,3]__proto__ === Array.prototype
+Array.prototype.__proto__ === Object.prototype
+Object.prototype.__proto__ === null
+
+
+
+Function 是 Object的创造者
+
+
+
+---------------------------------------------
+2018-04-15（周日） 原型链、继承
+
+p1 instanceof People  // true
+p1 instanceof Object	// true
+
+http://js.jirengu.com/vixir/1/edit?html,output
+
+
+call() apply()  bind() 区别
+
+---------------------------------------------
+2018-04-17（周二） this指针 页面图片轮播
+若愚老师的this指针：
+https://zhuanlan.zhihu.com/p/31823164
+
+
+function fn(a, b) {console.log(this)}
+
+fn()		// this 是Windows
+fn.call(undefined, a, b)	// this 是Windows
+
+http://jsbin.com/pedicowaki/edit?js,console,output
+
+轮播范例：
+http://book.jirengu.com/jirengu-inc/js-works       在 carousel 里面
+
+---------------------------------------------
+2018-04-19（周四）promise 图片懒加载  瀑布流布局 木桶布局
+
+promise 浏览器、语言都可以直接用
+上课的例子
+http://js.jirengu.com/luyux/1/edit?js,console
+
+promise兼容性好一点
+async/await
+图片懒加载原理：
+https://cloud.hunger-valley.com/18-4-19/27123708.jpg
+图片懒加载实例：
+http://book.jirengu.com/jirengu-inc/js-works/lazyimg/jquery-lazyload-img.html
+花瓣网站 huaban.com
+
+瀑布流示例：
+huaban.com/boards/25082487
+瀑布流原理：
+https://cloud.hunger-valley.com/18-4-19/21465704.jpg
+瀑布流布局， 代码都注释掉了，自己下载下来修改运行 http://book.jirengu.com/jirengu-inc/js-works/waterfall/water-basic.html
+
+木桶布局：
+zhuanlan.zhihu.com/p/28466291
+木桶布局 ： http://book.jirengu.com/jirengu-inc/js-works/barrellayout/index.html
+
+
+
+------
+
+2018-04-22（周日）Node.js 入门 npm使用
+
+
+
+http://book.jirengu.com/fe/前端进阶/Node/node入门.html
+
+
+
+
+
+
+
+------
+
+2018-04-24（周二） npm包发布，开发命令行工具
+
+
+
+卸载 自己开发的npm包： npm unpublish
+
+天气APIkey
+
+study_javascript_in_jirengu.com
+
+
+
+
+
+------
+
+2018-04-26（周四）  webpack 
+
+webpack官网
+
+https://webpack.js.org/
+
+
+
+http://book.jirengu.com/jirengu-inc/js-works/
+
+
+
+
+
+
+
+
+
+------
+
+2018-05-03（周四）浏览器缓存
+
+
+
+简述浏览器缓存是如何控制的
+
+https://zhuanlan.zhihu.com/p/23299600
+
+Nginx etag 计算
+
+实现效果
+
+http://book.jirengu.com/jirengu-inc/js-works/
+
+
+
+
+
+------
+
+2018-05-06（周日）HTML5 CSS3 新特性讲解 flex、grid布局
+
+https://jirengu.github.io/css-you-should-know/zh-cn/a-complete-guide-css-grid-layout.html
