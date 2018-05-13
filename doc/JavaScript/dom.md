@@ -131,7 +131,7 @@ document.compatMode的返回值：
 | document.body.offsetWidth       | 获取body元素的宽度：content+padding+boder               |
 | document.body.scrollHeight      | 元素滚动内容的总长度,如果没有滚动条： 等于 clientHeight |
 | document.body.scrollTop         | 滚动的高度                                              |
-| window.innerHeigh               | 窗口的高度                                              |
+| window.innerHeight              | 浏览器可见窗口的高度                                    |
 | element.getBoundingClientRect() | 获取元素在视窗中的位置                                  |
 
 ![](http://ww1.sinaimg.cn/large/005M7QYPly1fj8v93smtqj30bf06vgm6.jpg)
