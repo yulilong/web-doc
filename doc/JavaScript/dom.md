@@ -355,6 +355,27 @@ append()是Chrome新出来的属性， 兼容性不好
 
 
 
+## 7. 开发中遇到的问题
+
+### 7.1 xxx.forEach is not a function（DOM集合--类数组对象转化为数组）
+
+当使用`document.querySelectorAll`来获取一组dom然后操作的时候，当使用forEach的时候有的浏览器会出现(QQ浏览器)：
+
+```
+Uncaught TypeError: hdList.forEach is not a function
+```
+
+在其他浏览器中没有报错，经过查找：
+
+原生js获取的DOM集合是一个类数组对象，所以不能直接利用数组的方法（例如：forEach，map等），需要进行转换为数组后，才能用数组的方法！
+
+可把自己转换一下：
+
+1. 使用Array.from()方法：`let list = Array.from(hdList); `
+2. 用[ ...elems ]方法转化为数组:`let list = [...hdList];`
+
+参考资料： https://blog.csdn.net/m0_38082783/article/details/78131036
+
 ## 参考资料
 
 [所有DOM接口 MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Document_Object_Model)
