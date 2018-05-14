@@ -259,6 +259,8 @@ console.log(getScrollTop())
 
 [HTMLElement.offsetParent  MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLElement/offsetParent) 
 
+[HTML 获取屏幕、浏览器、页面的高度宽度](http://www.cnblogs.com/polk6/p/5051935.html)
+
 [获取scrollTop兼容各浏览器的方法，以及body和documentElement是啥？](http://www.cnblogs.com/xwgli/p/3490466.html)
 
 [网址在线测试  JSBIN](http://js.jirengu.com/?html,console,output)

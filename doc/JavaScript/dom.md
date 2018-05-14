@@ -62,8 +62,43 @@ document.compatMode的返回值：
 
 
 
-
 #### 2.2.2 查找元素
+
+##### 1 使用CSS选择器方式查找：querySelector、querySelectorAll
+
+```
+var content = document.querySelector(".content");
+```
+
+##### 2 使用元素ID查找：getElementById
+
+```
+var one = document.getElementById("one");
+```
+
+##### 3.使用一个CSS类名查找：getElementsByClassName
+
+```javascript
+var tt = document.getElementsByClassName('tt');	
+// HTMLCollection(2) [div.tt, div.tt]
+```
+
+##### 4. 使用标签名来查找：getElementsByTagName
+
+```
+var div = document.getElementsByTagName('div')
+// HTMLCollection(7) [div#one, div.tt, div.tt, ......
+```
+
+##### 5. 使用标签中name属性的值来查找: getElementsByName
+
+```javascript
+// <div class="tt" name="my">ttt</div> <div class="f" data-tt="my">123</div>
+var tt = document.getElementsByName('my')
+// NodeList [div.t]
+```
+
+
 
 | 方法(document.function)       | 说明                                                     |
 | ----------------------------- | -------------------------------------------------------- |
