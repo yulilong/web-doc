@@ -196,7 +196,108 @@ loader 模块需要导出为一个函数，并且使用 Node.js 兼容的 JavaSc
 
 ## 4. 插件(Plugins)
 
+插件是 wepback 的[支柱](https://github.com/webpack/tapable)功能。webpack 自身也是构建于，你在 webpack 配置中用到的**相同的插件系统**之上！
 
+插件目的在于解决 [loader](https://webpack.docschina.org/concepts/loaders) 无法实现的**其他事**。
+
+### 4.1 剖析
+
+webpack **插件**是一个具有 [`apply`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply) 属性的 JavaScript 对象。`apply` 属性会被 webpack compiler 调用，并且 compiler 对象可在**整个**编译生命周期访问。
+
+```javascript
+// ConsoleLogOnBuildWebpackPlugin.js
+const pluginName = 'ConsoleLogOnBuildWebpackPlugin';
+class ConsoleLogOnBuildWebpackPlugin {
+    apply(compiler) {
+        compiler.hooks.run.tap(pluginName, compilation => {
+            console.log("webpack 构建过程开始！");
+        });
+    }
+}
+```
+
+tap方法的第一个参数，是驼峰式命名的插件名称。建议为此使用一个常量，以便它可以在所有 hook 中复用。
+
+### 4.2 用法
+
+由于**插件**可以携带参数/选项，你必须在 webpack 配置中，向 `plugins` 属性传入 `new` 实例。
+
+根据你的 webpack 用法，这里有多种方式使用插件。
+
+### 4.3 配置
+
+**webpack.config.js**
+
+```javascript
+const HtmlWebpackPlugin = require('html-webpack-plugin'); //通过 npm 安装
+const webpack = require('webpack'); //访问内置的插件
+const path = require('path');
+const config = {
+  entry: './path/to/my/entry/file.js',
+  output: {
+    filename: 'my-first-webpack.bundle.js',
+    path: path.resolve(__dirname, 'dist')
+  },
+  module: {
+    rules: [
+      { test: /\.(js|jsx)$/, use: 'babel-loader' }
+    ]
+  },
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin(),
+    new HtmlWebpackPlugin({template: './src/index.html'})
+  ]
+};
+module.exports = config;
+```
+
+
+
+## 5. 配置(configuration)
+
+**webpack 的配置文件，是导出一个对象的 JavaScript 文件。**此对象，由 webpack 根据对象定义的属性进行解析。
+
+因为 webpack 配置是标准的 Node.js CommonJS 模块，你**可以做到以下事情**：
+
+- 通过 `require(...)` 导入其他文件
+- 通过 `require(...)` 使用 npm 的工具函数
+- 使用 JavaScript 控制流表达式，例如 `?:` 操作符
+- 对常用值使用常量或变量
+- 编写并执行函数来生成部分配置
+
+请在合适的时机使用这些特性。
+
+虽然技术上可行，**但应避免以下做法**：
+
+- 在使用 webpack 命令行接口(CLI)（应该编写自己的命令行接口(CLI)，或[使用 `--env`](https://webpack.docschina.org/configuration/configuration-types/)）时，访问命令行接口(CLI)参数
+- 导出不确定的值（调用 webpack 两次应该产生同样的输出文件）
+- 编写很长的配置（应该将配置拆分为多个文件）
+
+### 5.1 基本配置
+
+**webpack.config.js**
+
+```javascript
+var path = require('path');
+module.exports = {
+  mode: 'development',
+  entry: './foo.js',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'foo.bundle.js'
+  }
+};
+```
+
+### 5.2 导出多个配置
+
+#### 5.2.1 导出为一个函数
+
+在开发和生产构建之间，消除 `webpack.config.js` 的差异。（至少）有两种选项：
+
+明天继续：
+
+https://webpack.docschina.org/configuration/configuration-types/#exporting-multiple-configurations
 
 
 
