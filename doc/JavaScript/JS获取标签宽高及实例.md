@@ -170,6 +170,40 @@ $(window).scroll(function(){
 
 
 
+## 4. 浏览器兼容性问题
+
+### 4.1 各浏览器下 scrollTop的差异
+
+https://segmentfault.com/a/1190000008065472
+
+**IE6/7/8：**
+可以使用 `document.documentElement.scrollTop`； 
+**IE9及以上：**
+可以使用`window.pageYOffset`或者`document.documentElement.scrollTop `
+**Safari:** 
+safari： `window.pageYOffset` 与document.body.scrollTop都可以； 
+**Firefox:** 
+火狐等等相对标准些的浏览器就省心多了，直接用window.pageYOffset 或者 `document.documentElement.scrollTop `；
+**Chrome：**
+谷歌浏览器只认识`document.body.scrollTop`;
+注：标准浏览器是只认识documentElement.scrollTop的，但chrome虽然我感觉比firefox还标准，但却不认识这个，在有文档声明时，chrome也只认识document.body.scrollTop.
+
+document.body.scrollTop与document.documentElement.scrollTop两者有个特点，就是同时只会有一个值生效。
+
+为了兼容，不管有没有 DTD，可以使用如下代码：
+
+```javascript
+var scrollTop = window.pageYOffset  //用于FF
+                || document.documentElement.scrollTop  
+                || document.body.scrollTop || 0;
+```
+
+**documentElement 和 body 相关说明：**
+
+body是DOM对象里的body子节点，即 <body> 标签；
+
+documentElement 是整个节点树的根节点root，即<html> 标签；
+
 ## 一些问题
 
 ### 1. document.body.scrollTop总是0的原因
@@ -224,6 +258,8 @@ console.log(getScrollTop())
 [HTMLElement.offsetLeft  MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLElement/offsetLeft)
 
 [HTMLElement.offsetParent  MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLElement/offsetParent) 
+
+[获取scrollTop兼容各浏览器的方法，以及body和documentElement是啥？](http://www.cnblogs.com/xwgli/p/3490466.html)
 
 [网址在线测试  JSBIN](http://js.jirengu.com/?html,console,output)
 

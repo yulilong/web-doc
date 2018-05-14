@@ -19,6 +19,8 @@
   * [8Date日期](/doc/JavaScript/JS-8Date日期.md) 
   * [JS获取标签宽高及实例](/doc/JavaScript/JS获取标签宽高及实例.md) 
   * [webpack教程](/doc/JavaScript/webpack教程.md) 
+  * 高级
+    - [常用的代码片段](/doc/JavaScript/advanced/常用的代码片段.md) 
 * CSS
   - [position定位](/doc/css/CSS-定位.md)
   - [常见样式下](/doc/css/CSS常见样式下.md)
