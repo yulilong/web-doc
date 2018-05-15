@@ -32,6 +32,8 @@ document.documentElement.scrollLeft
 // 5. 网页可见区域的高度和宽度（不加边线）：
 document.body.clientHeight  // 9969
 document.body.clientWidth 	// 845
+document.documentElement.clientHeight
+document.documentElement.lientWidth
 
 // 6. 网页可见区域的高度和宽度（加边线）：
 document.body.offsetHeight 	// 9969
@@ -170,9 +172,52 @@ $(window).scroll(function(){
 
 
 
-## 4. 浏览器兼容性问题
+## 4. document.compatMode对获取浏览器窗口大小的影响
 
-### 4.1 各浏览器下 scrollTop的差异
+document.compatMode用来判断当前浏览器采用的渲染方式。
+
+IE对盒模型的渲染在 Standards Mode和Quirks Mode是有很大差别的：
+
+> Standards Mode：盒模型的解释和其他的标准浏览器是一样
+>
+> Quirks Mode: 使用IE盒模型，在不声明Doctype的情况下，IE默认Quirks Mode
+
+而document.compatMode可以判断使用了哪种方式，它有两个值：
+
+> BackCompat: 标准兼容模式关闭，Quirks Mode,即使用了IE盒模型：width = border + padding + content
+>
+> CSS1Compat：标准兼容模式开启，Standards Mode，即使用了标准盒模型: width: content
+
+### 4.1 BackCompat： 浏览器高度使用body的值
+
+**BackCompat：**标准兼容模式关闭，当document.compatMode等于BackCompat时，浏览器客户区宽度为document.body.clientWidth;
+
+### 4.2 CSS1Compat：浏览器高度使用documentElement的值
+
+**CSS1Compat：**标准兼容模式开启,当document.compatMode等于CSS1Compat时浏览器客户区宽度为document.documentElement.clientWidth;
+
+### 4.3 DOCTYPE 会影响document.compatMode
+
+当文档有了标准声明时， document.compatMode 的值就等于 "CSS1compat"， 因此， 我们可以根据 document.compatMode 的值来判断文档是否加了标准声明
+
+```javascript
+// HTML文件头部没有 <!DOCTYPE html>
+document.compatMode	// BackCompat
+// HTML文件头部有 <!DOCTYPE html>
+document.compatMode	// CSS1Compat
+```
+
+### 4.4 documentElement和body 
+
+body是DOM对象里的body子节点，即 `<body>` 标签；
+
+documentElement 是整个节点树的根节点root，即`<html> `标签；
+
+
+
+## 5. 浏览器兼容性问题
+
+### 5.1 各浏览器下 scrollTop的差异
 
 https://segmentfault.com/a/1190000008065472
 
@@ -260,6 +305,8 @@ console.log(getScrollTop())
 [HTMLElement.offsetParent  MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLElement/offsetParent) 
 
 [HTML 获取屏幕、浏览器、页面的高度宽度](http://www.cnblogs.com/polk6/p/5051935.html)
+
+[document.compatMode介绍](http://www.cnblogs.com/fullhouse/archive/2012/01/17/2324706.html)
 
 [获取scrollTop兼容各浏览器的方法，以及body和documentElement是啥？](http://www.cnblogs.com/xwgli/p/3490466.html)
 
