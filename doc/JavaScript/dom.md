@@ -143,7 +143,25 @@ var tt = document.getElementsByName('my')
 
 
 
+## 3. Element
 
+除了document对象，在DOM中最常用的就是Element对象了，Element对象表示HTML元素。
+
+Element 对象可以拥有类型为元素节点、文本节点、注释节点的子节点，DOM提供了一系列的方法可以进行元素的增、删、改、查操作
+
+Element有几个重要属性
+
+1. nodeName：元素标签名，还有个类似的tagName
+2. nodeType：元素类型
+3. className：类名
+4. id：元素id
+5. children：子元素列表（HTMLCollection）
+6. childNodes：子元素列表（NodeList）
+7. firstChild：第一个子元素
+8. lastChild：最后一个子元素
+9. nextSibling：下一个兄弟元素
+10. previousSibling：上一个兄弟元素
+11. parentNode、parentElement：父元素
 
 ## 3. dom使用方式
 
