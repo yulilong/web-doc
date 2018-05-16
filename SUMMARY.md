@@ -1,10 +1,10 @@
 # Summary
 
 * [说明](readme.md)
-* **HTML **
+* HTML
   - [HTML5-特性说明](/doc/HTML5-特性说明.md)   
   - [input标签介绍](/doc/HTML5-input标签介绍.md)   
-* **JavaScript**    
+* JavaScript  
   * [正则表达式](/doc/JavaScript/JS-正则表达式.md) 
   * [dom](/doc/JavaScript/dom.md) 
   * [排序算法.md](/doc/JavaScript/JS-排序算法.md) 
@@ -19,9 +19,9 @@
   * [8Date日期](/doc/JavaScript/JS-8Date日期.md) 
   * [JS获取标签宽高及实例](/doc/JavaScript/JS获取标签宽高及实例.md) 
   * [webpack教程](/doc/JavaScript/webpack教程.md) 
-  * ***高级***
+  * 高级
     - [常用的代码片段](/doc/JavaScript/advanced/常用的代码片段.md) 
-* ***CSS***
+* CSS
   - [position定位](/doc/css/CSS-定位.md)
   - [常见样式下](/doc/css/CSS常见样式下.md)
   - [深入浅出-1宽度与高度](/doc/css/CSS深入浅出-1宽度与高度笔记.md)
@@ -34,7 +34,7 @@
   - [深入浅出-8动态REM](/doc/css/CSS深入浅出-8动态REM.md)
   - [浏览器兼容](/doc/css/CSS-浏览器兼容.md)
   - [垂直水平居中](/doc/css/CSS垂直水平居中.md)
-* **其他**
+* 其他
   - [前端笔试编程题](/doc/other/前端笔试编程题.md)
   - [前端面试题](/doc/other/前端面试题.md)
   - [浏览器从输入URL到出现页面过程](/doc/other/浏览器从输入URL到出现页面过程.md)
