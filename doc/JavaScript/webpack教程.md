@@ -356,7 +356,9 @@ module.exports = {
 }
 ```
 
+清理插件遇到的错误：`dist is outside of the project root. Skipping...`:  
 
+https://github.com/johnagan/clean-webpack-plugin/issues/10
 
 
 
