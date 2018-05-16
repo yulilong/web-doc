@@ -331,6 +331,33 @@ https://doc.webpack-china.org/concepts/plugins/
 
 
 
+## 一些常用的插件plugins
+
+### 1. CleanWebpackPlugin：清理文件插件
+
+这个插件主要用来清理打包的文件的，在项目打包前，把之前打包的文件清理掉
+
+安装： `npm install clean-webpack-plugin --save-dev` 
+
+配置：
+
+```javascript
+// 配置文件位置： config/webpack.config.prod.js
+// 要清理的文件在dist目录下
+const path = require("path");
+module.exports = {
+    plugins:[
+        // 自动清理dist目录, root: process.cwd()不能少，否则不能清理
+        new CleanWebpackPlugin(
+            [path.join(__dirname,"../dist/")],
+            {root: process.cwd()}
+        ),
+    ],
+}
+```
+
+
+
 
 
 ## 参考资料
