@@ -373,6 +373,17 @@ only.append(cl)
 
 
 
+### 5.5 在标签的子标签中指定位置插入新标签
+
+```javascript
+var $imgCt = document.querySelector(".img-ct");
+var item = $imgCt.children;
+$imgCt.insertBefore(item[0].cloneNode(), $imgCt.childNodes[0]);
+$imgCt.appendChild(item[1].cloneNode());
+```
+
+
+
 ### 5.6 属性操作
 
 
