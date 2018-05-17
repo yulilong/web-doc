@@ -21,6 +21,8 @@
   * [webpack教程](/doc/JavaScript/webpack教程.md) 
   * 高级
     - [常用的代码片段](/doc/JavaScript/advanced/常用的代码片段.md) 
+    - [浏览器兼容](/doc/JavaScript/advanced/浏览器兼容.md) 
+    - [SEO搜索引擎优化](/doc/JavaScript/advanced/html-SEO搜索引擎优化.md) 
 * CSS
   - [position定位](/doc/css/CSS-定位.md)
   - [常见样式下](/doc/css/CSS常见样式下.md)
