@@ -163,6 +163,25 @@ Element有几个重要属性
 10. previousSibling：上一个兄弟元素
 11. parentNode、parentElement：父元素
 
+
+
+## 4. HTML DOM 对象
+
+### 4.1 style对象
+
+Style 对象代表一个单独的样式声明。可从应用样式的文档或元素访问 Style 对象。
+
+```javascript
+<div class="one">one</div>
+  <script>
+    var one = document.querySelector(".one");
+    one.style.border = "1px solid red";
+    one.style.height = "300px";
+  </script>
+```
+
+详情查看：http://www.w3school.com.cn/jsref/dom_obj_style.asp
+
 ## 3. dom使用方式
 
 ### 3.1 修改元素样式
