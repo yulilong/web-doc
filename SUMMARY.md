@@ -4,6 +4,7 @@
 * HTML
   - [HTML5-特性说明](/doc/HTML5-特性说明.md)   
   - [input标签介绍](/doc/HTML5-input标签介绍.md)   
+  - [HTML字符实体](/doc/html/HTML字符实体.md)
 * JavaScript  
   * [正则表达式](/doc/JavaScript/JS-正则表达式.md) 
   * [dom](/doc/JavaScript/dom.md) 
