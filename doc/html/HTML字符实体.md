@@ -4,7 +4,7 @@
 
 
 
-```javascript
+```
  	　　　　&nbsp;		&#32;	// 空格
 !	　　　　&excl;		&#33;
 "	　　　　&quot;		&#34;
@@ -20,24 +20,24 @@ $	　　　　&dollar;	&#36;
 ,	　　　　&comma; 	&#44;
 -	　　　　&hyphen; 	&#45;
 .	　　　　&period;	&#46;
-/	　　　　&sol; 	&#47;
-:	　　　　&colon;	&#58;
-;	　　　　&semi;	&#59;
-<	　　　　&lt;	&#60;
+/	　　　　&sol; 		&#47;
+:	　　　　&colon;		&#58;
+;	　　　　&semi;		&#59;
+<	　　　　&lt;		&#60;
 =	　　　　&equals;	&#61;
->	　　　　&gt;	&#62;
-?	　　　　&quest;	&#63;
+>	　　　　&gt;		&#62;
+?	　　　　&quest;		&#63;
 @	　　　　&commat; 	&#64;
-[	　　　　&lsqb; 	&#91;
-\	　　　　&bsol; 	&#92;
-]	　　　　&rsqb;	&#93;
-^	　　　　&circ;	&#94;
+[	　　　　&lsqb; 		&#91;
+\	　　　　&bsol; 		&#92;
+]	　　　　&rsqb;		&#93;
+^	　　　　&circ;		&#94;
 _	　　　　&lowbar;	&#95;
-`	　　　　&grave;	&#96;
-{	　　　　&lcub;	&#123;
+`	　　　　&grave;		&#96;
+{	　　　　&lcub;		&#123;
 |	　　　　&verbar;	&#124;
-}	　　　　&rcub;	&#125;
-~	　　　　&tilde;	&#126;
+}	　　　　&rcub;		&#125;
+~	　　　　&tilde;		&#126;
 ```
 
 
