@@ -473,7 +473,7 @@ Uncaught TypeError: hdList.forEach is not a function
 
 [饥人谷课件 DOM](http://book.jirengu.com/fe/%E5%89%8D%E7%AB%AF%E5%9F%BA%E7%A1%80/Javascript/dom.html)
 
-[DOM 节点层次](https://blog.csdn.net/crystal6918/article/details/52832540)
+[DOM 节点层次 CSND](https://blog.csdn.net/crystal6918/article/details/52832540)
 
 [深入理解DOM节点类型第一篇——12种DOM节点类型概述](http://www.cnblogs.com/xiaohuochai/p/5785189.html)
 
