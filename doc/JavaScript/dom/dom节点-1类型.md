@@ -235,6 +235,8 @@ DTD声明节点notation代表DTD中声明的符号。
 
 ## 参考资料
 
+[Node.nodeType MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Node/nodeType)
+
 [DOM常用节点类型](https://blog.csdn.net/u013243347/article/details/52122958)
 
 [简述HTML DOM及其节点分类](http://www.cnblogs.com/zhuwq585/p/6075119.html)
