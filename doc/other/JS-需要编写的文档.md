@@ -13,3 +13,5 @@ less、SCSS 语法
 jQuery bootstrap
 
 XMLHttpRequest Promise 对象编写
+
+继承 dom
