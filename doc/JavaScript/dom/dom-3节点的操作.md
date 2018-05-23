@@ -67,11 +67,108 @@ console.log(newDiv.ownerDocument === myDiv.ownerDocument);//true
 </script>
 ```
 
- 
-
-
-
 [Document.createElement() MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Document/createElement)
+
+
+
+## 3. 插入节点
+
+### 3.1 appendChild：向childNodes列表的末尾添加一个节点
+
+appendChild()方法用于向childNodes列表的末尾添加一个节点，并返回新增节点。添加节点后，childNodes中的新增节点、父节点和以前的最后一个子节点的关系指针都会相应地得到更新
+
+[Node.appendChild MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Node/appendChild)
+
+```html
+<div id="one"></div>
+<script>
+    var one = document.getElementById('one');
+    var newNode = document.createElement('ul');
+    var returnedNode = one.appendChild(newNode);
+    console.log(returnedNode.nodeName);//UL
+    console.log(returnedNode == newNode);//true
+    console.log(returnedNode == one.lastChild);//true
+</script>
+```
+
+如果插入的节点已经是文档的一部分了，那结果就是将该节点从原来的位置转移到新位置
+
+```html
+<div id="oldDiv">第一个div</div>
+<div id="newDiv">第二个div</div>
+<button id="btn">变换位置</button>
+<script>
+    btn.onclick = function(){ document.body.appendChild(newDiv); }    
+</script>
+```
+
+<div id="oldDiv">第一个div</div>
+<div id="newDiv">第二个div</div>
+<button id="btn">变换位置</button>
+<script>
+btn.onclick = function(){ document.body.appendChild(newDiv); }    
+</script>
+
+### 3.2 Node.insertBefore:父节点中指定子节点前插入
+
+语法：`insertedElement = parentElement.insertBefore(newElement, referenceElement);`
+
+如果`referenceElement`为`null`则`newElement`将被插入到子节点的末尾*。*如果`newElement`已经在DOM树中，`newElement`首先会从DOM树中移除。
+
+> - `insertedElement` 是被插入的节点，即 `newElement`
+> - `parentElement`  是新插入节点的父节点
+> - `newElement` 是被插入的节点
+> - `referenceElement` 在插入newElement之前的那个节点
+
+[Node.insertBefore() MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Node/insertBefore)
+
+```html
+<ul id="myUl" style="border:1px solid black;">
+    <li id="myLi">
+        <div id='oldDiv'>oldDiv</div>
+    </li>    
+</ul>
+<button id="btn1">插入oldDiv的前面</button>
+<button id="btn2">插入myUl的前面</button>
+<button id="btn3">插到oldDiv的里面</button>
+<script>
+var oDiv = document.createElement('div');
+oDiv.innerHTML = 'newDiv';
+btn1.onclick = function(){
+    console.log(myLi.insertBefore(oDiv,oldDiv));//<div>newDiv</div>
+}
+btn2.onclick = function(){
+    console.log(document.body.insertBefore(oDiv,myUl));//<div>newDiv</div>
+}
+btn3.onclick = function(){
+    console.log(oldDiv.insertBefore(oDiv,null));//<div>newDiv</div>
+}
+</script>
+```
+
+<ul id="myUl" style="border:1px solid black;">
+    <li id="myLi">
+        <div id='oldDiv'>oldDiv</div>
+    </li>    
+</ul>
+<button id="btn1">插入oldDiv的前面</button>
+<button id="btn2">插入myUl的前面</button>
+<button id="btn3">插到oldDiv的里面</button>
+<script>
+var oDiv = document.createElement('div');
+oDiv.innerHTML = 'newDiv';
+btn1.onclick = function(){
+    console.log(myLi.insertBefore(oDiv,oldDiv));//<div>newDiv</div>
+}
+btn2.onclick = function(){
+    console.log(document.body.insertBefore(oDiv,myUl));//<div>newDiv</div>
+}
+btn3.onclick = function(){
+    console.log(oldDiv.insertBefore(oDiv,null));//<div>newDiv</div>
+}
+</script>
+
+
 
 
 
