@@ -36,9 +36,9 @@
     - [浏览器兼容](/doc/JavaScript/advanced/浏览器兼容.md) 
     - [SEO搜索引擎优化](/doc/JavaScript/advanced/html-SEO搜索引擎优化.md) 
   - dom
-    - [dom节点-1节点的类型](/doc/JavaScript/dom/dom节点-1类型.md)
-    - [dom节点-2节点的关系](/doc/JavaScript/dom/dom节点-2关系.md)
-    - [dom节点-3节点的操作](/doc/JavaScript/dom/dom节点-2操作.md)
+    - [dom节点-1节点的类型](/doc/JavaScript/dom/dom-1节点的类型.md)
+    - [dom节点-2节点的关系](/doc/JavaScript/dom/dom-2节点的关系.md)
+    - [dom节点-3节点的操作](/doc/JavaScript/dom/dom-3节点的操作.md)
 - CSS
   - [position定位](/doc/css/CSS-定位.md)
   - [常见样式下](/doc/css/CSS常见样式下.md)
