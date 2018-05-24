@@ -39,6 +39,7 @@
     - [dom节点-1节点的类型](/doc/JavaScript/dom/dom-1节点的类型.md)
     - [dom节点-2节点的关系](/doc/JavaScript/dom/dom-2节点的关系.md)
     - [dom节点-3节点的操作](/doc/JavaScript/dom/dom-3节点的操作.md)
+  - [JavaScript设计模式](/doc/JavaScript/designPattern/设计模式文档.md)
 - CSS
   - [position定位](/doc/css/CSS-定位.md)
   - [常见样式下](/doc/css/CSS常见样式下.md)
@@ -61,3 +62,4 @@
   - [Emmet语法(HTML标签补全)](/doc/other/Emmet语法(HTML标签补全).md)
   - [JS-需要编写的文档](/doc/other/JS-需要编写的文档.md)
   - [z-临时文件](/doc/other/z-临时文件.md)
+

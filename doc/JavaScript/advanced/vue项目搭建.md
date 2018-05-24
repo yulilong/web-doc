@@ -1,18 +1,6 @@
 [TOC]
 
-## 1. 创建一个仓库
-
-可在网站创建好一个仓库后，clone到本地。
-
-或者在本地新建一个目录，终端打开这个目录后：`git init`,然后添加一个远程仓库
-
-## 2.  初始化一个package.json
-
-终端中：`npm init -y`, 此命令执行结束后，会自动生成一个package.json文件
-
-
-
-## 3. 安装vue-cli脚手架
+## 1. 安装vue-cli脚手架
 
 ```
 $ npm install -g vue-cli
@@ -28,9 +16,9 @@ added 6 packages from 2 contributors, removed 18 packages and updated 43 package
 
 注意：此文档使用的vue-cli版本是`2.9.3`.
 
-## 4. vue init webpack:通过webpack来创建一个项目
+## 2. vue init webpack:通过webpack来创建一个项目
 
-应为上面已经创建目录了，所以直接在这个目录中构建一个项目：
+如果已经创建目录了，可以在这个目录中构建一个项目：
 
 ```
 vue init webpack .
@@ -113,7 +101,7 @@ Documentation can be found at https://vuejs-templates.github.io/webpack
 
 ```
 
-## 5. 打开项目安装依赖运行
+## 3. 打开项目安装依赖运行
 
 使用vue-cli创建好一个项目后打开项目，运行`npm install`安装依赖包，依赖包装好后即可启动项目：
 
@@ -123,9 +111,9 @@ npm install 	// 安装依赖包
 npm start		// 启动服务
 ```
 
-## 6. 设置支持scss、less
+## 4. 设置支持scss、less
 
-### 6.1 安装less、scss依赖
+### 4.1 安装less、scss依赖
 
 ```
 ~ npm install less less-loader --save-dev	// 安装 less依赖
@@ -140,7 +128,7 @@ added 39 packages from 67 contributors in 21.585s
 added 85 packages from 88 contributors in 52.185s
 ```
 
-### 6.2 在webpack配置文件中配置
+### 4.2 在webpack配置文件中配置
 
 如果是通过vue-cli来构建的项目，那么vue-cli已经帮我们配置好了，只不过没有安装依赖包。
 
@@ -177,7 +165,7 @@ exports.styleLoaders = function (options) {
 
 
 
-### 6.3 scss、less在文件用使用
+### 4.3 scss、less在文件用使用
 
 在`app.vue`文件中的用法
 
