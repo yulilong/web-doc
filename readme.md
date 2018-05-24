@@ -40,6 +40,9 @@
     - [dom节点-2节点的关系](/doc/JavaScript/dom/dom-2节点的关系.md)
     - [dom节点-3节点的操作](/doc/JavaScript/dom/dom-3节点的操作.md)
   - [JavaScript设计模式](/doc/JavaScript/designPattern/设计模式文档.md)
+  - vue、react框架模板搭建
+    - [使用vue-cli搭建一个空项目](/doc/JavaScript/advanced/vue项目搭建.md)
+    - [使用create-react-app搭建一个空项目](/doc/JavaScript/advanced/react项目搭建.md)
 - CSS
   - [position定位](/doc/css/CSS-定位.md)
   - [常见样式下](/doc/css/CSS常见样式下.md)
@@ -53,6 +56,7 @@
   - [深入浅出-8动态REM](/doc/css/CSS深入浅出-8动态REM.md)
   - [浏览器兼容](/doc/css/CSS-浏览器兼容.md)
   - [垂直水平居中](/doc/css/CSS垂直水平居中.md)
+  - [Normalize.css和Reset CSS](/doc/css/Normalize.css和Reset CSS.md)
 - 其他
   - [前端笔试编程题](/doc/other/前端笔试编程题.md)
   - [前端面试题](/doc/other/前端面试题.md)
@@ -62,4 +66,3 @@
   - [Emmet语法(HTML标签补全)](/doc/other/Emmet语法(HTML标签补全).md)
   - [JS-需要编写的文档](/doc/other/JS-需要编写的文档.md)
   - [z-临时文件](/doc/other/z-临时文件.md)
-

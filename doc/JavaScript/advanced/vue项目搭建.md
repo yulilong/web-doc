@@ -205,6 +205,85 @@ exports.styleLoaders = function (options) {
 <!-- 如果没加scoped 则没有data-v-7ba5bd90  --->
 ```
 
+## vue项目的目录结构
+
+```
+.
+├── build/               # Webpack 配置目录
+├── dist/                # build 生成的生产环境下的项目
+├── src/                 # 源码目录（开发都在这里进行）
+│   ├── assets/            # 放置需要经由 Webpack 处理的静态文件
+│   ├── components/        # 组件
+│   ├── filters/           # 过滤器
+│   ├── mixins/            
+│   ├── routes/            # 路由
+│   ├── services/          # 服务（统一管理 XHR 请求）
+│   ├── utils/             # 工具类
+│   ├── views/             # 路由页面组件
+│   ├── app.js             # 启动文件
+│   ├── index.html         # 静态基页
+├── static/              # 放置无需经由 Webpack 处理的静态文件
+├── .babelrc             # Babel 转码配置
+├── .eslintignore        # （配置）ESLint 检查中需忽略的文件（夹）
+├── .eslintrc            # ESLint 配置
+├── .gitignore           # （配置）需被 Git 忽略的文件（夹）
+├── package.json         # （这个就不用多解释了吧）
+```
+
+上述目录结构中，需要注意的是 `src/components/` 与 `src/views/` 的区别
+
+`src/components/`
+
+- 主要是全局性的，或通用性很强的组件，具备良好的封装性
+- 一般不会涉及到具体的业务逻辑
+
+`src/views/`
+
+- 主要是业务性的页面组件，基本不具备通用性
+- 基本与路由一一对应（例如 `/src/views/auth/login.vue` 对应着路由 `/auth/login`）
+- 各功能模块（如 `msg/`）内部可分离出通用部分（如 `_components/`、`_mixins/`）
+
+> 若多个功能模块通用的，则建议移到全局，即 `src/components/`、`src/mixins/` 等
+
+```
+├── README.md                           项目介绍
+├── package.json                        npm包配置文件
+├── index.html                          入口页面
+├── build                               构建脚本目录
+│   ├── build.js                            生产环境构建脚本
+│   ├── utils.js                            构建相关工具方法
+│   ├── webpack.base.conf.js                wabpack基础配置
+│   ├── webpack.dev.conf.js                 wabpack开发环境配置
+│   └── webpack.prod.conf.js                wabpack生产环境配置
+├── config                              项目配置
+│   ├── dev.env.js                          开发环境变量
+│   ├── index.js                            项目配置文件
+│   └── prod.env.js                         生产环境变量
+├── src                                 源码目录
+│   ├── main.js                             入口js文件
+│   ├── app.vue                             根组件
+│   ├── assets                              资源目录
+│   │   ├── js                                  自己编写的js文件目录
+│   │   └── scss                                自己编写的scss文件目录
+│   ├── components                          公共组件目录
+│   │   ├── base                                基础功能组件目录
+│   │   └── business                            业务功能组件目录
+│   ├── filters                             自定义过滤器目录
+│   ├── router                              前端路由目录
+│   │   └── index.js
+│   └── views                               页面目录
+│       └── home-page                           视图组件目录
+│           ├── HomePage.vue                        视图组件
+│           ├── HomePageHeader.vue                  从属视图组件
+│           └── dash-board                            子视图组件目录
+│               ├── DashBoard.vue                         子视图组件
+│               └── DashBoardHeader.vue                   子从属视图组件
+└── static                              纯静态资源，不会被wabpack构建
+    ├── css                                 第三方css文件目录
+    ├── images                              所有图片目录   
+    └── js                                  第三方js文件目录
+```
+
 
 
 
@@ -212,4 +291,6 @@ exports.styleLoaders = function (options) {
 ## 参考资料
 
 [vue-cli构建项目使用 less](http://www.cnblogs.com/zhuzhenwei918/p/6870340.html)
+
+[VUE项目目录结构](https://github.com/kenberkeley/vue-demo/blob/master/docs/zh-cn/Structure.md)
 
