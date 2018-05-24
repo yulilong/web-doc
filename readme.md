@@ -39,6 +39,7 @@
     - [dom节点-1节点的类型](/doc/JavaScript/dom/dom-1节点的类型.md)
     - [dom节点-2节点的关系](/doc/JavaScript/dom/dom-2节点的关系.md)
     - [dom节点-3节点的操作](/doc/JavaScript/dom/dom-3节点的操作.md)
+    - [dom节点-4-HTMLCollection-NodeList](/doc/JavaScript/dom/dom-4-动态集合NodeLIst-HTMLCollection.md)
   - [JavaScript设计模式](/doc/JavaScript/designPattern/设计模式文档.md)
   - vue、react框架模板搭建
     - [使用vue-cli搭建一个空项目](/doc/JavaScript/advanced/vue项目搭建.md)
