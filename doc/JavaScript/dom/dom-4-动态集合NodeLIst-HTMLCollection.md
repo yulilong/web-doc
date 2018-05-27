@@ -172,7 +172,81 @@ HTML DOM 中的 `HTMLCollection` 是即时更新的（live）；当其所包�
 
 ## 3. NamedNodeMap
 
+NamedNodeMap 接口表示属性节点 [`Attr`](https://developer.mozilla.org/zh-CN/docs/Web/API/Attr) 对象的集合。尽管在 `NamedNodeMap` 里面的对象可以像数组一样通过索引来访问，但是它和 [`NodeList`](https://developer.mozilla.org/zh-CN/docs/Web/API/NodeList) 不一样，对象的顺序没有指定。
 
+`NamedNodeMap` 对象是即时的(*live*)，因此，如果它内部包含的对象发生改变的话，该对象会自动更新到最新的状态。
+
+- 属性: *该接口没有继承任何属性。*
+
+  > length: 只读， 返回映射(map)中对象的数量。
+
+- 方法
+
+  > getNamedItem() : 返回一个给定名字对应的属性节点
+  >
+  > setNamedItem(): 替换或添加一个属性节点到映射（map）中。
+  >
+  > removeNamedItem(): 移除一个属性节点
+  >
+  > item(): 返回指定索引处的属性节点，当索引超出或等于属性节点的数量时，返回 `null`
+
+```html
+<style type="text/css">
+.democlass{ color:red; }
+</style>
+<div id="test" datat-tt="pp">123</div>
+<script>
+    var att = test.attributes;	
+    // NamedNodeMap {0: id, 1: datat-tt, 2: class, id: id,
+    console.log(att.length);	// 2
+    
+    console.log(att.getNamedItem('id'));	// id="test"
+    var typ=document.createAttribute("class");
+    typ.nodeValue="democlass";
+    att.setNamedItem(typ);	// 此时页面上字体会变红
+    att.removeNamedItem('class');// class="democlass" 此时类已经删除了，颜色恢复了
+    att.item(0);	// id="test"
+    
+</script>   
+```
+
+该对象也是一个动态集合:
+
+```html
+<div id="test"></div>
+<script>
+    var attrs = test.attributes;
+    console.log(attrs);//NamedNodeMap {0: id, length: 1}
+    test.setAttribute('title','123');
+    console.log(attrs);//NamedNodeMap {0: id, 1: title, length: 2}
+</script>
+```
+
+
+
+## 4. 遍历动态集合注意事项
+
+动态集合是个很实用的概念，但在使用循环时一定要千万小心。可能会因为忽略集合的动态性，造成死循环
+
+```java
+var divs = document.getElementsByTagName("div");
+for(var i = 0 ; i < divs.length; i++){
+    document.body.appendChild(document.createElement("div"));
+}
+```
+
+在上面代码中，由于divs是一个HTMLElement集合，divs.length会随着appendChild()方法，而一直增加，于是变成一个死循环
+
+　　为了避免此情况，一般地，可以写为下面形式
+
+```javascript
+var divs = document.getElementsByTagName("div");
+for(var i = 0,len = divs.length; i < len; i++){
+    document.body.appendChild(document.createElement("div"));
+}
+```
+
+ 　　一般地，要尽量减少访问NodeList、HTMLCollection、NamedNodeMap的次数。因为每次访问它们，都会运行一次基于文档的查询。所以，可以考虑将它们的值缓存起来
 
 
 
@@ -187,4 +261,8 @@ HTML DOM 中的 `HTMLCollection` 是即时更新的（live）；当其所包�
 [NodeList MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/NodeList)
 
 [HTMLCollection  MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLCollection)
+
+[Attr MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Attr)
+
+[深入理解javascript中的动态集合——NodeList、HTMLCollection和NamedNodeMap](http://www.cnblogs.com/xiaohuochai/p/5827389.html)
 

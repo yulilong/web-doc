@@ -35,11 +35,13 @@
     - [常用的代码片段](/doc/JavaScript/advanced/常用的代码片段.md) 
     - [浏览器兼容](/doc/JavaScript/advanced/浏览器兼容.md) 
     - [SEO搜索引擎优化](/doc/JavaScript/advanced/html-SEO搜索引擎优化.md) 
+    - [手机端页面开发](/doc/JavaScript/advanced/手机端页面开发.md) 
   - dom
     - [dom节点-1节点的类型](/doc/JavaScript/dom/dom-1节点的类型.md)
     - [dom节点-2节点的关系](/doc/JavaScript/dom/dom-2节点的关系.md)
     - [dom节点-3节点的操作](/doc/JavaScript/dom/dom-3节点的操作.md)
     - [dom节点-4-HTMLCollection-NodeList](/doc/JavaScript/dom/dom-4-动态集合NodeLIst-HTMLCollection.md)
+    - [dom-5-Element](/doc/JavaScript/dom/dom-5Element.md)
   - [JavaScript设计模式](/doc/JavaScript/designPattern/设计模式文档.md)
   - vue、react框架模板搭建
     - [使用vue-cli搭建一个空项目](/doc/JavaScript/advanced/vue项目搭建.md)
