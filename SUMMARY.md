@@ -2,8 +2,8 @@
 
 * [说明](readme.md)
 * HTML
-  - [HTML5-特性说明](/doc/HTML5-特性说明.md)   
-  - [input标签介绍](/doc/HTML5-input标签介绍.md)   
+  - [HTML5-特性说明](/doc/html/HTML5-特性说明.md)   
+  - [input标签介绍](/doc/html/HTML5-input标签介绍.md)   
   - [HTML字符实体](/doc/html/HTML字符实体.md)
 * JavaScript  
   * [正则表达式](/doc/JavaScript/JS-正则表达式.md) 
@@ -56,5 +56,5 @@
   - [饥人谷课堂笔记](/doc/other/饥人谷课堂笔记.md)
   - [饥人谷每天一到面试题](/doc/other/饥人谷每天一到面试题.md)
   - [Emmet语法(HTML标签补全)](/doc/other/Emmet语法(HTML标签补全).md)
-  - [JS-需要编写的文档](/doc/other/JS-需要编写的文档.md)
+  - [JS-需要编写的文档](/doc/JS-需要编写的文档.md)
   - [z-临时文件](/doc/other/z-临时文件.md)

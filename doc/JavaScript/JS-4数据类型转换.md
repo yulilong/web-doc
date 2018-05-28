@@ -20,7 +20,7 @@ JavaScript是一种动态类型语言，变量没有类型限制，可以随时�
 
 ### 2.1 强制转为数字：Number()、parseInt()、parseFloat(string)
 
-#### 2.1.1 Number(value)
+#### 2.1.1 Number(value) 
 
 介绍：将其他类型的值转化成数字。Number函数整体转换，有一个无法转换就会返回NaN，parseInt和parseFloat则是逐个解析字符。
 
@@ -53,7 +53,7 @@ JavaScript是一种动态类型语言，变量没有类型限制，可以随时�
 
   ​
 
-#### 2.1.2 parseInt(string, radix)
+#### 2.1.2 parseInt(string, radix) 
 
 介绍：解析一个字符串参数，并返回一个指定数字进制格式(二、十、十六进制)。
 
@@ -112,9 +112,9 @@ rseFloat('dsss')				// NaN
 | String    | 不变                                                  | String('abc') // "abc"           |
 | Boolean   | true： "true", false: "false"                         | String(true) // "true"           |
 | undefined | "undefined"                                           | String(undefined) // "undefined" |
-| null      | "null"                                                | String(null) // "null"           |
+| null      | " null"                                               | String(null) // "null"           |
 | Object    | `{a: 1}`: "[object Object]",  数组:  数组的字符串形式 | String([1, 2, 3]) // "1, 2, 3"   |
-| NaN       | "NaN"                                                 | String(NaN)  // "NaN"            |
+| NaN       | "NaN"                                                 | String(NaN)  // NaN"             |
 
 - String对于对象的转换规则：
 
@@ -130,10 +130,12 @@ rseFloat('dsss')				// NaN
   String(obj)
   ```
 
+
 #### 2.2.1 其他转为字符串的方法
 
-1. "" + value
-2. value.toString()
+  1. "" + value
+  2. value.toString()
+
 
 ### 2.3 强转为布尔：Boolean()
 
@@ -167,7 +169,7 @@ Boolean(new Boolean(false))	// true
 
 
 
-## 3. 自动类型转换
+##  3. 自动类型转换
 
 自动转换是以强制转换为基础的，JavaScript会自动转换数据类型。
 
@@ -192,6 +194,103 @@ if ('abc') {}
 
 对于`a == b`的比较规则：
 
-|      |
-| ---- |
-|      |
+| 类型                   | 转换规则                                                     |
+| ---------------------- | ------------------------------------------------------------ |
+| **都是原始类型的值**   | 转换成数值类型再进行比较                                     |
+| **对象与原始类型的值** | 对象转化成原始类型的值，再进行比较。                         |
+| **undefined 和 null**  | 与其他类型的值比较时，结果都为`false`，它们互相比较时结果为`true` |
+
+```javascript
+1 == true 		// true		等同于 1 === Number(true)
+2 == true 		// false 	等同于 2 === Number(true)
+'true' == true 	// false 	等同于 Number('true') === Number(true) => NaN === 1
+'' == 0 		// true  	等同于 Number('') === 0
+'' == false  	// true  	等同于 Number('') === Number(false)
+'\n  123  \t' == 123 // true
+[1] == 1 		// true  	等同于 Number([1]) == 1
+[1] == '1'	 	// true 	等同于 Number([1]) == Number('1')
+[1] == true 	// true 	等同于 Number([1]) == Number(true)
+false == undefined 	// false 
+0 == undefined 		// false
+undefined == null 	// true
+```
+
+详细：[相等运算符 阮一峰](http://javascript.ruanyifeng.com/grammar/operator.html#toc13)
+
+### 3.2 自动转换为布尔值
+
+JavaScript遇到期望布尔值的时候(如if语句)，就会将非布尔值的参数转为布尔值，系统自动调用Boolean函数。
+
+```javascript
+if (!undefined) {}	//
+expression ? true : false
+!! expression
+```
+
+### 3.3 自动转换为字符串
+
+遇到期望为字符串的地方，就会将参数转为字符串，转换规则：先将复合类型的值转为原始类型的值，再将原始类型的值转为字符串。
+
+- 当字符串与其他变量做加法运算的时候，如果变量不是字符串，变量就会转为字符串。
+
+```javascript
+'5' + 1 	// '51'
+'5' + true 	// "5true"
+'5' + false // "5false"
+'5' + {} 	// "5[object Object]"
+'5' + [] 	// "5"
+'5' + function (){} // "5function (){}"
+'5' + undefined 	// "5undefined"
+'5' + null 			// "5null"
+var obj = { width: '100' };
+obj.width + 20	 	// "10020"
+```
+
+### 3.4 自动转换为数值
+
+遇到期望为数值的地方，就会将参数自动转为数值，系统自动调用Number函数。
+
+- 除加法运算符(+)有可能把变量转为字符串，其他运算符都会把变量自动转为数值：
+
+```javascript
+'5' - '2' 		// 3
+'5' * '2' 		// 10
+true - 1  		// 0
+false - 1 		// -1
+'1' - 1   		// 0
+'5' * []    	// 0
+false / '5' 	// 0
+'abc' - 1   	// NaN
+null + 1 		// 1
+undefined + 1 	// NaN
+```
+
+- 一元运算符也会把运算子转成数值
+
+  ```javascript
+  +'abc' 	// NaN
+  -'abc' 	// NaN
+  +true 	// 1
+  -false 	// 0
+  ```
+
+  ​
+
+## 参考资料
+
+
+
+[Number() MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number)
+
+[parseInt() MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/parseInt)
+
+[parseFloat() MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/parseFloat)
+
+[JavaScript 中 Number()、parseInt()、parseFloat()的区别](http://www.cnblogs.com/zxjwlh/p/6258045.html)
+
+[数据类型转换 阮一峰](http://javascript.ruanyifeng.com/grammar/conversion.html)
+
+[运算符 阮一峰](http://javascript.ruanyifeng.com/grammar/operator.html)
+
+
+
