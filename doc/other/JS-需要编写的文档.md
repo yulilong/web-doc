@@ -37,3 +37,13 @@ http请求
 http://rapheal.sinaapp.com/tag/uglifyjs/
 
 转载请注明原文链接（<https://github.com/LiPinghai/UglifyJSDocCN/blob/master/README.md> ）与作者信息。
+
+
+
+exports 和 module.exports 的区别
+
+https://cnodejs.org/topic/5231a630101e574521e45ef8
+
+https://www.jianshu.com/p/e452203d56c4
+
+http://nodejs.cn/api/modules.html

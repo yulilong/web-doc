@@ -360,6 +360,58 @@ module.exports = {
 
 https://github.com/johnagan/clean-webpack-plugin/issues/10
 
+### 2. 复制静态文件到打包目录：Copy Webpack Plugin
+
+安装：`npm i -D copy-webpack-plugin`
+
+用法，在webpack配置文件中：
+
+```javascript
+var CopyWebpackPlugin = require("copy-webpack-plugin"); // 复制静态资源到打包目录
+function resolve(dir){//因为自己改变了文件的路径，这里需要重新处理一下
+    return path.join(__dirname,"..",dir);
+}
+module.exports = {
+    plugins: [
+        new CopyWebpackPlugin([{
+            from: resolve("./static"),
+            to:resolve("./dist/static"),
+         }]),
+    ]
+}
+```
+
+插件的参数：
+
+```
+from    定义要拷贝的源目录           from: __dirname + ‘/src/public’
+to      定义要拷贝到的目标目录     from: __dirname + ‘/dist’
+toType  file 或者 dir         可选，默认是文件
+force   强制覆盖先前的插件           可选 默认false
+context                         可选 默认base context可用specific context
+flatten 只拷贝文件不管文件夹      默认是false
+ignore  忽略拷贝指定的文件           可以用模糊匹配
+```
+
+参考：[webpack中经典实用的插件copy-webpack-plugin拷贝资源插件](https://blog.csdn.net/wbiokr/article/details/73011288)
+
+这个插件主要用于html引入js、css、不需要webpack编译的大文件：
+
+如在HTML文件引入JS文件：
+
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="./static/js/rem.js"></script>
+</head>
+<body>
+	<div>我是代码</div>
+</body>
+</html>
+```
+
 
 
 ## 参考资料
