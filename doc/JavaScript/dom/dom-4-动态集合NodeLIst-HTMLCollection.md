@@ -222,6 +222,15 @@ NamedNodeMap 接口表示属性节点 [`Attr`](https://developer.mozilla.org/z
 </script>
 ```
 
+## 4. CSSStyleDeclaration
+
+代表css键值对的集合，它在一些API中被使用:
+
+- HTMLele.style 用于操作单个元素的样式`<ele style="...">`
+- 在getComputedStyle中应用：CSSStyleDeclaration是window.getComputedStyle()返回的只读接口，其中每个键都有值，或被设置的值或默认的值。
+
+ 
+
 
 
 ## 4. 遍历动态集合注意事项
@@ -265,4 +274,10 @@ for(var i = 0,len = divs.length; i < len; i++){
 [Attr MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Attr)
 
 [深入理解javascript中的动态集合——NodeList、HTMLCollection和NamedNodeMap](http://www.cnblogs.com/xiaohuochai/p/5827389.html)
+
+[那些困扰你的DOM集合类型](https://blog.csdn.net/zjjbobo/article/details/44114027)
+
+[Window.getComputedStyle()  MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/getComputedStyle)
+
+
 

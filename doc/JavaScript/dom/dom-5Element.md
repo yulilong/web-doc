@@ -105,8 +105,78 @@ document.documentElement.parentNode	// #document
 </script>
 ```
 
-- 元素还能通过继承HTML某元素Element.prototype上的一些属性，比如input元素的HTMLInputElement.prototype上的disabled可以通过inputele.disabled取得或设置值。
+- 元素还能通过继承HTML某元素Element.prototype上的一些特性，比如input元素的disabled属性继承自HTMLInputElement.prototype上的disabled，可以通过`.disabled`取得或设置值:
+
+  ```html
+  输入<input id="inp" type="text">
+  <input disabled> <!-- 也可以在标签里写-->
+  <script>
+      var input = document.getElementById('inp');
+      // <input id="inp" type="text">
+      input.disabled;	// false
+      input.disabled = true;	// 此时输入框禁止输入了
+  </script>
+  ```
+
 - HTML5规范对自定义特性做了增强，只要自定义特性以'data-attrName'形式写到html标签中（setAttribute或直接html代码存在均可），在DOM属性中就可通过ele.dataset.attrName形式访问自定义特性。
+
+  dataset属性继自HTMLElement.prototype，它的值是DOMStringMap的实例集合，原型链继承关系为：ele.dataset.__proto__->DOMStringMap.prototype->Object.prototype。
+
+  ```html
+  <div id="one" data-aa="a" data-bb="b" data-cc="c">自定义的属性</div>
+  <script>
+      var one = document.getElementById('one');
+      one.dataset;	// DOMStringMap {aa: "a", bb: "b", cc: "c"}
+      one.dataset.aa;	// "a"
+  </script>
+  ```
+
+- 特姓名不区分大小写，getAttribute('id')和getAttribute('ID')都代表同一个特性。
+
+  ```html
+  <div id="one" data-aa="a" data-bb="b" data-cc="c">自定义的属性</div>
+  <script>
+      var one = document.getElementById('one');
+      one.getAttribute('id');	// "one"
+      one.getAttribute('iD');	// "one"
+      one.getAttribute('ID');	// "one"
+  </script>
+  ```
+
+### 3.1 两个特殊的特性
+
+虽然有对应的属性名，但属性的值与通过getAttribute()返回的值并不相同。
+
+#### 3.1.1 style：用于通过css为元素指定样式
+
+style属性继承自HTMLElement.prototype
+
+- 通过getAttribute()访问返回的**style特性值（在标签中定义的）**中包含CSS文本
+- 通过style属性访问返回一个CSSStyleDeclaration类型集合对象，由于style属性是用于以编程方式访问访问元素样式的因此并没有直接映射到style特性,获得的集合中的属性只有已设置的才有值，其余的属性为空字符串即使它们都有默认值。
+
+```html
+<style> #one { border: 1px solid; background: green; } </style>
+ <div id="one" style="color:red">style</div>
+<script>
+    var one = document.getElementById('one');
+    one.getAttribute('style');	// "color:red"
+    one.style;
+    // CSSStyleDeclaration {0: "color", alignContent: "", alignItems: "", alignSelf: "", alignmentBaseline: "", all: "", …}
+</script>
+```
+
+从上面的结果可以看出，只有在标签上设置了style特性的值才会出现在结果中。
+
+通过`.style`属性返回的结果是CSSStyleDeclaration类型实例集合，原型链继承关系为：div.style.__proto__->CSSStyleDeclaration.prototype->Object.prototype
+
+```javascript
+Object.getOwnPropertyNames(CSSStyleDeclaration)
+// (5) ["length", "name", "arguments", "caller", "prototype"]
+Object.getOwnPropertyNames(CSSStyleDeclaration.prototype)
+// (10) ["cssText", "length", "parentRule", "cssFloat", "item", "getPropertyValue", "getPropertyPriority", "setProperty", "removeProperty", "constructor"]
+```
+
+
 
 
 
@@ -121,4 +191,6 @@ document.documentElement.parentNode	// #document
 [HTML DOM 元素对象 菜鸟教程](http://www.runoob.com/jsref/dom-obj-all.html)
 
 [Element  MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Element)
+
+[JS魔法堂：属性、特性，傻傻分不清楚](https://www.cnblogs.com/fsjohnhuang/p/3840263.html)
 
