@@ -194,3 +194,9 @@ Object.getOwnPropertyNames(CSSStyleDeclaration.prototype)
 
 [JS魔法堂：属性、特性，傻傻分不清楚](https://www.cnblogs.com/fsjohnhuang/p/3840263.html)
 
+[window.getComputedStyle()方法的使用 CSDN](https://blog.csdn.net/s110902/article/details/73312802?locationNum=12&fps=1)
+
+[Window.getComputedStyle()  MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/getComputedStyle)
+
+[Element对象  阮一峰](http://javascript.ruanyifeng.com/dom/element.html)
+

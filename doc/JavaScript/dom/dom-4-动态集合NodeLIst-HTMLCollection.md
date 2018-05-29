@@ -224,12 +224,42 @@ NamedNodeMap 接口表示属性节点 [`Attr`](https://developer.mozilla.org/z
 
 ## 4. CSSStyleDeclaration
 
-代表css键值对的集合，它在一些API中被使用:
+CSSStyleDeclaration 类表示一组 CSS 样式规则。MXML 编译器在和 Flex 应用程序关联的 CSS 文件中为每个选择器自动生成一个 CSSStyleDeclaration 对象。
 
-- HTMLele.style 用于操作单个元素的样式`<ele style="...">`
-- 在getComputedStyle中应用：CSSStyleDeclaration是window.getComputedStyle()返回的只读接口，其中每个键都有值，或被设置的值或默认的值。
+CSSStyleDeclaration 表示一个CSS属性键值对的集合。它被用于一些API中：
 
- 
+- 元素节点的`style`属性（`Element.style`）
+- `CSSStyle`实例的`style`属性
+- `window.getComputedStyle()`的返回值 
+
+CSSStyleDeclaration 接口可以直接读写 CSS 的样式属性，不过，连词号需要变成骆驼拼写法。
+
+```html
+<div></div>
+<script>
+    var divStyle = document.querySelector('div').style;
+    divStyle.backgroundColor = 'red';
+    divStyle.border = '1px solid black';
+    divStyle.width = '100px';
+    divStyle.height = '100px';
+    divStyle.fontSize = '10em';
+
+    divStyle.backgroundColor // red
+    divStyle.border // 1px solid black
+    divStyle.height // 100px
+    divStyle.width // 100px
+</script>
+```
+
+上面代码中，`style`属性的值是一个 CSSStyleDeclaration 实例。这个对象所包含的属性与 CSS 规则一一对应，但是名字需要改写，比如`background-color`写成`backgroundColor`。改写的规则是将横杠从 CSS 属性名中去除，然后将横杠后的第一个字母大写。如果 CSS 属性名是 JavaScript 保留字，则规则名之前需要加上字符串`css`，比如`float`写成`cssFloat`。
+
+注意，该对象的属性值都是字符串，设置时必须包括单位，但是不含规则结尾的分号。比如，`divStyle.width`不能写为`100`，而要写为`100px`。
+
+另外，`Element.style`返回的只是行内样式，并不是该元素的全部样式。通过样式表设置的样式，或者从父元素继承的样式，无法通过这个属性得到。元素的全部样式要通过`window.getComputedStyle()`得到。
+
+
+
+接着编写：http://javascript.ruanyifeng.com/dom/css.html#toc1
 
 
 
@@ -278,6 +308,8 @@ for(var i = 0,len = divs.length; i < len; i++){
 [那些困扰你的DOM集合类型](https://blog.csdn.net/zjjbobo/article/details/44114027)
 
 [Window.getComputedStyle()  MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/getComputedStyle)
+
+[CSSStyleDeclaration 接口  阮一峰](http://javascript.ruanyifeng.com/dom/css.html#toc1)
 
 
 
