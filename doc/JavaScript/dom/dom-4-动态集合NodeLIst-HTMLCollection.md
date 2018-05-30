@@ -229,8 +229,16 @@ CSSStyleDeclaration 类表示一组 CSS 样式规则。MXML 编译器在和 Flex
 CSSStyleDeclaration 表示一个CSS属性键值对的集合。它被用于一些API中：
 
 - 元素节点的`style`属性（`Element.style`）
+
+  `Element.style`返回的只是行内样式，并不是该元素的全部样式。
+
+  通过样式表设置的样式，或者从父元素继承的样式，无法通过这个属性得到。
+
 - `CSSStyle`实例的`style`属性
+
 - `window.getComputedStyle()`的返回值 
+
+  返回的是元素的全部样式
 
 CSSStyleDeclaration 接口可以直接读写 CSS 的样式属性，不过，连词号需要变成骆驼拼写法。
 
@@ -238,15 +246,14 @@ CSSStyleDeclaration 接口可以直接读写 CSS 的样式属性，不过，连�
 <div></div>
 <script>
     var divStyle = document.querySelector('div').style;
+    // CSSStyleDeclaration {alignContent: "", alignItems: "", alignSelf: "", alignmentBaseline: "", all: "", …}
     divStyle.backgroundColor = 'red';
     divStyle.border = '1px solid black';
     divStyle.width = '100px';
-    divStyle.height = '100px';
     divStyle.fontSize = '10em';
 
     divStyle.backgroundColor // red
     divStyle.border // 1px solid black
-    divStyle.height // 100px
     divStyle.width // 100px
 </script>
 ```
@@ -255,11 +262,95 @@ CSSStyleDeclaration 接口可以直接读写 CSS 的样式属性，不过，连�
 
 注意，该对象的属性值都是字符串，设置时必须包括单位，但是不含规则结尾的分号。比如，`divStyle.width`不能写为`100`，而要写为`100px`。
 
-另外，`Element.style`返回的只是行内样式，并不是该元素的全部样式。通过样式表设置的样式，或者从父元素继承的样式，无法通过这个属性得到。元素的全部样式要通过`window.getComputedStyle()`得到。
+### 4.1 CSSStyleDeclaration 实例属性
 
+#### 4.1.1 CSSStyleDeclaration.cssText
 
+cssText属性用来读写当前规则的所有样式声明文本
 
-接着编写：http://javascript.ruanyifeng.com/dom/css.html#toc1
+删除一个元素的所有行内样式，最简单方法就是设置cssText的值为空字符串
+
+#### 4.1.2 CSSStyleDeclaration.length
+
+length属性返回一个整数值，表示当前规则包含多少条样式声明。
+
+#### 4.1.3 CSSStyleDeclaration.parentRule
+
+parentRule属性返回当前规则所属的那个样式块（CSSRule 实例）。如果不存在所属的样式块，该属性返回`null`。
+
+该属性只读，且只在使用 CSSRule 接口时有意义。
+
+```html
+<style>.one {font-size: 60px; border: 2px solid;}</style>
+<div class="one" style="width: 300px;">one</div>
+<script>
+    // cssText
+    var one = document.querySelector('.one').style;
+    one.cssText;	// "width: 300px;" 仅显示行内样式
+    one.cssText += "background-color: red; font-size:20px";// 此时背景色变红
+    // "width: 300px;background-color: red; font-size:20px"
+    tt = window.getComputedStyle(document.querySelector('.one'));
+    tt.cssText;	// 会显示所有样式， 但是 只读。
+    
+    // length
+    one.length;	// 3 "width: 300px;background-color: red; font-size:20px"
+    tt.length;	// 283
+    
+    // parentRule
+    var declaration = document.styleSheets[0].rules[0].style;
+	declaration.parentRule === document.styleSheets[0].rules[0]
+	// true
+</script>
+```
+
+删除一个元素的所有行内样式：
+
+```javascript
+one.cssText = "";	// ""  此时会清空所有行内样式
+```
+
+### 4.2 CSSStyleDeclaration 实例方法
+
+#### 4.2.1 getPropertyPriority()
+
+getPropertyPriority()方法接受 CSS 样式的属性名作为参数，返回一个字符串，表示有没有设置`important`优先级。如果有就返回`important`，否则返回空字符串。
+
+#### 4.2.2 getPropertyValue()
+
+getPropertyValue()方法接受 CSS 样式属性名作为参数，返回一个字符串，表示该属性的属性值。
+
+#### 4.2.3 item()
+
+item()方法接受一个整数值作为参数，返回该位置的 CSS 属性名。
+
+#### 4.2.4 removeProperty()
+
+removeProperty()方法接受一个属性名作为参数，在 CSS 规则里面移除这个属性，返回这个属性原来的值。
+
+#### 4.2.5 setProperty()
+
+setProperty()方法用来设置新的 CSS 属性。该方法没有返回值。
+
+ 该方法可以接受三个参数:
+
+> 第一个参数：属性名，该参数是必需的。
+>
+> 第二个参数：属性值，该参数可选。如果省略，则参数值默认为空字符串。
+>
+>  第三个参数：优先级，该参数可选。如果设置，唯一的合法值是`important`，表示 CSS 规则里面的`!important`。
+
+#### 4.2.6 方法使用例子
+
+```html
+<div class="one" style="margin: 10px!important; color: red;">one</div>
+<script>
+    // getPropertyPriority()
+    var one = document.querySelector('.one').style;
+    one.margin;		// "10px"
+    one.getPropertyPriority('margin');	// "important"
+    one.getPropertyPriority('color'); 	// ""
+</script>
+```
 
 
 
