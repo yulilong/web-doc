@@ -47,3 +47,8 @@ https://cnodejs.org/topic/5231a630101e574521e45ef8
 https://www.jianshu.com/p/e452203d56c4
 
 http://nodejs.cn/api/modules.html
+
+
+
+[CSS中可以和不可以继承的属性](https://www.cnblogs.com/thislbq/p/5882105.html)
+
