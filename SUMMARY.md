@@ -25,6 +25,7 @@
     - [浏览器兼容](/doc/JavaScript/advanced/浏览器兼容.md) 
     - [SEO搜索引擎优化](/doc/JavaScript/advanced/html-SEO搜索引擎优化.md) 
     - [手机端页面开发](/doc/JavaScript/advanced/手机端页面开发.md) 
+    - [原生JS实现一些页面组件](/doc/JavaScript/advanced/原生JS实现一些页面组件.md) 
   * dom
     - [dom节点-1节点的类型](/doc/JavaScript/dom/dom-1节点的类型.md)
     - [dom节点-2节点的关系](/doc/JavaScript/dom/dom-2节点的关系.md)
