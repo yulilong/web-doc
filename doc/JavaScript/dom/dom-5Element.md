@@ -180,6 +180,8 @@ Object.getOwnPropertyNames(CSSStyleDeclaration.prototype)
 
 
 
+
+
 ## 参考资料
 
 [DOM Element节点类型详解](http://web.jobbole.com/83585/)

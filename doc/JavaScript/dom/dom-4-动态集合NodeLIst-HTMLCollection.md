@@ -15,15 +15,41 @@ javascript中的动态集合——NodeList、HTMLCollection和NamedNodeMap
 - 方法
 
   > item ( idx ):返回NodeList对象中指定索引的节点,如果索引越界,则`返回null`.等价的写法是`nodeList[idx], 不过这种情况下越界访问将返回undefined.`
+  >
+  > NodeList.prototype.forEach()：`forEach`方法用于遍历 NodeList 的所有成员。它接受一个回调函数作为参数，每一轮遍历就执行一次这个回调函数，用法与数组实例的`forEach`方法完全一致。
+  >
+  > NodeList.prototype.keys()，NodeList.prototype.values()，NodeList.prototype.entries()：这三个方法都返回一个 ES6 的遍历器对象，可以通过`for...of`循环遍历获取每一个成员的信息。区别在于，`keys()`返回键名的遍历器，`values()`返回键值的遍历器，`entries()`返回的遍历器同时包含键名和键值的信息。
 
 ```html
 <div id="one"><span>1</span></div>
 <script>
-  console.log(one.childNodes.length)	// 1
-  console.log(one.childNodes.item(0))	// <span>1</span>
-  console.log(one.childNodes[0])		// <span>1</span>
+    childNodes = one.childNodes
+    console.log(childNodes.length)	// 1
+    console.log(childNodes.item(0))	// <span>1</span>
+    console.log(childNodes[0])		// <span>1</span>
+    // 回调函数f的三个参数依次是当前成员、位置和当前 NodeList 实例。
+    // forEach方法的第二个参数，用于绑定回调函数内部的this，该参数可省略。
+    childNodes.forEach(function f(item, i, list) {
+        // ...
+    }, this);
+    
+    for (var key of childNodes.keys()) {
+        console.log(key);
+    }
+    // 0
+    
+    for (var value of childNodes.values()) {
+        console.log(value);
+    }
+    // <span>1</span>
+    for (var entry of childNodes.entries()) {
+        console.log(entry);
+    }
+    // (2) [0, span]
 </script>
 ```
+
+
 
 ### 1.1 Node.childNodes返回动态集合 
 
@@ -222,6 +248,8 @@ NamedNodeMap 接口表示属性节点 [`Attr`](https://developer.mozilla.org/z
 </script>
 ```
 
+
+
 ## 4. CSSStyleDeclaration
 
 CSSStyleDeclaration 类表示一组 CSS 样式规则。MXML 编译器在和 Flex 应用程序关联的 CSS 文件中为每个选择器自动生成一个 CSSStyleDeclaration 对象。
@@ -335,7 +363,7 @@ setProperty()方法用来设置新的 CSS 属性。该方法没有返回值。
 
 > 第一个参数：属性名，该参数是必需的。
 >
-> 第二个参数：属性值，该参数可选。如果省略，则参数值默认为空字符串。
+> 第二个参数：属性值，该参数可选。如果省略，则参数值默认为空字符串。在Google Chrome浏览器中，此参数是必需的。
 >
 >  第三个参数：优先级，该参数可选。如果设置，唯一的合法值是`important`，表示 CSS 规则里面的`!important`。
 
@@ -346,9 +374,28 @@ setProperty()方法用来设置新的 CSS 属性。该方法没有返回值。
 <script>
     // getPropertyPriority()
     var one = document.querySelector('.one').style;
+    // CSSStyleDeclaration {0: "color", 1: "margin-top", 2: "margin-right", 3: "margin-bottom", 4: "margin-left"
     one.margin;		// "10px"
     one.getPropertyPriority('margin');	// "important"
     one.getPropertyPriority('color'); 	// ""
+    
+    // getPropertyValue()
+    one.getPropertyValue("margin");	// "10px"
+    one.getPropertyValue("color");	// "red"
+    
+    // item()
+    one.item(0);	// "color"
+    one.item(1);	// "margin-top"
+    
+    // removeProperty()
+    one.removeProperty("color");// "red", 删除了红色，字体变成了黑色
+    
+    // setProperty()
+    one.setProperty('border', '1px solid blue');// 样式会立即生效。
+    one	; // CSSStyleDeclaration {0: "margin-top", ... 5: "border-right-width", 6: "border-bottom-width"
+    one.setProperty("width", "300px", "important");// 样式会立即生效
+    // 注意第三个参数是important，  不是 !important
+    
 </script>
 ```
 
@@ -401,6 +448,8 @@ for(var i = 0,len = divs.length; i < len; i++){
 [Window.getComputedStyle()  MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/getComputedStyle)
 
 [CSSStyleDeclaration 接口  阮一峰](http://javascript.ruanyifeng.com/dom/css.html#toc1)
+
+[CSSStyleDeclaration  MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/CSSStyleDeclaration)
 
 
 
