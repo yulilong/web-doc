@@ -1,0 +1,261 @@
+[TOC]
+
+Element对象对应网页的HTML元素。每个HTML元素在DOM树上都会转化成一个Element节点对象。
+
+元素节点的`nodeType`属性都是1.
+
+```javascript
+<p>ppppp</p>
+<script>
+    var p = document.querySelector('p');
+    console.log(p.nodeName);	// "P"
+    console.log(p.nodeType);	// 1
+</script>
+```
+
+Element对象继承了Node接口，因此Node的属性和方法在Element对象都存在。此外，不同的HTML元素对应的元素节点是不一样的，浏览器使用不同的构造函数，生成不同的元素节点，比如`<a>`元素的节点对象由`HTMLAnchorElement`构造函数生成，`<button>`元素的节点对象由`HTMLButtonElement`构造函数生成。因此，元素节点不是一种对象，而是一组对象，这些对象除了继承`Element`的属性和方法，还有各自构造函数的属性和方法。
+
+## 1. Element实例的属性
+
+### 1.1 元素特性的相关属性
+
+1. **Element.id**
+
+`Element.id`属性返回指定元素的`id`属性，该属性可读写。
+
+注意，`id`属性的值是大小写敏感，即浏览器能正确识别`<p id="foo">`和`<p id="FOO">`这两个元素的`id`属性，但是最好不要这样命名。
+
+```html
+<p id="foo">ppppp</p>
+<script>
+    var p = document.querySelector('p');
+    console.log(p.id);	// "foo"
+    p.id = "one";		// 此时ID会立刻修改
+    console.log(p.id);	// "one"
+</script>
+```
+
+2. **Element.tagName**
+
+`Element.tagName`属性返回指定元素的大写标签名，与`nodeName`属性的值相等。
+
+```html
+<span id="myspan">Hello</span>
+<script>
+    var span = document.getElementById('myspan');
+    console.log(span.tagName);
+    console.log(span.nodeName);
+</script>
+```
+
+3. **Element.dir**
+
+`Element.dir`属性用于读写当前元素的文字方向，可能是从左到右（`"ltr"`），也可能是从右到左（`"rtl"`）。
+
+4. **Element.accessKey**
+
+`Element.accessKey`属性用于读写分配给当前元素的快捷键。
+
+```html
+<button accesskey="h" id="btn">点击</button>
+<script>
+    var btn = document.getElementById('btn');
+    console.log(btn.accessKey);
+</script>
+```
+
+上面代码中，`btn`元素的快捷键是`h`，按下`Alt + h`就能将焦点转移到它上面。
+
+5. **Element.draggable**
+
+   `Element.draggable`属性返回一个布尔值，表示当前元素是否可拖动。该属性可读写。
+
+6. **Element.lang**
+
+   `Element.lang`属性返回当前元素的语言设置。该属性可读写。
+
+   ```
+   // HTML 代码如下
+   // <html lang="en">
+   document.documentElement.lang // "en"
+   ```
+
+7. **Element.tabIndex**
+
+   `Element.tabIndex`属性返回一个整数，表示当前元素在 Tab 键遍历时的顺序。该属性可读写。
+
+   `tabIndex`属性值如果是负值（通常是`-1`），则 Tab 键不会遍历到该元素。如果是正整数，则按照顺序，从小到大遍历。如果两个元素的`tabIndex`属性的正整数值相同，则按照出现的顺序遍历。遍历完所有`tabIndex`为正整数的元素以后，再遍历所有`tabIndex`等于`0`、或者属性值是非法值、或者没有`tabIndex`属性的元素，顺序为它们在网页中出现的顺序。
+
+8. **Element.title**
+
+   `Element.title`属性用来读写当前元素的 HTML 属性`title`。该属性通常用来指定，鼠标悬浮时弹出的文字提示框。
+
+   ```html
+   <p title="我是p" id="btn">111111</p>
+   <script>
+       var btn = document.getElementById('btn');
+       console.log(btn.title);	// "我是p"
+   </script>
+   ```
+
+### 1.2 元素状态的相关属性
+
+1. **Element.hidden**
+
+   `Element.hidden`属性返回一个布尔值，表示当前元素的`hidden`属性，用来控制当前元素是否可见。该属性可读写。
+
+   ```html
+   <p title="我是p" id="btn">111111</p>
+   <div id="mydiv">我会变</div>
+   <script>
+       var btn = document.getElementById('btn');
+       var mydiv = document.getElementById('mydiv');
+       btn.addEventListener('click', function () {
+           mydiv.hidden = !mydiv.hidden;
+       }, false);	// 点击btn 会切换 显示与隐藏 mydiv
+   </script>
+   ```
+
+   注意，该属性与 CSS 设置是互相独立的。CSS 对这个元素可见性的设置，`Element.hidden`并不能反映出来。也就是说，这个属性并不难用来判断当前元素的实际可见性。
+
+   CSS 的设置高于`Element.hidden`。如果 CSS 指定了该元素不可见（`display: none`）或可见（`display: hidden`），那么`Element.hidden`并不能改变该元素实际的可见性。换言之，这个属性只在 CSS 没有明确设定当前元素的可见性时才有效。
+
+2. **Element.contentEditable，Element.isContentEditable**
+
+   ```html
+   <div contenteditable id="one">123</div>
+   <script>
+       var one = document.getElementById('one');
+       console.log(one.contentEditable);	// "true"此时页面one元素可以编辑
+       console.log(one.isContentEditable);	// true	
+       one.contentEditable = false;	
+       console.log(one.contentEditable);	// "false"	页面不能编辑了
+       console.log(one.isContentEditable);	// false
+   </script>
+   ```
+
+   上面代码中，`<div>`元素有`contenteditable`属性，因此用户可以在网页上编辑这个区块的内容。
+
+   `Element.contentEditable`属性返回一个字符串，表示是否设置了`contenteditable`属性，有三种可能的值。该属性可写。
+
+   > `"true"`：元素内容可编辑
+   >
+   > `"false"`：元素内容不可编辑
+   >
+   > `"inherit"`：元素是否可编辑，继承了父元素的设置
+
+   `Element.isContentEditable`属性返回一个布尔值，同样表示是否设置了`contenteditable`属性。该属性只读。
+
+### 1.3 Element.attributes
+
+`Element.attributes`属性返回一个类似数组的对象，成员是当前元素节点的所有属性节点
+
+```html
+<p id="one" class="tt">123</p>
+<script>
+    var p = document.querySelector('p');
+    var attrs = p.attributes;
+    for (var i = attrs.length - 1; i >= 0; i--) {
+        console.log(attrs[i].name + '->' + attrs[i].value);
+    }
+    // "class->tt"
+    // "id->one"
+</script>
+```
+
+上面代码遍历`p`元素的所有属性。
+
+ ### 1.4 Element.className，Element.classList
+
+`className`属性用来读写当前元素节点的`class`属性。它的值是一个字符串，每个`class`之间用空格分割。
+
+`classList`属性返回一个类似数组的对象，当前元素节点的每个`class`就是这个对象的一个成员。
+
+```html
+<div class="one two three" id="myDiv"></div>
+<script>
+    var div = document.getElementById('myDiv');
+    console.log(div.className);	// "one two three"
+    console.log(div.classList); 
+    // DOMTokenList(3) ["one", "two", "three", value: "one two three", length:3]
+</script>
+```
+
+上面代码中，`className`属性返回一个空格分隔的字符串，而`classList`属性指向一个类似数组的对象，该对象的`length`属性（只读）返回当前元素的`class`数量。
+
+`classList`对象有下列方法:
+
+> `add()`：增加一个 class
+>
+> `remove()`：移除一个 class
+>
+> `contains()`：检查当前元素是否包含某个 class
+>
+> `toggle()`：将某个 class 移入或移出当前元素
+>
+> `item()`：返回指定索引位置的 class
+>
+> `toString()`：将 class 的列表转为字符串
+
+```html
+<div class="one two three" id="myDiv"></div>
+<script>
+    var div = document.getElementById('myDiv');
+    div.classList.add('myCssClass');
+    div.classList.add('foo', 'bar');
+    div.classList.remove('myCssClass');
+    div.classList.toggle('myCssClass'); // 如果 myCssClass 不存在就加入，否则移除
+    div.classList.contains('myCssClass'); // 返回 true 或者 false
+    div.classList.item(0); // 返回第一个 Class
+    div.classList.toString();
+</script>
+```
+
+`className`和`classList`在添加和删除某个 class 时的写法:
+
+```html
+<div class="one" id="foo"></div>
+<script>
+    var foo = document.getElementById('foo');
+    // 添加class
+    foo.className += 'bold';
+    foo.classList.add('bold');
+    // 删除class
+    foo.classList.remove('bold');
+    foo.className = foo.className.replace(/^bold$/, '');
+</script>
+```
+
+`toggle`方法可以接受一个布尔值，作为第二个参数。如果为`true`，则添加该属性；如果为`false`，则去除该属性。
+
+```javascript
+el.classList.toggle('abc', boolValue);
+
+// 等同于
+if (boolValue) {
+  el.classList.add('abc');
+} else {
+  el.classList.remove('abc');
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 参考资料
+
+
+
+[Element对象 阮一峰](https://javascript.ruanyifeng.com/dom/element.html)
+

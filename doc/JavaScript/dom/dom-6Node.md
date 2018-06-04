@@ -237,12 +237,17 @@ d2.previousSibling === d1 // true
 `parentNode`属性返回当前节点的父节点。对于一个节点来说，它的父节点只可能是三种类型：元素节点（element）、文档节点（document）和文档片段节点（documentfragment）。
 
 ```javascript
-if (node.parentNode) {
-  node.parentNode.removeChild(node);
-}
+<div id="d1"> <div id="one">one</div> </div>
+<div id="d2">world</div>
+<script>
+    var one = document.getElementById("one");
+    if (one.parentNode) {
+        one.parentNode.removeChild(one);
+    }
+</script>
 ```
 
-上面代码中，通过`node.parentNode`属性将`node`节点从文档里面移除。
+上面代码中，通过`one.parentNode`属性将`one`节点从文档里面移除。
 
 文档节点（document）和文档片段节点（documentfragment）的父节点都是`null`。另外，对于那些生成后还没插入 DOM 树的节点，父节点也是`null`。
 
@@ -251,9 +256,16 @@ if (node.parentNode) {
 `parentElement`属性返回当前节点的父元素节点。如果当前节点没有父节点，或者父节点类型不是元素节点，则返回`null`。
 
 ```javascript
-if (node.parentElement) {
-  node.parentElement.style.color = 'red';
-}
+<div id="d1">
+    <div id="one">one</div>
+</div>
+<div id="d2">world</div>
+<script>
+    var one = document.getElementById("one");
+    if (one.parentElement ) {
+        one.parentElement.style.color = 'red';
+    }
+</script>
 ```
 
 上面代码中，父元素节点的样式设定了红色。
@@ -265,10 +277,11 @@ if (node.parentElement) {
 `firstChild`属性返回当前节点的第一个子节点，如果当前节点没有子节点，则返回`null`。
 
 ```javascript
-// HTML 代码如下
-// <p id="p1"><span>First span</span></p>
-var p1 = document.getElementById('p1');
-p1.firstChild.nodeName // "SPAN"
+<p id="p1"><span>First span</span></p>
+<script>
+    var p1 = document.getElementById('p1');
+	console.log(p1.firstChild.nodeName); // "SPAN"
+</script>
 ```
 
 上面代码中，`p`元素的第一个子节点是`span`元素。
@@ -276,12 +289,13 @@ p1.firstChild.nodeName // "SPAN"
 注意，`firstChild`返回的除了元素节点，还可能是文本节点或评论节点。
 
 ```javascript
-// HTML 代码如下
-// <p id="p1">
-//   <span>First span</span>
-//  </p>
-var p1 = document.getElementById('p1');
-p1.firstChild.nodeName // "#text"
+<p id="p1">
+    <span>First span</span>
+</p>
+<script>
+    var p1 = document.getElementById('p1');
+	console.log(p1.firstChild.nodeName) // "#text"
+</script>
 ```
 
 上面代码中，`p`元素与`span`元素之间有空白字符，这导致`firstChild`返回的是文本节点。
