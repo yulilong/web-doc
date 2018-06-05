@@ -1,5 +1,13 @@
 [TOC]
 
+Element元素的继承关系：
+
+```
++---------------+       +-----------+          +----------+
+|  EventTarget  | ----> | Node      | =------> | Element  |
++---------------+       +-----------+          +----------+
+```
+
 Element对象对应网页的HTML元素。每个HTML元素在DOM树上都会转化成一个Element节点对象。
 
 元素节点的`nodeType`属性都是1.
@@ -239,9 +247,195 @@ if (boolValue) {
 }
 ```
 
+### 1.5 Element.dataset
 
+网页元素可以自定义`data-`属性，用来添加数据。
 
+`Element.dataset`属性返回一个对象，可以从这个对象读写`data-`属性。
 
+```html
+<div id="foo" data-columns="3" data-index-number="12314" data-parent="cars"></div>
+<script>
+    var foo = document.getElementById('foo');
+    console.log(foo.dataset.columns);		// "3"
+    console.log(foo.dataset.indexNumber);	// "12314"
+    console.log(foo.dataset.parent);		// "cars"
+</script>
+```
+
+注意，`dataset`上面的各个属性返回都是字符串。
+
+HTML 代码中，`data-`属性的属性名，只能包含英文字母、数字、连词线（`-`）、点（`.`）、冒号（`:`）和下划线（`_`）。它们转成 JavaScript 对应的`dataset`属性名，规则如下：
+
+> 开头的`data-`会省略
+>
+> 如果连词线后面跟了一个英文字母，那么连词线会取消，该字母变成大写
+>
+> 其他字符不变
+
+因此，`data-abc-def`对应`dataset.abcDef`，`data-abc-1`对应`dataset["abc-1"]`。
+
+除了使用`dataset`读写`data-`属性，也可以使用`Element.getAttribute()`和`Element.setAttribute()`，通过完整的属性名读写这些属性。
+
+```html
+<div id="foo" data-columns="3" data-index-number="12314" data-parent="cars"></div>
+<script>
+    var foo = document.getElementById('foo');
+    console.log(foo.getAttribute('data-columns'));		// "3"
+    console.log(foo.getAttribute('data-index-number'));	// "12314"
+    console.log(foo.getAttribute('data-parent'));		// "cars"
+</script>
+```
+
+### 1.6 Element.innerHTML
+
+`Element.innerHTML`属性返回一个字符串，等同于该元素包含的所有 HTML 代码。该属性可读写，常用来设置某个节点的内容。它能改写所有元素节点的内容，包括`<HTML>`和`<body>`元素。
+
+如果将`innerHTML`属性设为空，等于删除所有它包含的所有节点:`el.innerHTML = '';`,代码等于将`el`节点变成了一个空节点，`el`原来包含的节点被全部删除。
+
+注意，读取属性值的时候，如果文本节点包含`&`、小于号（`<`）和大于号（`>`），`innerHTML`属性会将它们转为实体形式`&amp;`、`&lt;`、`&gt;`。如果想得到原文，建议使用`element.textContent`属性。
+
+```html
+<p id="para"> 5 > 3 </p>
+<script>
+    var foo = document.getElementById('para')
+    console.log(foo.innerHTML);		// " 5 &gt; 3 "
+</script>
+```
+
+写入的时候，如果插入的文本包含 HTML 标签，会被解析成为节点对象插入 DOM。注意，如果文本之中含有`<script>`标签，虽然可以生成`script`节点，但是插入的代码不会执行。
+
+```html
+<p id="one">one</p>
+<script>
+    var one = document.getElementById('one');
+    var name = "<script>alert('haha')\<\/script>";
+    one.innerHTML = name;
+    console.log(one.innerHTML);
+</script>
+```
+
+上面代码将脚本插入内容，脚本并不会执行。但是，`innerHTML`还是有安全风险的。
+
+```html
+<p id="one">one</p>
+<script>
+    var one = document.getElementById('one');
+    var name = "<img src=x onerror=alert(1)>";
+    one.innerHTML = name;	// 页面运行后 会弹出框
+    console.log(one.innerHTML);
+</script>
+```
+
+上面代码中，`alert`方法是会执行的。因此为了安全考虑，如果插入的是文本，最好用`textContent`属性代替`innerHTML`。
+
+### 1.7 Element.outerHTML
+
+`Element.outerHTML`属性返回一个字符串，表示当前元素节点的所有 HTML 代码，包括该元素本身和所有子元素。
+
+```html
+<div id="d"><p>Hello</p></div>
+<script>
+    var d = document.getElementById('d');
+    console.log(d.innerHTML);	// <p>Hello</p> 
+    // "<p>Hello</p>"
+    console.log(d.outerHTML);	// <div id="d"><p>Hello</p></div>
+    // "<div id=\"d\"><p>Hello</p></div>"
+</script>
+```
+
+`outerHTML`属性是可读写的，对它进行赋值，等于替换掉当前元素。
+
+```html
+<div id="container"><div id="d">Hello</div></div>
+<script>
+    var container = document.getElementById('container');
+    var d = document.getElementById('d');
+    console.log(container.firstChild.nodeName);	// "DIV"
+    console.log(d.nodeName);					// "DIV"
+    d.outerHTML = '<p>Hello</p>';
+    console.log(container.firstChild.nodeName);	// "P"
+    console.log(d.nodeName);					// "DIV"
+</script>
+```
+
+上面代码中，变量`d`代表子节点，它的`outerHTML`属性重新赋值以后，内层的`div`元素就不存在了，被`p`元素替换了。但是，变量`d`依然指向原来的`div`元素，这表示被替换的`DIV`元素还存在于内存中。
+
+ 注意，如果一个节点没有父节点，设置`outerHTML`属性会报错:
+
+```javascript
+var div = document.createElement('div');
+div.outerHTML = '<p>test</p>';
+// DOMException: Failed to set the 'outerHTML' property on 'Element': This element has no parent node.
+```
+
+### 1.8 Element.clientHeight，Element.clientWidth
+
+`Element.clientHeight`属性返回一个整数值，表示元素节点的 CSS 高度（单位像素），只对块级元素生效，对于行内元素返回`0`。如果块级元素没有设置 CSS 高度，则返回实际高度。
+
+除了元素本身的高度，它还包括`padding`部分，但是不包括`border`、`margin`。如果有水平滚动条，还要减去水平滚动条的高度。注意，这个值始终是整数，如果是小数会被四舍五入。
+
+`Element.clientWidth`属性返回元素节点的 CSS 宽度，同样只对块级元素有效，也是只包括元素本身的宽度和`padding`，如果有垂直滚动条，还要减去垂直滚动条的宽度。
+
+`document.documentElement`的`clientHeight`属性，返回当前视口的高度（即浏览器窗口的高度），等同于`window.innerHeight`属性减去水平滚动条的高度（如果有的话）。`document.body`的高度则是网页的实际高度。一般来说，`document.body.clientHeight`大于`document.documentElement.clientHeight`。
+
+```javascript
+// 视口高度
+document.documentElement.clientHeight
+// 网页总高度
+document.body.clientHeight
+```
+
+### 1.9 Element.clientLeft，Element.clientTop
+
+`Element.clientLeft`属性等于元素节点左边框（left border）的宽度（单位像素），不包括左侧的`padding`和`margin`。如果没有设置左边框，或者是行内元素（`display: inline`），该属性返回`0`。该属性总是返回整数值，如果是小数，会四舍五入。
+
+`Element.clientTop`属性等于网页元素顶部边框的宽度（单位像素），其他特点都与`clientTop`相同。
+
+ ```html
+<style>
+    #tt {border: 1px solid}
+    #one { border: 12px solid red; padding:10px; margin: 15px; }
+</style>
+<div id="tt">
+    <div id="one">one</div>
+</div>
+<script>
+    var one = document.getElementById('one');
+    console.log(one.clientLeft);	// 12
+    console.log(one.clientTop);		// 12
+</script>
+ ```
+
+### 1.20 Element.scrollHeight，Element.scrollWidth
+
+`Element.scrollHeight`属性返回一个整数值（小数会四舍五入），表示当前元素的总高度（单位像素），包括溢出容器、当前不可见的部分。它包括`padding`，但是不包括`border`、`margin`以及水平滚动条的高度（如果有水平滚动条的话），还包括伪元素（`::before`或`::after`）的高度。
+
+`Element.scrollWidth`属性表示当前元素的总宽度（单位像素），其他地方都与`scrollHeight`属性类似。这两个属性只读。
+
+整张网页的总高度可以从`document.documentElement`或`document.body`上读取。
+
+```html
+<style>
+    #tt { border: 1px solid; height: 100px; width: 200px;  overflow: scroll; }
+</style>
+<div id="tt">
+    <p>123ssssaaaaaaaaaaaaaaaaaaaaaa</p>
+    <p>123</p><p>123</p><p>123</p>
+    <p>123</p><p>123</p><p>123</p><p>123</p>
+</div>
+<script>
+    var tt = document.getElementById('tt');
+    console.log(tt.clientHeight);	// 85
+    console.log(tt.clientWidth);	// 185
+    console.log(tt.scrollHeight);	// 320
+    console.log(tt.scrollWidth);	// 255
+</script>
+```
+
+注意，如果元素节点的内容出现溢出，即使溢出的内容是隐藏的，`scrollHeight`属性仍然返回元素的总高度。
+
+上面的代码中，即使tt元素的CSS高度只有100像素，且溢出部分不可见，但是`scrollHeight`仍然会返回该元素的原始高度。
 
 
 
