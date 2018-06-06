@@ -407,7 +407,7 @@ document.body.clientHeight
 </script>
  ```
 
-### 1.20 Element.scrollHeight，Element.scrollWidth
+### 1.10 Element.scrollHeight，Element.scrollWidth
 
 `Element.scrollHeight`属性返回一个整数值（小数会四舍五入），表示当前元素的总高度（单位像素），包括溢出容器、当前不可见的部分。它包括`padding`，但是不包括`border`、`margin`以及水平滚动条的高度（如果有水平滚动条的话），还包括伪元素（`::before`或`::after`）的高度。
 
@@ -437,7 +437,261 @@ document.body.clientHeight
 
 上面的代码中，即使tt元素的CSS高度只有100像素，且溢出部分不可见，但是`scrollHeight`仍然会返回该元素的原始高度。
 
+### 1.11 Element.scrollLeft，Element.scrollTop
 
+`Element.scrollLeft`属性表示当前元素的水平滚动条向右侧滚动的像素数量，`Element.scrollTop`属性表示当前元素的垂直滚动条向下滚动的像素数量。对于那些没有滚动条的网页元素，这两个属性总是等于0。
+
+这两个属性都可读写，设置该属性的值，会导致浏览器将当前元素自动滚动到相应的位置。
+
+如果要查看整张网页的水平的和垂直的滚动距离，要从`document.documentElement`元素上读取。
+
+```html
+<style>
+    #tt { border: 1px solid; height: 100px; width: 200px;  overflow: scroll; }
+</style>
+<div id="tt">
+    <p>123ssssaaaaaaaaaaaaaaaaaaaaaa</p>
+    <p>123</p><p>123</p><p>123</p>
+    <p>123</p><p>123</p><p>123</p><p>123</p>
+</div>
+  <button>我是按钮</button>
+  <script>
+    var tt = document.getElementById('tt');
+    var btn = document.querySelector("button");
+    btn.onclick = function() {
+      console.log(tt.scrollLeft);	// 0 
+      console.log(tt.scrollTop);	// 0
+      tt.scrollLeft = "40";			// 执行后横向滚动条会移动到中间位置(大约)
+    }
+    // 读取整张网页的水平的和垂直的滚动距离
+    console.log(document.documentElement.scrollLeft)
+    console.log(document.documentElement.scrollLeft)
+  </script>
+```
+
+### 1.12 Element.offsetParent
+
+`Element.offsetParent`属性返回最靠近当前元素的、并且 CSS 的`position`属性不等于`static`的上层元素。
+
+该属性主要用于确定子元素位置偏移的计算基准，`Element.offsetTop`和`Element.offsetLeft`就是根据`offsetParent`元素的距离计算的。
+
+如果该元素是不可见的（`display`属性为`none`），或者位置是固定的（`position`属性为`fixed`），则`offsetParent`属性返回`null`。
+
+如果某个元素的所有上层节点的`position`属性都是`static`，则`Element.offsetParent`属性指向`<body>`元素。
+
+```html
+<style>
+    #tt { border: 1px solid; height: 100px; width: 200px;  overflow: scroll; }
+</style>
+
+<div id="tt" style="position: relative;">
+    <p>
+        <span id="one">Hello</span>
+    </p>
+    <p>
+        <span id="two" style="display: none;">Hello</span>
+    </p>
+</div>
+<span id="three">333</span>
+<script>
+    var one = document.getElementById('one');
+    var two = document.getElementById('two');
+    var three = document.getElementById('three');
+    console.log(one.offsetParent);	// <div	 id="tt" ......
+    console.log(two.offsetParent)	// null
+    console.log(three.offsetParent)	// <body> ......
+</script>
+```
+
+上面的代码中，id为`one`的元素的`offsetParent`属性就是id为`tt`的`div`元素。
+
+上面的代码中，id为`two`的`span`元素的`offsetParent`属性是`null`。
+
+上面的代码中，id为`three`的`span`元素的`offsetParent`属性是`body`元素。
+
+### 1.13 Element.offsetHeight，Element.offsetWidth
+
+`Element.offsetHeight`属性返回一个整数，表示元素的 CSS 垂直高度（单位像素），包括元素本身的高度、padding 和 border，以及水平滚动条（如果存在且渲染的话），不包含:before或:after等伪类元素的高度。
+
+ `Element.offsetWidth`属性表示元素的 CSS 水平宽度（单位像素），其他都与`Element.offsetHeight`一致。
+
+这两个属性都是只读属性，只比`Element.clientHeight`和`Element.clientWidth`多了边框的高度或宽度。如果元素的 CSS 设为不可见（比如`display: none;`），则返回`0`。
+
+```html
+<style>
+    #tt { border: 5px solid; height: 100px; width: 200px; padding: 5px; overflow: scroll; }
+</style>
+<div id="tt">
+    <p>123ssssaaaaaaaaaaaaaaaaaaaaaa</p>
+    <p>123</p><p>123</p><p>123</p>
+    <p>123</p><p>123</p><p>123</p><p>123</p>
+</div>
+<script>
+    var tt = document.getElementById('tt');
+    console.log(tt.clientHeight);	// 95
+    console.log(tt.clientWidth);	// 195
+    console.log(tt.scrollHeight);	// 330
+    console.log(tt.scrollWidth);	// 260
+    console.log(tt.offsetHeight);	// 120
+    console.log(tt.offsetWidth );	// 220
+</script>
+```
+
+### 1.14 Element.offsetLeft，Element.offsetTop
+
+`Element.offsetLeft`返回当前元素左上角相对于`Element.offsetParent`节点的水平位移，`Element.offsetTop`返回垂直位移，单位为像素。通常，这两个值是指相对于父节点的位移。
+
+```html
+<style>
+    body { margin: 0; }
+    .one { border: 1px solid; height: 300px; width: 300px;
+        overflow: scroll; position: relative;
+    }
+    p { margin: 30px 0; border: 1px solid red; }
+</style>
+<p>123</p>
+<div class="one">
+    <p>1</p><p>2</p><p>3</p> <p>4</p><p>5</p><p>6</p>
+    <p>7</p><p>8</p><p>9</p> <p>10</p><p>11</p><p>12</p>
+    <p>13</p>dddddddd <span class=f>ffffffffffffffffffffffffff</span><p>14</p>
+    <p>15</p><p>16</p><p>17</p> <p>18</p><p>19</p><p>20</p>
+</div>
+<script>
+    var one = document.querySelector(".one");
+    var f = document.querySelector(".f");
+    // one.scrollTop = f.offsetTop;	设置 直接滚动到指定位置
+    console.log(f.offsetLeft)	// 80
+    console.log(f.offsetTop)	// 732
+</script>
+```
+
+下面的代码可以算出元素左上角相对于整张网页的坐标:
+
+```javascript
+function getElementPosition(e) {
+  var x = 0;
+  var y = 0;
+  while (e !== null)  {
+    x += e.offsetLeft;
+    y += e.offsetTop;
+    e = e.offsetParent;	// 这个是重点，每次循环都找到offsetParent
+  }
+  return {x: x, y: y};
+}
+```
+
+下面是函数测试：
+
+```html
+<style>
+    body { margin: 0; border: 1px solid;}    
+    p { margin: 30px 0; border: 1px solid red; }
+  </style>
+  <p>123</p>
+  <div> <p>内部</p>
+    <div> <p>又一个内部</p
+      <div> <p id="one">又一个</p>
+      </div>
+    </div>
+  </div>
+  <script>
+      var one = document.querySelector("#one");
+      console.log(one.offsetTop);
+      function getElementPosition(e) {
+        var x = 0; var y = 0;
+        while (e !== null)  {
+          x += e.offsetLeft; y += e.offsetTop; e = e.offsetParent;
+        }
+        return {x: x, y: y};
+      }
+    var tmp = getElementPosition(one);
+    console.log(tmp.x)	// 1
+    console.log(tmp.y)	// 193
+  </script>
+```
+
+### 1.15 Element.style
+
+每个元素节点都有`style`用来读写该元素的行内样式信息
+
+`style`属性返回一个 [`CSSStyleDeclaration`](https://developer.mozilla.org/zh-US/docs/DOM/CSSStyleDeclaration) 对象，表示元素的 内联[`style` 属性（attribute）](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Global_attributes#style)，但忽略任何样式表应用的属性。
+
+由于 `style` 属性的优先级和通过style设置内联样式是一样的，并且在css层级样式中拥有最高优先级，因此在为特定的元素设置样式时很有用。
+
+[HTMLElement.style   MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLElement/style)
+
+### 1.16 Element.children，Element.childElementCount
+
+`Element.children`属性返回一个类似数组的对象（`HTMLCollection`实例），包括当前元素节点的所有子元素。如果当前元素没有子元素，则返回的对象包含零个成员。 
+
+`Element.children`属性与`Node.childNodes`属性的区别是，它只包括元素类型的子节点，不包括其他类型的子节点。
+
+`Element.childElementCount`属性返回当前元素节点包含的子元素节点的个数，与`Element.children.length`的值相同。
+
+```html
+<div id="one">
+    <span>1 </span><span>2 </span><span>3 </span>
+</div>
+<div id="two"></div>
+<script>
+    var one = document.getElementById("one");
+    var two = document.getElementById("two");
+    if (one.children.length) {
+        var children = one.children;
+        for (var i = 0; i < children.length; i++){
+            console.log(children[i]);
+        }
+    }
+    // <span>1 </span>
+    // <span>2 </span>
+    // <span>3 </span>
+    console.log(two.children);	// HTMLCollection []
+</script>
+```
+
+### 1.17 Element.firstElementChild，Element.lastElementChild
+
+`Element.firstElementChild`属性返回当前元素的第一个元素子节点。 
+
+`Element.lastElementChild`返回最后一个元素子节点。
+
+如果没有元素子节点，这两个属性返回`null`。
+
+```html
+<div id="one">
+    <span>1 </span><span>2 </span><span>3 </span>
+  </div>
+  <div id="two"></div>
+  <script>
+    var one = document.getElementById("one");
+    var two = document.getElementById("two");
+    console.log(one.firstElementChild);	// <span>1 </span>
+    console.log(one.lastElementChild);	// <span>3 </span>
+    console.log(two.firstElementChild);	// null
+    console.log(two.lastElementChild);	// null
+  </script>
+```
+
+### 1.18 Element.nextElementSibling，Element.previousElementSibling
+
+`Element.nextElementSibling`属性返回当前元素节点的后一个同级元素节点，如果没有则返回`null`。
+
+`Element.previousElementSibling`属性返回当前元素节点的前一个同级元素节点，如果没有则返回`null`。
+
+```html
+<div id="tt">
+    <div id="div-01">Here is div-01</div>
+    <div id="div-02">Here is div-02</div>
+  </div>
+  <script>
+    var one = document.getElementById('div-01');
+    var two = document.getElementById("div-02");
+    console.log(one.nextElementSibling);	// <div id="div-02">Here is div-02</div>
+    console.log(two.nextElementSibling);	// null
+    console.log(one.previousElementSibling);// null
+    console.log(two.previousElementSibling);// <div id="div-01">Here is div-01</div>
+  </script>
+```
 
 
 
@@ -452,4 +706,8 @@ document.body.clientHeight
 
 
 [Element对象 阮一峰](https://javascript.ruanyifeng.com/dom/element.html)
+
+[HTMLElement  MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLElement)
+
+[Element  MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Element)
 
