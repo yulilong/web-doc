@@ -693,9 +693,236 @@ function getElementPosition(e) {
   </script>
 ```
 
+## 2. 实例方法
 
+### 2.1 属性相关方法
 
+元素节点提供六个方法，用来操作属性。
 
+- `getAttribute()`：读取某个属性的值
+- `getAttributeNames()`：返回当前元素的所有属性名
+- `setAttribute()`：写入属性值
+- `hasAttribute()`：某个属性是否存在
+- `hasAttributes()`：当前元素是否有属性
+- `removeAttribute()`：删除属性
+
+这些方法的介绍请看《属性的操作》一章。
+
+### 2.1 Element.querySelector()
+
+`Element.querySelector`方法接受 CSS 选择器作为参数，返回父元素的第一个匹配的子元素。如果没有找到匹配的子元素，就返回`null`。
+
+```html
+<div id="tt">
+    <div>123</div> <p>p</p> <p>2p</p>
+</div>
+<script>
+    var one = document.getElementById('tt');
+    var p = one.querySelector("p");
+    console.log(p);	// <p>p</p>
+</script>
+```
+
+上面代码返回`content`节点的第一个`p`元素。
+
+`Element.querySelector`方法可以接受任何复杂的 CSS 选择器。
+
+```javascript
+document.body.querySelector("style[type='text/css'], style:not([type])");
+```
+
+注意，这个方法无法选中伪元素。
+
+它可以接受多个选择器，它们之间使用逗号分隔。
+
+```javascript
+element.querySelector('div, p');
+```
+
+上面代码返回`element`的第一个`div`或`p`子元素。
+
+需要注意的是，浏览器执行`querySelector`方法时，是先在全局范围内搜索给定的 CSS 选择器，然后过滤出哪些属于当前元素的子元素。因此，会有一些违反直觉的结果，下面是一段 HTML 代码。
+
+```html
+<div>
+    <blockquote id="outer">
+        <p>Hello</p>
+        <div id="inner">
+            <p>World</p>
+        </div>
+    </blockquote>
+</div>
+<script>
+    var outer = document.getElementById('outer');
+    var p = outer.querySelector('div p')
+    console.log(p);	// <p>Hello</p>
+</script>
+```
+
+上面的代码实际上返回的是第一个`p`元素，而不是第二个。
+
+### 2.3 Element.querySelectorAll()
+
+`Element.querySelectorAll`方法接受 CSS 选择器作为参数，返回一个`NodeList`实例，包含所有匹配的子元素。
+
+该方法的执行机制与`querySelector`方法相同，也是先在全局范围内查找，再过滤出当前元素的子元素。因此，选择器实际上针对整个文档的。
+
+它也可以接受多个 CSS 选择器，它们之间使用逗号分隔。如果选择器里面有伪元素的选择器，则总是返回一个空的`NodeList`实例。
+
+```html
+<div id="one">
+    <div class="tt"><p>tt</p></div>
+    <div id="two">
+        <p>1</p> <p>2</p> <p>3</p>
+        <p>4</p> <p>5</p>
+    </div>
+</div>
+<script>
+    var one = document.getElementById('one');
+    var p = one.querySelectorAll('div#two > p')
+    console.log(p);	// NodeList(5) [p, p, p, p, p]
+</script>
+```
+
+### 2.4 Element.getElementsByClassName()
+
+`Element.getElementsByClassName`方法返回一个`HTMLCollection`实例，成员是当前元素节点的所有具有指定 class 的子元素节点。该方法与`document.getElementsByClassName`方法的用法类似，只是搜索范围不是整个文档，而是当前元素节点。
+
+注意，该方法的参数大小写敏感。
+
+由于`HTMLCollection`实例是一个活的集合，`document`对象的任何变化会立刻反应到实例，下面的代码不会生效。
+
+```html
+<div id="example">
+    <p class="foo">123</p>
+    <p class="foo">abc</p>
+</div>
+<script>
+    var element = document.getElementById('example');
+    var matches = element.getElementsByClassName('foo');
+    for (var i = 0; i< matches.length; i++) {
+        matches[i].classList.remove('foo');
+        matches.item(i).classList.add('bar');
+    }
+    // 执行后，HTML 代码如下
+    // <div id="example">
+    //   <p></p>
+    //   <p class="foo bar"></p>
+    // </div>
+</script>
+```
+
+上面代码中，`matches`集合的第一个成员，一旦被拿掉 class 里面的`foo`，就会立刻从`matches`里面消失，导致出现上面的结果。
+
+### 2.5 Element.getElementsByTagName()
+
+`Element.getElementsByTagName`方法返回一个`HTMLCollection`实例，成员是当前节点的所有匹配指定标签名的子元素节点。该方法与`document.getElementsByClassName`方法的用法类似，只是搜索范围不是整个文档，而是当前元素节点。
+
+注意，该方法的参数是大小写不敏感的。
+
+```html
+<div id="one">
+    <p id="foo">123</p>
+    <p class="foo">abc</p>
+</div>
+<script>
+    var one = document.getElementById('one');
+    var foo = document.getElementById("foo");
+    var p = one.getElementsByTagName('p');
+    console.log(p);
+    one.removeChild(foo);
+    console.log(p);
+</script>
+```
+
+### 2.6 Element.closest()
+
+`Element.closest`方法接受一个 CSS 选择器作为参数，返回匹配该选择器的、最接近当前节点的一个祖先节点（包括当前节点本身）。如果没有任何节点匹配 CSS 选择器，则返回`null`。
+
+```html
+<article>
+    <div id="div-01">Here is div-01
+        <div id="div-02">Here is div-02
+            <div id="div-03">Here is div-03</div>
+        </div>
+    </div>
+</article>
+<script>
+    var div03 = document.getElementById('div-03');
+    console.log(div03.closest("#div-02"));		// div-02
+    console.log(div03.closest("div div"));		// div-03
+    console.log(div03.closest("article > div"));//div-01
+    console.log(div03.closest(":not(div)"));	// article
+</script>
+```
+
+上面代码中，由于`closest`方法将当前节点也考虑在内，所以第二个`closest`方法返回`div-03`。
+
+### 2.7 Element.matches()
+
+`Element.matches`方法返回一个布尔值，表示当前元素是否匹配给定的 CSS 选择器。
+
+```html
+<div class="one two" id="tt">one</div>
+<script>
+    var tt = document.getElementById('tt');
+    console.log(tt.matches(".two"));	// true
+    console.log(tt.matches(".three"));	// false
+    console.log(tt.matches("#tt"));		// true
+    console.log(tt.matches("#ee"));		// false
+</script>
+```
+
+### 2.8 事件相关方法
+
+以下三个方法与`Element`节点的事件相关。这些方法都继承自`EventTarget`接口，详见相关章节。
+
+- `Element.addEventListener()`：添加事件的回调函数
+- `Element.removeEventListener()`：移除事件监听函数
+- `Element.dispatchEvent()`：触发事件
+
+```java
+element.addEventListener('click', listener, false);
+element.removeEventListener('click', listener, false);
+
+var event = new Event('click');
+element.dispatchEvent(event);
+```
+
+### 2.9 Element.scrollIntoView()
+
+`Element.scrollIntoView`方法滚动当前元素，进入浏览器的可见区域，类似于设置`window.location.hash`的效果。
+
+该方法可以接受一个布尔值作为参数:
+
+如果为`true`，表示元素的顶部与当前区域的可见部分的顶部对齐（前提是当前区域可滚动）；
+
+如果为`false`，表示元素的底部与当前区域的可见部分的尾部对齐（前提是当前区域可滚动）。
+
+如果没有提供该参数，默认为`true`。
+
+```html
+<style>
+    body { margin: 0; }
+    .one { border: 1px solid; height: 300px; width: 300px;
+        overflow: scroll; position: relative;
+    }
+    p { margin: 30px 0; border: 1px solid red; }
+</style>
+<p>123</p>
+<div class="one">
+    <p>1</p><p>2</p><p>3</p> <p>4</p><p>5</p><p>6</p>
+    <p>7</p><p>8</p><p>9</p> <p>10</p><p>11</p><p>12</p>
+    <p>13</p>dddddddd <span class=f>ffffffffffffffffffffffffff</span><p>14</p>
+    <p>15</p><p>16</p><p>17</p> <p>18</p><p>19</p><p>20</p>
+</div>
+<script>
+    var one = document.querySelector(".one");
+    var f = document.querySelector(".f");
+    f.scrollIntoView();		// f移动到了one内部的可见区域顶部 
+    f.scrollIntoView(false);// f移动到了one内部的可见区域底部
+</script>
+```
 
 
 
@@ -706,6 +933,8 @@ function getElementPosition(e) {
 
 
 [Element对象 阮一峰](https://javascript.ruanyifeng.com/dom/element.html)
+
+[Element 节点 阮一峰 网道](https://wangdoc.com/javascript/dom/element.html)
 
 [HTMLElement  MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLElement)
 
