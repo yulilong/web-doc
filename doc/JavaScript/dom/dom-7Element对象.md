@@ -924,7 +924,207 @@ element.dispatchEvent(event);
 </script>
 ```
 
+### 2.10 Element.getBoundingClientRect()
 
+`Element.getBoundingClientRect`方法返回一个对象，提供当前元素节点的大小、位置等信息，基本上就是 CSS 盒状模型的所有信息。
+
+```html
+<style>
+    body { margin: 0; }
+    .one { border: 1px solid; height: 300px; width: 300px;
+    }
+</style>
+<p>ss</p>
+<div class="one">
+    <p>123</p>
+</div>
+<script>
+    var one = document.querySelector(".one");
+    var ret = one.getBoundingClientRect();
+    console.log(ret);	// DOMRect {x: 0, y: 54, width: 302, height: 302, top: 54, …}
+    console.log(Object.keys(ret));	// []
+</script>
+```
+
+上面代码中，`getBoundingClientRect`方法返回的`rect`对象，具有以下属性（全部为只读）。
+
+- `x`：元素左上角相对于视口的横坐标
+- `y`：元素左上角相对于视口的纵坐标
+- `height`：元素高度
+- `width`：元素宽度
+- `left`：元素左上角相对于视口的横坐标，与`x`属性相等
+- `right`：元素右边界相对于视口的横坐标（等于`x + width`）
+- `top`：元素顶部相对于视口的纵坐标，与`y`属性相等
+- `bottom`：元素底部相对于视口的纵坐标（等于`y + height`）
+
+由于元素相对于视口（viewport）的位置，会随着页面滚动变化，因此表示位置的四个属性值，都不是固定不变的。如果想得到绝对位置，可以将`left`属性加上`window.scrollX`，`top`属性加上`window.scrollY`。
+
+注意，`getBoundingClientRect`方法的所有属性，都把边框（`border`属性）算作元素的一部分。也就是说，都是从边框外缘的各个点来计算。因此，`width`和`height`包括了元素本身 + `padding` + `border`。
+
+另外，上面的这些属性，都是继承自原型的属性，`Object.keys`会返回一个空数组，这一点也需要注意。
+
+上面代码中，`ret`对象没有自身属性，而`Object.keys`方法只返回对象自身的属性，所以返回了一个空数组。
+
+### 2.11 Element.getClientRects()
+
+`Element.getClientRects`方法返回一个类似数组的对象，里面是当前元素在页面上形成的所有矩形（所以方法名中的`Rect`用的是复数）。每个矩形都有`bottom`、`height`、`left`、`right`、`top`和`width`六个属性，表示它们相对于视口的四个坐标，以及本身的高度和宽度。
+
+对于盒状元素（比如`<div>`和`<p>`），该方法返回的对象中只有该元素一个成员。
+
+对于行内元素（比如`<span>`、`<a>`、`<em>`），该方法返回的对象有多少个成员(经过chrome浏览器测试)：
+
+HTML代码中行内元素行数，加上实际网页行数减一，
+
+比如代码中span元素写了三行，实际页面是2行，那么返回的对象就是4个 
+
+而`Element.getBoundingClientRect()`方法对于行内元素总是返回一个矩形对象。
+
+```html
+<style>
+    HTML, body {margin: 0;}
+    .one {
+        width: 800px; border: 1px solid; font-size: 15px;
+    }
+</style>
+<div class="one">
+    <span id="inline">
+        Hello World
+        Element.getClientRects
+        方法返回一个类似数组的对象Element.getClientRects方法返回一个类似数组的对象Ele
+    </span>
+</div>
+<script>
+    var el = document.getElementById('inline');
+    console.log(el.getClientRects().length);// 4
+    console.log(el.getClientRects());		// 1
+    // DOMRectList {0: DOMRect, 1: DOMRect, 2: DOMRect, 3: DOMRect, length: 4}
+    console.log(el.getBoundingClientRect());
+    // DOMRect {x: 1, y: 1, width: 790.71875, height: 42, top: 1, …}
+</script>
+```
+
+这个方法主要用于判断行内元素是否换行，以及行内元素的每一行的位置偏移。
+
+## 2.12 Element.insertAdjacentElement()
+
+`Element.insertAdjacentElement`方法在相对于当前元素的指定位置，插入一个新的节点。该方法返回被插入的节点，如果插入失败，返回`null`。
+
+该方法一共可以接受两个参数，第一个参数是一个字符串，表示插入的位置，第二个参数是将要插入的节点。第一个参数只可以取如下的值：
+
+> - `beforebegin`：当前元素之前
+> - `afterbegin`：当前元素内部的第一个子节点前面
+> - `beforeend`：当前元素内部的最后一个子节点后面
+> - `afterend`：当前元素之后
+
+注意，`beforebegin`和`afterend`这两个值，只在当前节点有父节点时才会生效。如果当前节点是由脚本创建的，没有父节点，那么插入会失败。
+
+如果插入的节点是一个文档里现有的节点，它会从原有位置删除，放置到新的位置。
+
+```html
+<p id="pp">我是pp</p>
+<div id="one"> 123</div>
+<script>
+    var one = document.getElementById('one');
+    var pp = document.getElementById('pp');
+    var p1 = document.createElement('p');
+    var p2 = document.createElement('p');
+    p2.innerText = 'p2q';
+    tt = p1.insertAdjacentElement('afterend', p2);
+    dd = one.insertAdjacentElement('afterend', p2);
+    ff = one.insertAdjacentElement('afterend', pp);// 这里会把 pp移动到div里面
+    console.log(tt);// null
+    console.log(dd);// <p>p2q</p>
+    console.log(ff);// <p id="pp">我是pp</p>
+</script>
+```
+
+### 2.13 Element.insertAdjacentHTML()，Element.insertAdjacentText()
+
+`Element.insertAdjacentHTML`方法用于将一个 HTML 字符串，解析生成 DOM 结构，插入相对于当前节点的指定位置。
+
+该方法接受两个参数，第一个是一个表示指定位置的字符串，第二个是待解析的 HTML 字符串。第一个参数只能设置下面四个值之一。
+
+> - `beforebegin`：当前元素之前
+> - `afterbegin`：当前元素内部的第一个子节点前面
+> - `beforeend`：当前元素内部的最后一个子节点后面
+> - `afterend`：当前元素之后
+
+该方法只是在现有的 DOM 结构里面插入节点，这使得它的执行速度比`innerHTML`方法快得多。
+
+注意，该方法不会转义 HTML 字符串，这导致它不能用来插入用户输入的内容，否则会有安全风险。
+
+`Element.insertAdjacentText`方法在相对于当前节点的指定位置，插入一个文本节点，用法与`Element.insertAdjacentHTML`方法完全一致。
+
+```html
+<div id="one">one</div>
+<div id="two">two</div>
+<script>
+    var one = document.getElementById('one');
+    var two = document.getElementById('two');
+    one.insertAdjacentHTML('beforeend', '<p id="pt">pp</p>');
+    one.insertAdjacentHTML('beforeend', '<>   1');
+    two.insertAdjacentText('beforeend', '<p id="pt">pp</p>');
+    two.insertAdjacentText('beforeend', '<>   1');
+    
+    // HTML 代码：<div id="one">one</div>
+    var d1 = document.getElementById('one');
+    d1.insertAdjacentHTML('afterend', '<div id="two">two</div>');
+    // 执行后的 HTML 代码：
+    // <div id="one">one</div><div id="two">two</div>
+    
+    // HTML 代码：<div id="one">one</div>
+    var d1 = document.getElementById('one');
+    d1.insertAdjacentText('afterend', 'two');
+    // 执行后的 HTML 代码：
+    // <div id="one">one</div>two
+</script>
+```
+
+### 2.14 Element.remove()
+
+`Element.remove`方法继承自 ChildNode 接口，用于将当前元素节点从它的父节点移除。
+
+```html
+3<div id="one">one</div>4
+<script>
+    var one = document.getElementById('one');
+    tt = one.remove();	// one从HTML中删除
+    console.log(tt)		// undefined
+</script>
+```
+
+### 2.15 Element.focus()，Element.blur()
+
+`Element.focus`方法用于将当前页面的焦点，转移到指定元素上。
+
+该方法可以接受一个对象作为参数。参数对象的`preventScroll`属性是一个布尔值，指定是否将当前元素停留在原始位置，而不是滚动到可见区域。
+
+```javascript
+function getFocus() {
+  document.getElementById('btn').focus({preventScroll:false});
+}
+```
+
+上面代码会让`btn`元素获得焦点，并滚动到可见区域。
+
+最后，从`document.activeElement`属性可以得到当前获得焦点的元素。
+
+`Element.blur`方法用于将焦点从当前元素移除。
+
+```html
+<div>123:<input id="one" type="text"></div>
+<div>ppp:<input id="two" type="text"></div>
+<script>
+    var one = document.getElementById('one');
+    one.focus();	// one 输入框会获取焦点
+    console.log(document.activeElement);// 可以得到有焦点的元素
+    //     one.blur();
+</script>
+```
+
+### 2.16 Element.click()
+
+`Element.click`方法用于在当前元素上模拟一次鼠标点击，相当于触发了`click`事件。
 
 
 
