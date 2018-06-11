@@ -474,6 +474,313 @@ new KeyboardEvent(type, options)
 - `KeyboardEvent.metaKey`：是否按下 meta 键（Mac 系统是一个四瓣的小花，Windows 系统是 windows 键）
 - `KeyboardEvent.shiftKey`：是否按下 Shift 键
 
+```html
+<script>
+    function showChar(e){
+        console.log("ALT: " + e.altKey);
+        console.log("CTRL: " + e.ctrlKey);
+        console.log("Meta: " + e.metaKey);
+        console.log("Meta: " + e.shiftKey);
+    }
+    document.body.addEventListener('keyup', showChar, false);
+</script>
+```
+
+### 8.2 KeyboardEvent.code
+
+- `KeyboardEvent.code`属性返回一个字符串，表示当前按下的键的字符串形式。该属性只读。
+
+下面是一些常用键的字符串形式，其他键请查[文档](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code#Code_values)。
+
+> 数字键0 - 9：返回`digital0` - `digital9`
+>
+> 字母键A - z：返回`KeyA` - `KeyZ`
+>
+> 功能键F1 - F12：返回 `F1` - `F12`
+>
+> 方向键：返回`ArrowDown`、`ArrowUp`、`ArrowLeft`、`ArrowRight`
+>
+> Alt 键：返回`AltLeft`或`AltRight`
+>
+> Shift 键：返回`ShiftLeft`或`ShiftRight`
+>
+> Ctrl 键：返回`ControLeft`或`ControlRight`
+
+```html
+<script>
+    function showChar(e){
+        console.log("code: " + e.code);
+    }
+    document.body.addEventListener('keyup', showChar, false);
+</script>
+```
+
+上面的代码执行后，在页面上按键盘后，会输出对应按键的code
+
+### 8.3 KeyboardEvent.key
+
+- `KeyboardEvent.key`属性返回一个字符串，表示按下的键名。该属性只读。
+
+如果按下的键代表可打印字符，则返回这个字符，比如数字、字母。
+
+如果按下的键代表不可打印的特殊字符，则返回预定义的键值，比如 Backspace，Tab，Enter，Shift，Control，Alt，CapsLock，Esc，Spacebar，PageUp，PageDown，End，Home，Left，Right，Up，Down，PrintScreen，Insert，Del，Win，F1～F12，NumLock，Scroll 等。
+
+如果同时按下一个控制键和一个符号键，则返回符号键的键名。比如，按下 Ctrl + a，则返回`a`；按下 Shift + a，则返回大写的`A`。
+
+如果无法识别键名，返回字符串`Unidentified`。
+
+```html
+<script>
+    function showChar(e){ console.log("key: " + e.key); }
+    document.body.addEventListener('keyup', showChar, false);
+</script>
+```
+
+### 8.4 KeyboardEvent.location
+
+- `KeyboardEvent.location`属性返回一个整数，表示按下的键处在键盘的哪一个区域。它可能取以下值
+
+  > 0：处在键盘的主区域，或者无法判断处于哪一个区域。
+  >
+  > 1：处在键盘的左侧，只适用那些有两个位置的键（比如 Ctrl 和 Shift 键）。
+  >
+  > 2：处在键盘的右侧，只适用那些有两个位置的键（比如 Ctrl 和 Shift 键）。
+  >
+  > 3：处在数字小键盘。
+
+```html
+<script>
+    function showChar(e){ console.log("location: " + e.location); }
+    document.body.addEventListener('keyup', showChar, false);
+</script>
+```
+
+上面的代码可以监控到按键在键盘的位置。
+
+### 8.5 KeyboardEvent.repeat
+
+`KeyboardEvent.repeat`返回一个布尔值，代表该键是否被按着不放，以便判断是否重复这个键，即浏览器会持续触发`keydown`和`keypress`事件，直到用户松开手为止。
+
+```html
+<script>
+    function showChar(e){ console.log("repeat: " + e.repeat); }
+    document.body.addEventListener('keydown', showChar, false);
+    // document.body.addEventListener('keypress', showChar, false);
+    // document.body.addEventListener('keyup', showChar, false);
+</script>
+```
+
+上面的代码执行后，在页面上按住一个键不放就出测试出repeat，
+
+注意监听`keyup`不会触发`repeat`。
+
+## 9. KeyboardEvent 的实例方法
+
+### 9.1 KeyboardEvent.getModifierState()
+
+`KeyboardEvent.getModifierState()`方法返回一个布尔值，表示是否按下或激活指定的功能键。
+
+它的常用参数如下:
+
+> - `Alt`：Alt 键
+> - `CapsLock`：大写锁定键
+> - `Control`：Ctrl 键
+> - `Meta`：Meta 键
+> - `NumLock`：数字键盘开关键
+> - `Shift`：Shift 键
+
+```html
+<script>
+    function showChar(e){ 
+        if (
+            event.getModifierState('Control') +
+            event.getModifierState('Alt') +
+            event.getModifierState('Meta') == 3
+        ) {
+            console.log('Control Alt Meta')
+        } else { console.log('没有') }
+    }
+    document.body.addEventListener('keydown', showChar, false);
+</script>
+```
+
+## 10. 进度事件
+
+ 进度事件用来描述资源加载的进度，主要由 AJAX 请求、`<img>`、`<audio>`、`<video>`、`<style>`、`<link>`等外部资源的加载触发，继承了`ProgressEvent`接口。它主要包含以下几种事件:
+
+> - `abort`：外部资源中止加载时（比如用户取消）触发。如果发生错误导致中止，不会触发该事件。
+> - `error`：由于错误导致外部资源无法加载时触发。
+> - `load`：外部资源加载成功时触发。
+> - `loadstart`：外部资源开始加载时触发。
+> - `loadend`：外部资源停止加载时触发，发生顺序排在`error`、`abort`、`load`等事件的后面。
+> - `progress`：外部资源加载过程中不断触发。
+> - `timeout`：加载超时时触发。
+
+注意，除了资源下载，文件上传也存在这些事件。
+
+```javascript
+image.addEventListener('load', function (event) {
+  image.classList.add('finished');
+});
+
+image.addEventListener('error', function (event) {
+  image.style.display = 'none';
+});
+```
+
+上面代码在图片元素加载完成后，为图片元素添加一个`finished`的 Class。如果加载失败，就把图片元素的样式设置为不显示。
+
+有时候，图片加载会在脚本运行之前就完成，尤其是当脚本放置在网页底部的时候，因此有可能`load`和`error`事件的监听函数根本不会执行。所以，比较可靠的方式，是用`complete`属性先判断一下是否加载完成。
+
+```javascript
+function loaded() {
+  // ...
+}
+
+if (image.complete) {
+  loaded();
+} else {
+  image.addEventListener('load', loaded);
+}
+```
+
+由于 DOM 的元素节点没有提供是否加载错误的属性，所以`error`事件的监听函数最好放在`<img>`元素的 HTML 代码中，这样才能保证发生加载错误时百分之百会执行。 
+
+```html
+<img src="/wrong/url" onerror="this.style.display='none';" />
+```
+
+`loadend`事件的监听函数，可以用来取代`abort`事件、`load`事件、`error`事件的监听函数，因为它总是在这些事件之后发生。
+
+```javascript
+req.addEventListener('loadend', loadEnd, false);
+
+function loadEnd(e) {
+  console.log('传输结束，成功失败未知');
+}
+```
+
+`loadend`事件本身不提供关于进度结束的原因，但可以用它来做所有加载结束场景都需要做的一些操作。
+
+另外，`error`事件有一个特殊的性质，就是不会冒泡。所以，子元素的`error`事件，不会触发父元素的`error`事件监听函数。
+
+## 11. ProgressEvent 接口
+
+`ProgressEvent`接口主要用来描述外部资源加载的进度，比如 AJAX 加载、`<img>`、`<video>`、`<style>`、`<link>`等外部资源加载。进度相关的事件都继承了这个接口。
+
+浏览器原生提供了`ProgressEvent()`构造函数，用来生成事件实例。
+
+```javascript
+new ProgressEvent(type, options)
+```
+
+`ProgressEvent()`构造函数接受两个参数。第一个参数是字符串，表示事件的类型，这个参数是必须的。第二个参数是一个配置对象，表示事件的属性，该参数可选。配置对象除了可以使用`Event`接口的配置属性，还可以使用下面的属性，所有这些属性都是可选的。
+
+> - `lengthComputable`：布尔值，表示加载的总量是否可以计算，默认是`false`。
+> - `loaded`：整数，表示已经加载的量，默认是`0`。
+> - `total`：整数，表示需要加载的总量，默认是`0`。
+
+
+
+`ProgressEvent`具有对应的实例属性。
+
+> - `ProgressEvent.lengthComputable`
+> - `ProgressEvent.loaded`
+> - `ProgressEvent.total`
+
+如果`ProgressEvent.lengthComputable`为`false`，`ProgressEvent.total`实际上是没有意义的。
+
+下面是一个例子。
+
+```html
+<script>
+    var p = new ProgressEvent('load', {
+        lengthComputable: true,
+        loaded: 30,
+        total: 100,
+    });
+    document.body.addEventListener('load', function (e) {
+        console.log('已经加载：' + (e.loaded / e.total) * 100 + '%');
+    });
+    document.body.dispatchEvent(p);
+</script>
+```
+
+上面代码先构造一个`load`事件，抛出后被监听函数捕捉到。
+
+下面是一个实际的例子。
+
+```javascript
+var xhr = new XMLHttpRequest();
+
+xhr.addEventListener('progress', updateProgress, false);
+xhr.addEventListener('load', transferComplete, false);
+xhr.addEventListener('error', transferFailed, false);
+xhr.addEventListener('abort', transferCanceled, false);
+
+xhr.open();
+function updateProgress(e) {
+  if (e.lengthComputable) {
+    var percentComplete = e.loaded / e.total;
+  } else {
+    console.log('不能计算进度');
+  }
+}
+
+function transferComplete(e) {
+  console.log('传输结束');
+}
+
+function transferFailed(evt) {
+  console.log('传输过程中发生错误');
+}
+
+function transferCanceled(evt) {
+  console.log('用户取消了传输');
+}
+```
+
+上面是下载过程的进度事件，还存在上传过程的进度事件。这时所有监听函数都要放在`XMLHttpRequest.upload`对象上面。
+
+```javascript
+var xhr = new XMLHttpRequest();
+
+xhr.upload.addEventListener('progress', updateProgress, false);
+xhr.upload.addEventListener('load', transferComplete, false);
+xhr.upload.addEventListener('error', transferFailed, false);
+xhr.upload.addEventListener('abort', transferCanceled, false);
+
+xhr.open();
+```
+
+
+
+## 12. 拖拉事件
+
+拖拉（drag）指的是，用户在某个对象上按下鼠标键不放，拖动它到另一个位置，然后释放鼠标键，将该对象放在那里。
+
+拖拉的对象有好几种，包括元素节点、图片、链接、选中的文字等等。在网页中，除了元素节点默认不可以拖拉，其他（图片、链接、选中的文字）都是可以直接拖拉的。为了让元素节点可拖拉，可以将该节点的`draggable`属性设为`true`。
+
+```html
+<div draggable="true">
+  此区域可拖拉
+</div>
+```
+
+`draggable`属性可用于任何元素节点，但是图片（`<img>`）和链接（`<a>`）不加这个属性，就可以拖拉。对于它们，用到这个属性的时候，往往是将其设为`false`，防止拖拉这两种元素。
+
+注意，一旦某个元素节点的`draggable`属性设为`true`，就无法再用鼠标选中该节点内部的文字或子节点了。
+
+当元素节点或选中的文本被拖拉时，就会持续触发拖拉事件，包括以下一些事件。
+
+> - `drag`：拖拉过程中，在被拖拉的节点上持续触发（相隔几百毫秒）。
+> - `dragstart`：用户开始拖拉时，在被拖拉的节点上触发，该事件的`target`属性是被拖拉的节点。通常应该在这个事件的监听函数中，指定拖拉的数据。
+> - `dragend`：拖拉结束时（释放鼠标键或按下 ESC 键）在被拖拉的节点上触发，该事件的`target`属性是被拖拉的节点。它与`dragstart`事件，在同一个节点上触发。不管拖拉是否跨窗口，或者中途被取消，`dragend`事件总是会触发的。
+> - `dragenter`：拖拉进入当前节点时，在当前节点上触发一次，该事件的`target`属性是当前节点。通常应该在这个事件的监听函数中，指定是否允许在当前节点放下（drop）拖拉的数据。如果当前节点没有该事件的监听函数，或者监听函数不执行任何操作，就意味着不允许在当前节点放下数据。在视觉上显示拖拉进入当前节点，也是在这个事件的监听函数中设置。
+> - `dragover`：拖拉到当前节点上方时，在当前节点上持续触发（相隔几百毫秒），该事件的`target`属性是当前节点。该事件与`dragenter`事件的区别是，`dragenter`事件在进入该节点时触发，然后只要没有离开这个节点，`dragover`事件会持续触发。
+> - `dragleave`：拖拉操作离开当前节点范围时，在当前节点上触发，该事件的`target`属性是当前节点。如果要在视觉上显示拖拉离开操作当前节点，就在这个事件的监听函数中设置。
+> - `drop`：被拖拉的节点或选中的文本，释放到目标节点时，在目标节点上触发。注意，如果当前节点不允许`drop`，即使在该节点上方松开鼠标键，也不会触发该事件。如果用户按下 ESC 键，取消这个操作，也不会触发该事件。该事件的监听函数负责取出拖拉数据，并进行相关处理。
+
 
 
 
