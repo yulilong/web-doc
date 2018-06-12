@@ -781,7 +781,140 @@ xhr.open();
 > - `dragleave`：拖拉操作离开当前节点范围时，在当前节点上触发，该事件的`target`属性是当前节点。如果要在视觉上显示拖拉离开操作当前节点，就在这个事件的监听函数中设置。
 > - `drop`：被拖拉的节点或选中的文本，释放到目标节点时，在目标节点上触发。注意，如果当前节点不允许`drop`，即使在该节点上方松开鼠标键，也不会触发该事件。如果用户按下 ESC 键，取消这个操作，也不会触发该事件。该事件的监听函数负责取出拖拉数据，并进行相关处理。
 
+下面的例子展示，如何动态改变被拖动节点的背景色。
 
+```html
+<div id="one" draggable="true">可拖动div</div>
+<div> <a href="">dadasdasdsadasdasds</a> </div>
+<script>
+    var div = document.getElementById("one");
+    div.addEventListener('dragstart', function (e) {
+        this.style.backgroundColor = 'red';
+    }, false);
+    div.addEventListener('dragend', function (e) {
+        this.style.backgroundColor = 'green';
+    }, false);
+</script>
+```
+
+上面代码中，`div`节点被拖动时，背景色会变为红色，拖动结束，又变回绿色。
+
+下面是一个例子，展示如何实现将一个节点从当前父节点，拖拉到另一个父节点中。
+
+```html
+<style> .dropzone {border: 1px solid; min-height: 100px;} </style>
+<div class="dropzone">
+    <div id="dragged" draggable="true"> 该节点可拖拉 </div>
+</div>
+<div class="dropzone"></div>
+<div class="dropzone"></div>
+<div class="dropzone"></div>
+<script>
+    var dragged = document.getElementById("dragged");
+    // 开始拖动时触发：拖动的节点字体颜色变红，背景色变通欧明
+    document.addEventListener('dragstart', function (event) {
+        dragged = event.target;	// 保存被拖拉节点
+        event.target.style.opacity = 0.5;// 被拖拉节点的背景色变透明
+        event.target.style.color = "yellow";
+    }, false);
+    // 拖动结束后触发：拖动的节点字体颜色恢复，背景色恢复
+    document.addEventListener('dragend', function (event) {
+        event.target.style.opacity = '';// 被拖拉节点的背景色恢复正常
+        event.target.style.color = "";
+    }, false);
+    // 拖拉到当前节点上方时，在当前节点上持续触发
+    document.addEventListener('dragover', function (event) {
+        event.preventDefault();// 防止拖拉效果被重置，允许被拖拉的节点放入目标节点
+    }, false);
+    // 拖拉进入当前节点时，在当前节点上触发一次
+    document.addEventListener('dragenter', function (event) {
+        // 目标节点的背景色变紫色
+        // 由于该事件会冒泡，所以要过滤节点
+        if (event.target.className === 'dropzone') {
+            event.target.style.background = 'purple';
+        }
+    }, false);
+    // 拖拉操作离开当前节点范围时，在当前节点上触发
+    document.addEventListener('dragleave', function( event ) {
+        // 目标节点的背景色恢复原样
+        if (event.target.className === 'dropzone') {
+            event.target.style.background = '';
+        }
+    }, false);
+    // 被拖拉的节点或选中的文本，释放到目标节点时，在目标节点上触发
+    document.addEventListener('drop', function( event ) {
+        // 防止事件默认行为（比如某些元素节点上可以打开链接），
+        event.preventDefault();
+        if (event.target.className === 'dropzone') {
+            // 恢复目标节点背景色
+            event.target.style.background = '';
+            // 将被拖拉节点插入目标节点
+            dragged.parentNode.removeChild(dragged);
+            event.target.appendChild( dragged );
+        }
+    }, false);
+</script>
+```
+
+
+
+关于拖拉事件，有以下几个注意点:
+
+> - 拖拉过程只触发以上这些拖拉事件，尽管鼠标在移动，但是鼠标事件不会触发。
+> - 将文件从操作系统拖拉进浏览器，不会触发`dragstart`和`dragend`事件。
+> - `dragenter`和`dragover`事件的监听函数，用来取出拖拉的数据（即允许放下被拖拉的元素）。由于网页的大部分区域不适合作为放下拖拉元素的目标节点，所以这两个事件的默认设置为当前节点不允许接受被拖拉的元素。如果想要在目标节点上放下的数据，首先必须阻止这两个事件的默认行为。
+
+```html
+<div ondragover="return false">
+<div ondragover="event.preventDefault()">
+```
+
+上面代码中，如果不取消拖拉事件或者阻止默认行为，就不能在`div`节点上放下被拖拉的节点。
+
+## 13. DragEvent 接口
+
+拖拉事件都继承了`DragEvent`接口，这个接口又继承了`MouseEvent`接口和`Event`接口。
+
+浏览器原生提供一个`DragEvent()`构造函数，用来生成拖拉事件的实例对象。
+
+```html
+new DragEvent(type, options)
+```
+
+`DragEvent()`构造函数接受两个参数，第一个参数是字符串，表示事件的类型，该参数必须；第二个参数是事件的配置对象，用来设置事件的属性，该参数可选。配置对象除了接受`MouseEvent`接口和`Event`接口的配置属性，还可以设置`dataTransfer`属性要么是`null`，要么是一个`DataTransfer`接口的实例。
+
+`DataTransfer`的实例对象用来读写拖拉事件中传输的数据
+
+## 14. DataTransfer 接口概述
+
+所有拖拉事件的实例都有一个`DragEvent.dataTransfer`属性，用来读写需要传递的数据。这个属性的值是一个`DataTransfer`接口的实例。
+
+浏览器原生提供一个`DataTransfer()`构造函数，用来生成`DataTransfer`实例对象。
+
+```javascript
+var dataTrans = new DataTransfer();
+```
+
+`DataTransfer()`构造函数不接受参数。
+
+ 拖拉的数据分成两方面：数据的种类（又称格式）和数据的值。数据的种类是一个 MIME 字符串（比如`text/plain`、`image/jpeg`），数据的值是一个字符串。一般来说，如果拖拉一段文本，则数据默认就是那段文本；如果拖拉一个链接，则数据默认就是链接的 URL。
+
+拖拉事件开始时，开发者可以提供数据类型和数据值。拖拉过程中，开发者通过`dragenter`和`dragover`事件的监听函数，检查数据类型，以确定是否允许放下（drop）被拖拉的对象。比如，在只允许放下链接的区域，检查拖拉的数据类型是否为`text/uri-list`。
+
+发生`drop`事件时，监听函数取出拖拉的数据，对其进行处理。
+
+## 15.DataTransfer 的实例属性
+
+### 15.1 DataTransfer.dropEffect
+
+`DataTransfer.dropEffect`属性用来设置放下（drop）被拖拉节点时的效果，会影响到拖拉经过相关区域时鼠标的形状。它可能取下面的值。
+
+> - copy：复制被拖拉的节点
+> - move：移动被拖拉的节点
+> - link：创建指向被拖拉的节点的链接
+> - none：无法放下被拖拉的节点
+
+除了上面这些值，设置其他的值都是无效的。
 
 
 
