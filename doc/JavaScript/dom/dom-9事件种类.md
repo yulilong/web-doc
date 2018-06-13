@@ -916,6 +916,344 @@ var dataTrans = new DataTransfer();
 
 除了上面这些值，设置其他的值都是无效的。
 
+```javascript
+target.addEventListener('dragover', function (e) {
+  e.preventDefault();
+  e.stopPropagation();
+  e.dataTransfer.dropEffect = 'copy';
+});
+```
+
+上面代码中，被拖拉元素一旦`drop`，接受的区域会复制该节点。
+
+`dropEffect`属性一般在`dragenter`和`dragover`事件的监听函数中设置，对于`dragstart`、`drag`、`dragleave`这三个事件，该属性不起作用。因为该属性只对接受被拖拉的节点的区域有效，对被拖拉的节点本身是无效的。进入目标区域后，拖拉行为会初始化成设定的效果。
+
+```html
+<div id="one" draggable="true">可拖动div</div>
+<div> <a href="">dadasdasdsadasdasds</a> </div>
+<script>
+    var div = document.getElementById("one");
+    div.addEventListener('dragover', function (e) {
+        console.log(e.dataTransfer.dropEffect)
+    }, false);
+</script>
+```
+
+### 15.2 DataTransfer.effectAllowed
+
+`DataTransfer.effectAllowed`属性设置本次拖拉中允许的效果。它可能取下面的值。
+
+> - copy：复制被拖拉的节点
+> - move：移动被拖拉的节点
+> - link：创建指向被拖拉节点的链接
+> - copyLink：允许`copy`或`link`
+> - copyMove：允许`copy`或`move`
+> - linkMove：允许`link`或`move`
+> - all：允许所有效果
+> - none：无法放下被拖拉的节点
+> - uninitialized：默认值，等同于`all`
+
+如果某种效果是不允许的，用户就无法在目标节点中达成这种效果。
+
+这个属性与`dropEffect`属性是同一件事的两个方面。前者设置被拖拉的节点允许的效果，后者设置接受拖拉的区域的效果，它们往往配合使用。
+
+`dragstart`事件的监听函数，可以用来设置这个属性。其他事件的监听函数里面设置这个属性是无效的。
+
+```javascript
+source.addEventListener('dragstart', function (e) {
+  e.dataTransfer.effectAllowed = 'move';
+});
+
+target.addEventListener('dragover', function (e) {
+  ev.dataTransfer.dropEffect = 'move';
+});
+```
+
+只要`dropEffect`属性和`effectAllowed`属性之中，有一个为`none`，就无法在目标节点上完成`drop`操作。
+
+### 15.3 DataTransfer.files
+
+`DataTransfer.files`属性是一个 FileList 对象，包含一组本地文件，可以用来在拖拉操作中传送。如果本次拖拉不涉及文件，则该属性为空的 FileList 对象。
+
+下面就是一个接收拖拉文件的例子。
+
+```html
+<div id="output" style="min-height: 200px;border: 1px solid black;">
+    文件拖拉到这里
+</div>
+<script>
+    var div = document.getElementById('output');
+    div.addEventListener("dragenter", function( event ) {
+        div.textContent = '';
+        event.stopPropagation();
+        event.preventDefault();
+    }, false);
+    div.addEventListener("dragover", function( event ) {
+        event.stopPropagation();
+        event.preventDefault();
+    }, false);
+    div.addEventListener("drop", function( event ) {
+        event.stopPropagation();
+        event.preventDefault();
+        var files = event.dataTransfer.files;
+        for (var i = 0; i < files.length; i++) {
+            div.textContent += files[i].name + ' ' + files[i].size + '字节\n';
+        }
+    }, false);
+</script>
+```
+
+上面代码中，通过`dataTransfer.files`属性读取被拖拉的文件的信息。如果想要读取文件内容，就要使用`FileReader`对象。
+
+```javascript
+div.addEventListener('drop', function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  var fileList = e.dataTransfer.files;
+  if (fileList.length > 0) {
+    var file = fileList[0];
+    var reader = new FileReader();
+    reader.onloadend = function(e) {
+      if (e.target.readyState === FileReader.DONE) {
+        var content = reader.result;
+        div.innerHTML = 'File: ' + file.name + '\n\n' + content;
+      }
+    }
+    reader.readAsBinaryString(file);
+  }
+});
+```
+
+### 15.4 DataTransfer.types
+
+`DataTransfer.types`属性是一个只读的数组，每个成员是一个字符串，里面是拖拉的数据格式（通常是 MIME 值）。比如，如果拖拉的是文字，对应的成员就是`text/plain`。
+
+下面是一个例子，通过检查`dataTransfer`属性的类型，决定是否允许在当前节点执行`drop`操作。
+
+```html
+function contains(list, value){
+  for (var i = 0; i < list.length; ++i) {
+    if(list[i] === value) return true;
+  }
+  return false;
+}
+
+function doDragOver(event) {
+  var isLink = contains(event.dataTransfer.types, 'text/uri-list');
+  if (isLink) event.preventDefault();
+}
+```
+
+上面代码中，只有当被拖拉的节点是一个链接时，才允许在当前节点放下。
+
+### 15.5 DataTransfer.items
+
+`DataTransfer.items`属性返回一个类似数组的只读对象（DataTransferItemList 实例），每个成员就是本次拖拉的一个对象（DataTransferItem 实例）。如果本次拖拉不包含对象，则返回一个空对象。
+
+DataTransferItemList 实例具有以下的属性和方法。
+
+> - `length`：返回成员的数量
+> - `add(data, type)`：增加一个指定内容和类型（比如`text/html`和`text/plain`）的字符串作为成员
+> - `add(file)`：`add`方法的另一种用法，增加一个文件作为成员
+> - `remove(index)`：移除指定位置的成员
+> - `clear()`：移除所有的成员
+
+DataTransferItem 实例具有以下的属性和方法。
+
+> - `kind`：返回成员的种类（`string`还是`file`）。
+> - `type`：返回成员的类型（通常是 MIME 值）。
+> - `getAsFile()`：如果被拖拉是文件，返回该文件，否则返回`null`。
+> - `getAsString(callback)`：如果被拖拉的是字符串，将该字符传入指定的回调函数处理。该方法是异步的，所以需要传入回调函数。
+
+下面是一个例子。
+
+```html
+<div id="output" style="min-height: 200px;border: 1px solid black;">
+    文件拖拉到这里
+</div>
+<script>
+    var div = document.getElementById('output');
+    div.addEventListener("dragenter", function( event ) {
+        div.textContent = '';
+        event.stopPropagation();
+        event.preventDefault();
+    }, false);
+    div.addEventListener("dragover", function( event ) {
+        event.stopPropagation();
+        event.preventDefault();
+    }, false);
+    div.addEventListener('drop', function (e) {
+        e.preventDefault();
+        if (e.dataTransfer.items != null) {
+            for (var i = 0; i < e.dataTransfer.items.length; i++) {
+                console.log(e.dataTransfer.items[i].kind + ': ' + e.dataTransfer.items[i].type);
+            }
+        }
+    });
+</script>
+```
+
+上面的代码运行后，把文件拖进div中后，会在控制台显示信息。
+
+## 16. DataTransfer 的实例方法
+
+### 16.1 DataTransfer.setData()
+
+`DataTransfer.setData()`方法用来设置拖拉事件所带有的数据。该方法没有返回值。
+
+```javascript
+event.dataTransfer.setData('text/plain', 'Text to drag');
+```
+
+上面代码为当前的拖拉事件加入纯文本数据。
+
+该方法接受两个参数，都是字符串。第一个参数表示数据类型（比如`text/plain`），第二个参数是具体数据。如果指定类型的数据在`dataTransfer`属性不存在，那么这些数据将被加入，否则原有的数据将被新数据替换。
+
+如果是拖拉文本框或者拖拉选中的文本，会默认将对应的文本数据，添加到`dataTransfer`属性，不用手动指定。
+
+```html
+<div draggable="true">
+  aaa
+</div>
+```
+
+上面代码中，拖拉这个`<div>`元素会自动带上文本数据`aaa`。
+
+使用`setData`方法，可以替换到原有数据。
+
+```html
+<div
+  draggable="true"
+  ondragstart="event.dataTransfer.setData('text/plain', 'bbb')"
+>
+  aaa
+</div>
+```
+
+上面代码中，拖拉数据实际上是`bbb`，而不是`aaa`。
+
+下面是添加其他类型的数据。由于`text/plain`是最普遍支持的格式，为了保证兼容性，建议最后总是保存一份纯文本格式的数据。
+
+```javascript
+var dt = event.dataTransfer;
+
+// 添加链接
+dt.setData('text/uri-list', 'http://www.example.com');
+dt.setData('text/plain', 'http://www.example.com');
+
+// 添加 HTML 代码
+dt.setData('text/html', 'Hello there, <strong>stranger</strong>');
+dt.setData('text/plain', 'Hello there, <strong>stranger</strong>');
+
+// 添加图像的 URL
+dt.setData('text/uri-list', imageurl);
+dt.setData('text/plain', imageurl);
+```
+
+可以一次提供多种格式的数据。
+
+```javascript
+var dt = event.dataTransfer;
+dt.setData('application/x-bookmark', bookmarkString);
+dt.setData('text/uri-list', 'http://www.example.com');
+dt.setData('text/plain', 'http://www.example.com');
+```
+
+上面代码中，通过在同一个事件上面，存放三种类型的数据，使得拖拉事件可以在不同的对象上面，`drop`不同的值。注意，第一种格式是一个自定义格式，浏览器默认无法读取，这意味着，只有某个部署了特定代码的节点，才可能`drop`（读取到）这个数据。
+
+### 16.2 DataTransfer.getData()
+
+`DataTransfer.getData()`方法接受一个字符串（表示数据类型）作为参数，返回事件所带的指定类型的数据（通常是用`setData`方法添加的数据）。如果指定类型的数据不存在，则返回空字符串。通常只有`drop`事件触发后，才能取出数据。
+
+下面是一个`drop`事件的监听函数，用来取出指定类型的数据。
+
+```javascript
+function onDrop(event) {
+  var data = event.dataTransfer.getData('text/plain');
+  event.target.textContent = data;
+  event.preventDefault();
+}
+```
+
+上面代码取出拖拉事件的文本数据，将其替换成当前节点的文本内容。注意，这时还必须取消浏览器的默认行为，因为假如用户拖拉的是一个链接，浏览器默认会在当前窗口打开这个链接。
+
+`getData`方法返回的是一个字符串，如果其中包含多项数据，就必须手动解析。
+
+```javascript
+function doDrop(event) {
+  var lines = event.dataTransfer.getData('text/uri-list').split('\n');
+  for (let line of lines) {
+    let link = document.createElement('a');
+    link.href = line;
+    link.textContent = line;
+    event.target.appendChild(link);
+  }
+  event.preventDefault();
+}
+```
+
+上面代码中，`getData`方法返回的是一组链接，就必须自行解析。
+
+类型值指定为`URL`，可以取出第一个有效链接。
+
+```
+var link = event.dataTransfer.getData('URL');
+```
+
+下面的例子是从多种类型的数据里面取出数据。
+
+```
+function doDrop(event) {
+  var types = event.dataTransfer.types;
+  var supportedTypes = ['text/uri-list', 'text/plain'];
+  types = supportedTypes.filter(function (value) { types.includes(value) });
+  if (types.length) {
+    var data = event.dataTransfer.getData(types[0]);
+  }
+  event.preventDefault();
+}
+```
+
+### 16.3 DataTransfer.clearData()
+
+ `DataTransfer.clearData()`方法接受一个字符串（表示数据类型）作为参数，删除事件所带的指定类型的数据。如果没有指定类型，则删除所有数据。如果指定类型不存在，则调用该方法不会产生任何效果。
+
+```
+event.dataTransfer.clearData('text/uri-list');
+```
+
+上面代码清除事件所带的`text/uri-list`类型的数据。
+
+该方法不会移除拖拉的文件，因此调用该方法后，`DataTransfer.types`属性可能依然会返回`Files`类型（前提是存在文件拖拉）。
+
+注意，该方法只能在`dragstart`事件的监听函数之中使用，因为这是拖拉操作的数据唯一可写的时机。
+
+### 16.4 DataTransfer.setDragImage()
+
+拖动过程中（`dragstart`事件触发后），浏览器会显示一张图片跟随鼠标一起移动，表示被拖动的节点。这张图片是自动创造的，通常显示为被拖动节点的外观，不需要自己动手设置。
+
+`DataTransfer.setDragImage()`方法可以自定义这张图片。它接受三个参数。第一个是`<img>`节点或者`<canvas>`节点，如果省略或为`null`，则使用被拖动的节点的外观；第二个和第三个参数为鼠标相对于该图片左上角的横坐标和右坐标。
+
+下面是一个例子。
+
+```html
+<div id="drag-with-image" class="dragdemo" draggable="true">
+    drag me
+</div>
+<script>
+    var div = document.getElementById('drag-with-image');
+    div.addEventListener('dragstart', function (e) {
+        var img = document.createElement('img');
+        img.src = 'http://path/to/img';
+        e.dataTransfer.setDragImage(img, 0, 0);
+    }, false);
+</script>
+```
+
+
+
+
+
 
 
 
