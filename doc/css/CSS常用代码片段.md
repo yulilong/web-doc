@@ -28,3 +28,23 @@
 这样`<footer>`就会在底部了。
 
 参考资料：https://blog.csdn.net/u014374031/article/details/69258208
+
+
+
+### 2. a标签去掉下划线
+
+
+
+```html
+<style type="text/css">
+a:link,a:visited{
+ text-decoration:none;  /*超链接无下划线*/
+}
+a:hover{
+ text-decoration:underline;  /*鼠标放上去有下划线*/
+}
+</style>
+
+<a href="#">超链接</a>
+```
+

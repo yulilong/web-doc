@@ -52,6 +52,7 @@
   - [Normalize.css和Reset CSS](/doc/css/Normalize.css和Reset CSS.md)
   - [LESS-SCSS语法](/doc/css/LESS-SCSS语法.md)
   - [CSS常用代码片段](/doc/css/CSS常用代码片段.md)
+  - [CSS选择器](/doc/css/CSS选择器.md)
 * 其他
   - [前端笔试编程题](/doc/other/前端笔试编程题.md)
   - [前端面试题](/doc/other/前端面试题.md)
