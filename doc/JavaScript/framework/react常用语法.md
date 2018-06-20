@@ -49,3 +49,42 @@ ReactDOM.render(<HelloWorld/>,document.getElementById("app"))
 
 参考资料：https://blog.csdn.net/chuipaopao163/article/details/73432229
 
+### 2. 生命周期（Lifecycle）
+
+React 的生命周期包括三个阶段：mount（挂载）、update（更新）和 unmount（移除）
+
+#### 2.1 mount
+
+mount 就是第一次让组件出现在页面中的过程。这个过程的关键就是 render 方法。React 会将 render 的返回值（一般是虚拟 DOM，也可以是 DOM 或者 null）插入到页面中。
+
+这个过程会暴露几个钩子（hook）方便你往里面加代码：
+
+1. constructor()
+2. componentWillMount()
+3. render()
+4. componentDidMount()
+
+我用一幅图解释一下：
+
+![](http://cdn.jscode.me/2017-04-09-14916683117874.jpg)
+
+#### 2.2 update
+
+mount 之后，如果数据有任何变动，就会来到 update 过程，这个过程有 5 个钩子：
+
+1. componentWillReceiveProps(nextProps) - 我要读取 props 啦！
+
+2. shouldComponentUpdate(nextProps, nextState) - 请问要不要更新组件？true / false
+3. componentWillUpdate() - 我要更新组件啦！
+4. render() - 更新！
+5. componentDidUpdate() - 更新完毕啦！
+
+ #### 2.3 unmount
+
+当一个组件将要从页面中移除时，会进入 unmount 过程，这个过程就一个钩子：
+
+1. componentWillUnmount() - 我要死啦！
+
+你可以在这个组件死之前做一些清理工作。
+
+ 
