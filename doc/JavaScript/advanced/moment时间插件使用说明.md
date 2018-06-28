@@ -1,3 +1,32 @@
+## 1. moment代码片段
+
+### 1.1 获取当前月份时间段
+
+```javascript
+var firstDay = moment().startOf('month').format('YYYY-MM-DD');
+var lastDay  = moment().endOf('month').format('YYYY-MM-DD');
+```
+
+### 1.2 获取本周时间段：
+
+```javascript
+var firstDay = moment().day(0).format('YYYY-MM-DD');
+var lastDay = moment().day(7).format('YYYY-MM-DD');
+```
+
+### 1.3 获取3个月内的时间段
+
+```javascript
+var currentMonth = moment().month()+1,
+var currentYear  = moment().year(),<span style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;"> </span>
+var lastMonth    = currentMonth-3;
+lastMonth    = (currentMonth-3)<10?'0'+lastMonth:lastMonth;
+ var lastDay = moment().startOf('month').format('YYYY-MM-DD'),
+       firstDay = currentYear +'-'+ lastMonsth + '-01';
+```
+
+参考资料：https://blog.csdn.net/XingKong22star/article/details/44240687
+
 
 
 ## 参考资料
