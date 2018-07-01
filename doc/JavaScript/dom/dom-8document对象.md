@@ -239,7 +239,43 @@ document.referrer
 
 一般来说，如果网页代码的第一行设置了明确的`DOCTYPE`（比如`<!doctype html>`），`document.compatMode`的值都为`CSS1Compat`。
 
- 
+ ### 2.4 文档状态属性
+
+#### 2.4.1 document.hidden
+
+`document.hidden`属性返回一个布尔值，表示当前页面是否可见。如果窗口最小化、浏览器切换了 Tab，都会导致导致页面不可见，使得`document.hidden`返回`true`。
+
+这个属性是 Page Visibility API 引入的，一般都是配合这个 API 使用。
+
+#### 2.4.2 document.visibilityState
+
+`document.visibilityState`返回文档的可见状态。
+
+它的值有四种可能。
+
+- visible：页面可见。注意，页面可能是部分可见，即不是焦点窗口，前面被其他窗口部分挡住了。
+- hidden： 页面不可见，有可能窗口最小化，或者浏览器切换到了另一个 Tab。
+- prerender：页面处于正在渲染状态，对于用于来说，该页面不可见。
+- unloaded：页面从内存里面卸载了。
+
+这个属性可以用在页面加载时，防止加载某些资源；或者页面不可见时，停掉一些页面功能。
+
+#### 2.4.3 document.readyState
+
+`document.readyState`属性返回当前文档的状态，共有三种可能的值。
+
+- `loading`：加载 HTML 代码阶段（尚未完成解析）
+- `interactive`：加载外部资源阶段
+- `complete`：加载完成
+
+这个属性变化的过程如下。
+
+1. 浏览器开始解析 HTML 文档，`document.readyState`属性等于`loading`。
+2. 浏览器遇到 HTML 文档中的`<script>`元素，并且没有`async`或`defer`属性，就暂停解析，开始执行脚本，这时`document.readyState`属性还是等于`loading`。
+3. HTML 文档解析完成，`document.readyState`属性变成`interactive`。
+4. 浏览器等待图片、样式表、字体文件等外部资源加载完成，一旦全部加载完成，`document.readyState`属性变成`complete`。
+
+下面的代码用来检查网页是否加载成功。
 
 
 
