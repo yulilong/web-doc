@@ -117,6 +117,36 @@ class Input extends Component {
 
 
 
+父组件使用ref调用子组件方法:
+
+```jsx
+class Son extends React.Component {
+   getShowData = (params) => {
+        console.log('params ', params)
+  }
+   render() {
+       return ( <div>12312</div> )
+   }
+}
+class father extends React.Component {
+   // 获取子组件引用
+  getRef = (ele) => {
+    this.incomeTable = ele;
+    if (ele) {
+      const params = {a: 1, b: 2}
+      ele.getShowData(params);
+    }
+  }
+   render() {
+       return (  <Son  ref={this.getRef} /> )
+   }
+}
+```
+
+
+
+
+
 - ref的回调函数执行时间
 
   当组件挂载后和卸载后，以及ref属性本身发生变化时，回调函数就会被调用。
@@ -171,3 +201,6 @@ class Parent extends React.Component {
 同样的道理，如果A组件是B组件的父组件，B组件是C组件的父组件，那么可用上面的方法，让A组件拿到C组件的DOM。但是官方态度是discouraged，这种多级调用确实不雅，我们确实需要考虑其他更好的方案了。
 
  参考资料：https://juejin.im/post/5927f51244d904006414925a
+
+
+
