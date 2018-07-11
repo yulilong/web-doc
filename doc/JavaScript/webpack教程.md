@@ -414,6 +414,70 @@ ignore  忽略拷贝指定的文件           可以用模糊匹配
 
 
 
+## webpack一些用法
+
+### 1. 设置环境变量区分生产环境和开发环境process.env.NODE_ENV
+
+[webpack参考](https://webpack.docschina.org/guides/production/#%E6%8C%87%E5%AE%9A%E7%8E%AF%E5%A2%83)
+
+许多 library 将通过与 `process.env.NODE_ENV` 环境变量关联，以决定 library 中应该引用哪些内容。例如，当不处于*生产环境*中时，某些 library 为了使调试变得容易，可能会添加额外的日志记录(log)和测试(test)。其实，当使用 `process.env.NODE_ENV === 'production'` 时，一些 library 可能针对具体用户的环境进行代码优化，从而删除或添加一些重要代码。我们可以使用 webpack 内置的 [`DefinePlugin`](https://webpack.docschina.org/plugins/define-plugin) 为所有的依赖定义这个变量：   
+
+```javascript
+  const webpack = require('webpack');
+  const merge = require('webpack-merge');
+  const common = require('./webpack.common.js');
+
+  module.exports = merge(common, {
+    devtool: 'source-map',
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify('production')
+      })
+    ]
+  });
+```
+
+如果你正在使用像 [`react`](https://doc.react-china.org/) 这样的 library，那么在添加此 DefinePlugin 插件后，你应该看到 bundle 大小显著下降。还要注意，任何位于 `/src` 的本地代码都可以关联到 process.env.NODE_ENV 环境变量，所以以下检查也是有效的：
+
+**src/index.js**
+
+```javascript
+import { cube } from './math.js';
+ 
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('Looks like we are in development mode!');
+  }
+
+  function component() {
+    var element = document.createElement('pre');
+
+    element.innerHTML = [
+      'Hello webpack!',
+      '5 cubed is equal to ' + cube(5)
+    ].join('\n\n');
+
+    return element;
+  }
+
+  document.body.appendChild(component());
+```
+
+### 2. 在webpack中配置mock，访问的API地址在webpack中过滤，使用假数据
+
+[webpack-api-mocker](https://github.com/jaywcjlove/webpack-api-mocker)
+
+使用webpack的插件，在webpack中配置好后，需要假数据的API就会跳转到假数据的地方访问。
+
+参考资料：https://segmentfault.com/a/1190000013220134
+
+还有一个：
+
+[mock-webpack-plugin](https://github.com/MarxJiao/mock-webpack-plugin/blob/HEAD/readme-zh.md)
+
+
+
+
+
 ## 参考资料
 
 [webpack官网](https://webpack.js.org/)
@@ -421,3 +485,6 @@ ignore  忽略拷贝指定的文件           可以用模糊匹配
 [webpack中文官网](https://doc.webpack-china.org/)
 
 [webpack概念](https://doc.webpack-china.org/concepts/)
+
+[Node 环境变量 process.env.NODE_ENV 之webpack应用](https://blog.csdn.net/icewfz/article/details/76640319)
+
