@@ -202,5 +202,105 @@ class Parent extends React.Component {
 
  参考资料：https://juejin.im/post/5927f51244d904006414925a
 
+### 4.Context：组件间共享变量
 
+Context是react 16.0以上版本才支持的。
+
+注意：使用Context共享变量时，要是一个React.createContext创建的才能共享
+
+#### 4.1 API说明
+
+- React.createContext
+
+  ```
+  const {Provider, Consumer} = React.createContext(defaultValue);
+  ```
+
+  创建一对 `{ Provider, Consumer }`。当 React 渲染 context 组件 Consumer 时，它将从组件树的上层中最接近的匹配的 Provider 读取当前的 context 值。
+
+  如果上层的组件树没有一个匹配的 Provider，而此时你需要渲染一个 Consumer 组件，那么你可以用到 `defaultValue` 。这有助于在不封装它们的情况下对组件进行测试。
+
+- Provider
+
+  ```
+  <Provider value={/* some value */}>
+  ```
+
+  React 组件允许 Consumers 订阅 context 的改变。
+
+  接收一个 `value` 属性传递给 Provider 的后代 Consumers。一个 Provider 可以联系到多个 Consumers。Providers 可以被嵌套以覆盖组件树内更深层次的值。
+
+- Consumer
+
+  ```
+  <Consumer>
+    {value => /* render something based on the context value */}
+  </Consumer>
+  ```
+
+  一个可以订阅 context 变化的 React 组件。
+
+  接收一个 [函数作为子节点](http://react.yubolun.com/docs/render-props.html#using-props-other-than-render). 函数接收当前 context 的值并返回一个 React 节点。传递给函数的 `value` 将等于组件树中上层 context 的最近的 Provider 的 `value` 属性。如果 context 没有 Provider ，那么 `value` 参数将等于被传递给 `createContext()` 的 `defaultValue` 。
+
+
+
+每当Provider的值发送改变时, 作为Provider后代的所有Consumers都会重新渲染。 从Provider到其后代的Consumers传播不受shouldComponentUpdate方法的约束，因此即使祖先组件退出更新时，后代Consumer也会被更新。
+
+通过使用与[Object.is](http://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is#Description)相同的算法比较新值和旧值来确定变化。
+
+
+
+#### 4.2 一个使用的例子：
+
+```jsx
+// theme-context.js  声明一个Context
+import React from 'react';
+export const {Provider, Consumer} = React.createContext();
+
+
+// app.jsx 把变量发布出去
+import { Provider } from './userContext'   
+class App extends React.Component {
+    render () {
+        return (
+        	<Provider value={this.state.userInfo}>
+            	<div>巴拉巴拉。。。</div>
+            </Provider>
+        )
+    }
+}
+
+// 获取变量有2中方式：
+// 1. 把获取的变量当组件的属性传给 组件
+// BusinessIncome.jsx 
+class BusinessIncome extends React.Component {
+    render () {
+        return (
+        	<Consumer>
+                {/*通过属性获取变量*/}
+                { value => (<IncomeTrend userInfo={value} />)}
+            </Consumer>
+        )
+    }
+}
+// 2. 直接在需要变量的组件中放回调方法，在回调方法里面获取变量
+// BusinessIncome.jsx 
+class ShowIncomeTable extends React.Component {
+    consumerCallback = (value) => {
+      console.log('consumerCallback -> value', value);
+    }
+    render () {
+        return (
+            <Consumer>
+                <div>
+                    <Consumer>{this.consumerCallback}</Consumer>
+                    <div></div>
+                </div>
+            </Consumer>
+        )
+    }
+}
+```
+
+参考资料：http://react.yubolun.com/docs/context.html
 
