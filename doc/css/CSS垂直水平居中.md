@@ -85,5 +85,36 @@
 
 vertical-align: middle; 只对行内元素和表格元素生效。
 
+```html
+<div class="box">
+   <div class="test">asd</div>
+</div>
+```
+
+css
+
+```css
+.box{
+  width: 300px;
+  height: 200px;
+  border: 1px solid ;
+  text-align: center;
+}
+
+.box:before{
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+.box .test{
+  vertical-align: middle;
+  display: inline-block;
+  background: blue;
+}
+```
+
+
+
 ### table-cell实现居中
 [代码](http://js.jirengu.com/nape/1/edit)
