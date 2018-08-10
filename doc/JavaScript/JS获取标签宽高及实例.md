@@ -172,6 +172,29 @@ $(window).scroll(function(){
 
 
 
+### 3.3 获取浏览器窗口宽度
+
+
+
+```javascript
+//浏览器窗口的宽度
+  getClientWidth(){
+    var clientWidth = 0, bodyClientWidth = 0, documentClientWidth = 0;
+    if(document.body){ bodyClientWidth = document.body.clientWidth; }
+    if(document.documentElement){
+      documentClientWidth = document.documentElement.clientWidth;
+    }
+    clientWidth = (bodyClientWidth - documentClientWidth > 0) ? bodyClientWidth : documentClientWidth;
+    return clientWidth;
+  }
+```
+
+
+
+
+
+
+
 ## 4. document.compatMode对获取浏览器窗口大小的影响
 
 document.compatMode用来判断当前浏览器采用的渲染方式。
