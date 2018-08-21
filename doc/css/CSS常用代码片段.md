@@ -48,3 +48,37 @@ a:hover{
 <a href="#">超链接</a>
 ```
 
+
+
+### 3. input输入框输入时去掉默认蓝边
+
+```less
+input {
+    &:focus {
+        outline: none;
+    }
+}
+```
+
+
+
+### 4. input输入框placeholder字体颜色修改
+
+```less
+input {
+    &::-webkit-input-placeholder { /* WebKit browsers*/ 
+        color:#999;
+        font-size: 20px;
+    }
+    &:-moz-placeholder {  /* Mozilla Firefox 4 to 18*/ 
+        color:#999;
+    }
+    &::-moz-placeholder {  /* Mozilla Firefox 19+*/ 
+        color:#999;
+    }
+    &:-ms-input-placeholder { /* Internet Explorer 10+*/ 
+        color:#999;
+    }
+}
+```
+
