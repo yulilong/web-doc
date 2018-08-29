@@ -476,7 +476,47 @@ import { cube } from './math.js';
 
 
 
+### 3. webpack本地开发配置API代理解决跨域问题
 
+如果你有单独的后端开发服务器 API，并且希望在同域名下发送 API 请求 ，那么代理某些 URL 会很有用。
+
+dev-server 使用了非常强大的 [http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware) 包。更多高级用法，请查阅其 [文档](https://github.com/chimurai/http-proxy-middleware#options)。
+
+```javascript
+module.exports = {
+  //...
+  devServer: {
+    proxy: {
+      '/api': 'http://localhost:3000'
+    }
+  }
+};
+```
+
+请求到 `/api/users` 现在会被代理到请求 `http://localhost:3000/api/users`。
+
+如果你不想始终传递 `/api` ，则需要重写路径：
+
+```javascript
+proxy: {
+    '/api': {
+        target: 'http://localhost:3000',
+        pathRewrite: {'^/api' : ''}
+    }
+}
+```
+
+一些比较重要的参数：
+
+- secure: false
+
+  接受运行在 HTTPS 上，可以使用无效证书的后端服务器
+
+- changeOrigin: true
+
+  如果代理地址是域名，那么需要加上这个配置才能生效，如：www.baidu.com 。否则会失败的。
+
+https://segmentfault.com/a/1190000016199721
 
 ## 参考资料
 
