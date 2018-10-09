@@ -518,6 +518,79 @@ proxy: {
 
 https://segmentfault.com/a/1190000016199721
 
+
+
+### 4. import或require时设置路径别名简化引入路径
+
+参考资料：https://webpack.docschina.org/configuration/resolve/
+
+```javascript
+module.exports = {
+    //...
+    extensions: ['.js', '.json', '.jsx'],
+    // 解析模块时应该搜索的目录
+    modules:[resolve('../src'), resolve('../node_modules')],
+    // 创建 import 或 require 的别名，来确保模块引入变得更简单
+    alias: {
+        components: path.join(__dirname, '../src/components'),
+        utils: path.join(__dirname, '../src/utils'),
+        style: path.join(__dirname, '../src/style'),
+    },
+};
+```
+
+主要的参数：
+
+- resolve.extensions
+
+  自动解析确定的扩展,能够使用户在引入模块时不带扩展,使用此选项，会**覆盖默认数组**，这就意味着 webpack 将不再尝试使用默认扩展来解析模块。对于使用其扩展导入的模块，例如，`import SomeFile from "./somefile.ext"`，要想正确的解析，一个包含“*”的字符串必须包含在数组中。
+
+- resolve.modules
+
+  告诉 webpack 解析模块时应该搜索的目录.
+
+  绝对路径和相对路径都能使用，但是要知道它们之间有一点差异。
+
+  通过查看当前目录以及祖先路径（即 `./node_modules`, `../node_modules` 等等），相对路径将类似于 Node 查找 'node_modules' 的方式进行查找。
+
+  使用绝对路径，将只在给定目录中搜索。
+
+  如果你想要添加一个目录到模块搜索目录，此目录优先于 `node_modules/` 搜索:
+
+  ```
+   modules: [path.resolve(__dirname, 'src'), 'node_modules']
+  ```
+
+- resolve.alias
+
+  创建 `import` 或 `require` 的别名，来确保模块引入变得更简单。
+
+  ```javascript
+  alias: {
+      Utilities: path.resolve(__dirname, 'src/utilities/'),
+      Templates: path.resolve(__dirname, 'src/templates/')
+  }
+  ```
+
+  现在，替换「在导入时使用相对路径」这种方式，就像这样：`import Utility from '../../utilities/utility';`
+
+  你可以这样使用别名：`import Utility from 'Utilities/utility';`
+
+  也可以在给定对象的键后的末尾添加 `$`，以表示精准匹配：
+
+  ```
+  alias: {
+  	xyz$: path.resolve(__dirname, 'path/to/file.js')
+  }
+  ```
+
+  这将产生以下结果：
+
+  `import Test1 from 'xyz'; // 精确匹配，所以 path/to/file.js 被解析和导入`
+
+  `import Test2 from 'xyz/file.js'; // 非精确匹配，触发普通解析`
+
+
 ## 参考资料
 
 [webpack官网](https://webpack.js.org/)
