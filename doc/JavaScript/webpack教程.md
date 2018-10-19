@@ -591,6 +591,48 @@ module.exports = {
   `import Test2 from 'xyz/file.js'; // 非精确匹配，触发普通解析`
 
 
+
+### 5.  生成的HTML压缩，删除空格
+
+主要是HtmlWebpackPlugin插件中加一个参数minify
+
+https://github.com/jantimon/html-webpack-plugin
+
+```
+module.exports = {
+    //...
+    extensions: ['.js', '.json', '.jsx'],
+    // 解析模块时应该搜索的目录
+    modules:[resolve('../src'), resolve('../node_modules')],
+    plugins: [
+        new HtmlWebpackPlugin({ 
+          filename: resolve("/dist/email.html"), 
+          template: "./src/email.html",
+          chunks: ["email"],
+          minify:{  // 清除HTML的空格
+            collapseWhitespace:true
+          }
+        }),
+    ]
+};
+```
+
+minify更多的参数：
+
+```
+{
+  collapseWhitespace: true,
+  removeComments: true,
+  removeRedundantAttributes: true,
+  removeScriptTypeAttributes: true,
+  removeStyleLinkTypeAttributes: true,
+  useShortDoctype: true
+}
+```
+
+
+
+
 ## 参考资料
 
 [webpack官网](https://webpack.js.org/)
