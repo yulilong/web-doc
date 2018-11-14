@@ -362,7 +362,13 @@ https://github.com/johnagan/clean-webpack-plugin/issues/10
 
 ### 2. 复制静态文件到打包目录：Copy Webpack Plugin
 
-安装：`npm i -D copy-webpack-plugin`
+安装：
+
+```
+npm i -D copy-webpack-plugin
+```
+
+
 
 用法，在webpack配置文件中：
 
