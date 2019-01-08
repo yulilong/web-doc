@@ -29,9 +29,11 @@ JavaScript执行机制：
 
 ### 2.2 主线程
 
-JavaScript是单线程的，那么这个单线程就成为主线程。而事件循环实在主线程执行完执行栈代码后，才执行的。所以主线程代码执行时间过长，会阻塞事件循环的执行。只有当执行栈为空的时候(同步代码执行完毕)，才会执行事件循环来观察有哪些事件回调需要执行，当事件循环检测到任务队列有事件就读取出回调放到执行栈由主线程执行。
+JavaScript是单线程的，那么这个单线程就成为主线程。而事件循环在主线程执行完执行栈代码后，才执行的。所以主线程代码执行时间过长，会阻塞事件循环的执行。只有当执行栈为空的时候(同步代码执行完毕)，才会执行事件循环来观察有哪些事件回调需要执行，当事件循环检测到任务队列有事件就读取出回调放到执行栈由主线程执行。
 
 ### 2.3 任务队列
+
+任务队列也有时称叫消息队列、回调队列。
 
 异步操作会将相关回调添加到任务队列中。而不同的异步操作添加到任务队列的时机也不同，如`onclick`, `setTimeout`,`ajax`处理的方式都不同，这些异步操作是由浏览器内核的`webcore`来执行的，`webcore`包含下图中的3种 webAPI，分别是`DOM Binding`、`network`、`timer`模块。
 
@@ -69,20 +71,92 @@ console.log(4);
 
 
 
+## 3. 宏任务和微任务
+
+出现**Promises**后，JavaScript对于任务的定义除了广义的同步任务和异步任务，又对任务做了更精细的定义，macrotask（宏任务）和 microtask（微任务）：
+
+- **macrotask**（按优先级顺序排列）: `script`(你的全部JS代码，“同步代码”）, `setTimeout`, `setInterval`, `setImmediate(node的)`, `I/O`,`UI rendering`
+- **microtask**（按优先级顺序排列）:`process.nextTick(node的)`,`Promises`（这里指浏览器原生实现的 Promise）, `Object.observe`, `MutationObserver`
+
+***注意：***宏任务、微任务中出现的nodejs中的方法是nodejs专有的，浏览器的JavaScript环境没有。
+
+### 3.1 事件循环对宏任务和微任务的处理
+
+有了宏任务和微任务后，JavaScript事件循环对此处理方法如下形式：
+
+- js引擎首先从macrotask queue中取出第一个任务，执行完毕后，将microtask queue中的所有任务取出，按顺序全部执行；
+- 然后再从**macrotask queue**（宏任务队列）中取下一个，执行完毕后，再次将**microtask queue**（微任务队列）中的全部取出；
+- 循环往复，直到两个queue中的任务都取完。
+
+![](./hong.png)
+
+
+
+## 4. 以实际代码讲解JavaScript执行流程
+
+知道了上面的流程后，如下代码：
+
+```javascript
+console.log('1');
+setTimeout(function() {
+  console.log('2');
+  new Promise(function(resolve) {
+      console.log('3');
+      resolve();
+  }).then(function() {
+      console.log('4')
+  })
+})
+console.log('5');
+setTimeout(function() {
+  console.log('6');
+  new Promise(function(resolve) {
+      console.log('7');
+      resolve();
+  }).then(function() {
+      console.log('8')
+  })
+})
+console.log('9');
+```
+
+上面代码执行过程：
+
+- 第一轮事件循环
+  - 整体script代码作为第一个宏任务进入主线程，遇到`console.log`，输出1
+  - 遇到`setTimeout`,其回调函数被放到`宏任务队列`中，暂记为`setTmineout1`
+  - 遇到`console.log`，输出5
+  - 遇到`setTimeout`,其回调函数被放到`宏任务队列`中，暂记为`setTmineout2`
+  - 遇到`console.log`，输出9
+  - 一个宏任务执行结束，去`微任务队列`查找是否有待执行的任务，没有，结束
+  - 第一轮循环结束，输出：`1 5 9`
+- 第二轮事件循环
+  - 从宏任务队列中取出一个任务，即`setTmineout1`，开始执行
+  - 遇到`console.log`，输出2
+  - 遇到`Promise`,创建`Promise`,输出了3,同时把`Promise.then`回调函数放到`微任务队列`
+  - 一个宏任务执行结束，去`微任务队列`查找是否有待执行的任务, 发现有微任务，全部取出放到执行栈执行
+  - 执行微任务，此时就一个微任务，`console.log`，输出4
+  - 微任务执行结束
+  - 第二轮循环结束，输出：`2 4`
+- 第三轮事件循环与第二轮一样，输出：`6 7 8`
+- 事件循环发现所有任务都已经处理完毕，此时程序执行结束
+- 全部的输出：`1 5 9 2 3 4 6 7 8`,可复制代码到`chrome`浏览器控制台中运行校验结果
+
+
+
+***注意：***浏览器环境JavaScript的执行机制和node中JavaScript的执行机制是不同的。
+
 
 
 
 
 ## 参考资料
 
+[这一次，彻底弄懂 JavaScript 执行机制](https://mp.weixin.qq.com/s?__biz=MzA5NzkwNDk3MQ==&mid=2650585345&amp;idx=1&amp;sn=6fd112fbed64246601b48e392d1e7a0b&source=41#wechat_redirect)
 
+[JavaScript任务队列的顺序机制（事件循环）](http://www.yangzicong.com/article/3)
 
-`https://mp.weixin.qq.com/s?__biz=MzA5NzkwNDk3MQ==&mid=2650585345&amp;idx=1&amp;sn=6fd112fbed64246601b48e392d1e7a0b&source=41#wechat_redirect`
+[搞懂 JavsScript 异步 —  事件轮询](https://segmentfault.com/a/1190000017120344)
 
-http://www.yangzicong.com/article/3
+[JS与Node.js中的事件循环](https://segmentfault.com/a/1190000012362096)
 
-http://www.ruanyifeng.com/blog/2014/10/event-loop.html
-
-https://segmentfault.com/a/1190000012362096
-
-https://segmentfault.com/a/1190000017120344#articleHeader8
