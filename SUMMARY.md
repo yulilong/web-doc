@@ -7,6 +7,7 @@
   - [HTML字符实体](/doc/html/HTML字符实体.md)
 * JavaScript  
   * [JavaScript运行机制和事件循环](/doc/JavaScript/JavaScript运行机制和事件循环.md) 
+  * [nodejs环境下JavaScript代码执行机制和事件循环](/doc/JavaScript/nodejs环境下JavaScript代码执行机制和事件循环.md) 
   * [正则表达式](/doc/JavaScript/JS-正则表达式.md) 
   * [dom](/doc/JavaScript/dom.md) 
   * [排序算法.md](/doc/JavaScript/JS-排序算法.md) 
