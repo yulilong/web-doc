@@ -4,32 +4,51 @@
 
 nodejs是单线程执行的，同时它又是基于事件驱动的非阻塞IO编程模型。这就使得我们不用等待异步操作结果返回，就可以继续往下执行代码。当异步事件触发之后，就会通知主线程，主线程执行相应事件的回调。
 
-本篇文章讲解node中JavaScript的代码的执行流程，下面一个测试代码，如果你知道输出的结果，那么就不需要再看本篇文章，如果不知道输出结果，那么本片文章可帮助你了解：
+本篇文章讲解node中JavaScript的代码的执行流程，下面是测试代码，如果你知道输出的结果，那么就不需要再看本篇文章，如果不知道输出结果，那么本片文章可帮助你了解：
+
+```javascript
+console.log(1)
+setTimeout(function () {
+  new Promise(function (resolve) {
+    console.log(2)
+    resolve()
+  })
+  .then(() => { console.log(3) })
+})
+setTimeout(function () {
+  console.log(4)
+})
+```
+
+复杂的：
 
 ```javascript
 // a.js
-console.log('1')
-setTimeout(function() {
-  console.log('2')
-  new Promise(function(resolve) { console.log('3'); resolve(); })
-  .then(function() { console.log('4') })
-  setTimeout(() => { console.log('5') })
-  new Promise(function(resolve) { console.log('6'); resolve()})
-  .then(function() { console.log('7') })
+setTimeout(() => {
+  console.log('1')
+  new Promise((resolve) => { console.log('2'); resolve(); })
+  .then(() => { console.log('3') })
+  new Promise((resolve)=> { console.log('4'); resolve()})
+  .then(() => { console.log('5') })
+  setTimeout(() => { 
+    console.log('6')
+    setTimeout(() => {
+      console.log('7')
+      new Promise((resolve) => { console.log('8'); resolve() })
+      .then( () => {  console.log('9') })
+      new Promise((resolve) => { console.log('10'); resolve() })
+      .then(() => {  console.log('11') })
+    })
+    setTimeout(() => { console.log('12') }, 0)
+  })
+  setTimeout(() => { console.log('13') }, 0)
 })
-setTimeout(function() { console.log('8') }, 0)
-new Promise(function(resolve) { console.log('9'); resolve() })
-.then(function() { console.log('10') })
-setTimeout(function() {
-  console.log('11')
-  new Promise(function(resolve) { console.log('12'); resolve() })
-  .then(function() {  console.log('13') })
-})
-new Promise(function(resolve) { console.log('14'); resolve() })
-.then(function() { console.log('15') })
+setTimeout(() => { console.log('14') }, 0)
+new Promise((resolve) => { console.log('15'); resolve() })
+.then( ()=> { console.log('16') })
+new Promise((resolve) => { console.log('17'); resolve() })
+.then(() => { console.log('18') })
 ```
-
-保存该文件后，可在终端使用`node a.js`查看输出结果。
 
 ## 2. nodejs的启动过程
 
@@ -59,6 +78,8 @@ node.js启动过程可以分为以下步骤：
 
 Nodejs 将消息循环又细分为 6 个阶段(官方叫做 Phase), 每个阶段都会有一个类似于队列的结构, 存储着该阶段需要处理的回调函数.
 
+Nodejs 为了防止某个 阶段 任务太多, 导致后续的 阶段 发生饥饿的现象, 所以消息循环的每一个迭代(iterate) 中, 每个 阶段 执行回调都有个最大数量. 如果超过数量的话也会强行结束当前 阶段而进入下一个 阶段. 这一条规则适用于消息循环中的每一个 阶段.
+
 ### 3.1 Timer 阶段
 
 这是消息循环的第一个阶段, 用一个 `for` 循环处理所有 `setTimeout` 和 `setInterval` 的回调. 
@@ -67,21 +88,32 @@ Nodejs 将消息循环又细分为 6 个阶段(官方叫做 Phase), 每个阶段
 
 Timer 阶段中判断某个回调是否符合条件的方法也很简单. 消息循环每次进入 Timer 的时候都会保存一下当时的系统时间,然后只要看上述最小堆中的回调函数设置的启动时间是否超过进入 Timer 时保存的时间, 如果超过就拿出来执行.
 
-此外, Nodejs 为了防止某个 阶段 任务太多, 导致后续的 阶段 发生饥饿的现象, 所以消息循环的每一个迭代(iterate) 中, 每个 阶段 执行回调都有个最大数量. 如果超过数量的话也会强行结束当前 阶段而进入下一个 阶段. 这一条规则适用于消息循环中的每一个 阶段.
+
 
 ### 3.2 Pending I/O Callback 阶段
 
-这一阶段是执行你的 `fs.read`, `socket` 等 IO 操作的回调函数, 同时也包括各种 error 的回调.
+
+执行除了`close callbacks`、`setTimeout()`、`setInterval()`、`setImmediate()`回调之外几乎所有回调，比如说`TCP连接发生错误`、 `fs.read`, `socket` 等 IO 操作的回调函数, 同时也包括各种 error 的回调.
 
 ### 3.3 Idle, Prepare 阶段
 
-据说是内部使用, 所以我们也不在这里过多讨论.
+系统内部的一些调用。
 
 ### 3.4 Poll 阶段，重要阶段
 
 这是整个消息循环中最重要的一个 阶段, 作用是等待异步请求和数据，因为它支撑了整个消息循环机制.
 
-Poll 阶段 首先会执行 `watch_queue` 队列中的 IO 请求, 一旦 watch_queue 队列空, 则整个消息循环就会进入 sleep , 从而等待被内核事件唤醒. 
+poll阶段有两个主要的功能：一是执行下限时间已经达到的timers的回调，一是处理poll队列里的事件。
+***注：***Node的很多API都是基于事件订阅完成的，比如fs.readFile，这些回调应该都在`poll`阶段完成。
+
+当事件循环进入poll阶段：
+
+- `poll`队列不为空的时候，事件循环肯定是先遍历队列并同步执行回调，直到队列清空或执行回调数达到系统上限。
+- `poll`队列为空的时候，这里有两种情况。
+  - 如果代码已经被`setImmediate()`设定了回调，那么事件循环直接结束`poll`阶段进入`check`阶段来执行`check`队列里的回调。
+  - 如果代码没有被设定`setImmediate()`设定回调：
+    - 如果有被设定的timers，那么此时事件循环会检查timers，如果有一个或多个timers下限时间已经到达，那么事件循环将绕回timers阶段，并执行timers的有效回调队列。
+    - 如果没有被设定timers，这个时候事件循环是**阻塞**在poll阶段等待事件回调被加入poll队列。
 
 Poll阶段，当js层代码注册的事件回调都没有返回的时候，事件循环会暂时阻塞在poll阶段，解除阻塞的条件：
 
@@ -139,14 +171,12 @@ Poll阶段，当js层代码注册的事件回调都没有返回的时候，事�
 
     - 首先检查是否存在尚未完成的回调，如果存在，分如下两种情况：
 
-      - 第一种情况：
-        - 如果有可执行的回调(包含到期的定时器还有一些IO事件等)，执行所有可用回调
+      - 第一种情况：有可执行的回调
+        - 执行所有可用回调(包含到期的定时器还有一些IO事件等)
         - 检查是否有`process.nextTick`任务，如果有，全部执行
         - 检查是否有微任务(promise)，如果有，全部执行
         - 退出该阶段
-      - 第二种情况：
-        - 如果没有可执行的回调
-
+      - 第二种情况：没有可执行的回调
         - 检查是否有`immediate`回调，如果有，退出Poll阶段。如果没有，阻塞在此阶段，等待新的事件通知
     - 如果不存在尚未完成的回调，退出Poll阶段
 
@@ -237,78 +267,86 @@ require('fs').readFile('my-file-path.txt', () => {
 如下面一段代码：
 
 ```javascript
-console.log('1')
-// settimeout1
-setTimeout(function() {
-  console.log('2')
-  // promise3
-  new Promise(function(resolve) { console.log('3'); resolve(); })
-  .then(function() { console.log('4') })
-  // settimeout4
-  setTimeout(() => { console.log('5') })
-  // promise4
-  new Promise(function(resolve) { console.log('6'); resolve()})
-  .then(function() { console.log('7') })
+setTimeout(() => {                                                // settimeout1
+  console.log('1')
+  new Promise((resolve) => { console.log('2'); resolve(); })      // Promise3
+  .then(() => { console.log('3') })
+  new Promise((resolve)=> { console.log('4'); resolve()})         // Promise4
+  .then(() => { console.log('5') })
+  setTimeout(() => {                                              // settimeout3
+    console.log('6')
+    setTimeout(() => {                                            // settimeout5
+      console.log('7')
+      new Promise((resolve) => { console.log('8'); resolve() })   // Promise5
+      .then( () => {  console.log('9') })
+      new Promise((resolve) => { console.log('10'); resolve() })  // Promise6
+      .then(() => {  console.log('11') })
+    })
+    setTimeout(() => { console.log('12') }, 0)                    // settimeout6
+  })
+  setTimeout(() => { console.log('13') }, 0)                      // settimeout4
 })
-// settimeout2
-setTimeout(function() { console.log('8') }, 0)
-// Promise1
-new Promise(function(resolve) { console.log('9'); resolve() })
-.then(function() { console.log('10') })
-// settimeout3
-setTimeout(function() {
-  console.log('11')
-  // Promise5
-  new Promise(function(resolve) { console.log('12'); resolve() })
-  .then(function() {  console.log('13') })
-})
-// Promise2
-new Promise(function(resolve) { console.log('14'); resolve() })
-.then(function() { console.log('15') })
+setTimeout(() => { console.log('14') }, 0)                        // settimeout2
+new Promise((resolve) => { console.log('15'); resolve() })        // Promise1
+.then( ()=> { console.log('16') })
+new Promise((resolve) => { console.log('17'); resolve() })        // Promise2
+.then(() => { console.log('18') })
 ```
 
 上面代码执行过程：
 
 - node初始化
-
   - 执行JavaScript代码
-    - 遇到`console.log`，输出1
     - 遇到`setTimeout`, 把回调函数放到`Timer`队列中，记为settimeout1
     - 遇到`setTimeout`, 把回调函数放到`Timer`队列中，记为settimeout2
-    - 遇到`Promise`，执行，输出9，把回调函数放到`微任务`队列，记为Promise1
-    - 遇到`setTimeout`, 把回调函数放到`Timer`队列中，记为settimeout3
-    - 遇到`Promise`，执行，输出14，把回调函数放到`微任务`队列，记为Promise2
-    - 代码执行结束，此阶段输出结果：`1 9 14`
+    - 遇到`Promise`，执行，输出15，把回调函数放到`微任务`队列，记为Promise1
+    - 遇到`Promise`，执行，输出17，把回调函数放到`微任务`队列，记为Promise2
+    - 代码执行结束，此阶段输出结果：`15 17`
+  - 没有`process.nextTick`回调，略过
   - 执行微任务
     - 检查微任务队列是否有可执行回调，此时队列有2个回调：Promise1、Promise2
-    - 执行Promise1回调，输出10
-    - 执行Promise2回调，输出15
-    - 此阶段输出结果：`10 15`
-
+    - 执行Promise1回调，输出16
+    - 执行Promise2回调，输出18
+    - 此阶段输出结果：`16 18`
 - 进入第一次事件循环
-
   - 进入Timer阶段
-    - 检查Timer队列是否有可执行的回调，此时队列有3个回调：settimeout1、settimeout2、settimeout3
-    - 执行settimeout1回调，输出2、3、6，添加了2个微任务，记为Promise3、Promise4，添加了一个Timer任务，记为settimeout4
-    - 执行settimeout2回调，输出8
-    - 执行settimeout3回调，输出11、12，添加了1个微任务，记为Promise5
+    - 检查Timer队列是否有可执行的回调，此时队列有2个回调：settimeout1、settimeout2
+    - 执行settimeout1回调：
+      - 输出1、2、4
+      - 添加了2个微任务，记为Promise3、Promise4
+      - 添加了2个Timer任务，记为settimeout3、settimeout4
+    - 执行settimeout2回调，输出14
     - Timer队列任务执行完毕
-    - 检查微任务队列是否有可执行回调，此时队列有3个回调：Promise3、Promise4、Promise5
-    - 按顺序执行3个微任务，输出4、7、13
-    - 此阶段输出结果：`2 3 6 8 11 12 4 7 13`
-  - Pending I/O Callback、Poll、check、closing阶段没有任务，略过
+    - 没有`process.nextTick`回调，略过
+    - 检查微任务队列是否有可执行回调，此时队列有2个回调：Promise3、Promise4
+    - 按顺序执行2个微任务，输出3、5
+    - 此阶段输出结果：`1 2 4 14 3 5`
+  - Pending I/O Callback阶段没有任务，略过
+  - 进入Pol阶段
+    - 检查是否存在尚未完成的回调，此时有2个回调：settimeout3、settimeout4
+    - 执行settimeout3回调
+      - 输出6
+      - 添加了2个Timer任务，记为settimeout5、settimeout6
+    - 执行settimeout4回调，输出13
+    - 没有`process.nextTick`回调，略过
+    - 没有微任务，略过
+    - 此阶段输出结果：`6 13`
+  - check、closing阶段没有任务，略过
   - 检查是否还有活跃的`handles(定时器、IO等事件句柄)`,有，继续下一轮事件循环
-
 - 进入第二次事件循环
-
   - 进入Timer阶段
-    - 检查Timer队列是否有可执行的回调，此时队列有1个回调：settimeout4
-    - 执行settimeout4回调，输出5
-    - 此阶段输出结果：`5`
+    - 检查Timer队列是否有可执行的回调，此时队列有2个回调：settimeout5、settimeout6
+    - 执行settimeout5回调：
+      - 输出7、 8、10
+      - 添加了2个微任务，记为Promise5、Promise6
+    - 执行settimeout6回调，输出12
+    - 没有`process.nextTick`回调，略过
+    - 检查微任务队列是否有可执行回调，此时队列有2个回调：Promise5、Promise6
+    - 按顺序执行2个微任务，输出9、11
+    - 此阶段输出结果：`7 8 10 12 9 11`
   - Pending I/O Callback、Poll、check、closing阶段没有任务，略过
   - 检查是否还有活跃的`handles(定时器、IO等事件句柄)`,没有了，结束事件循环，退出程序
-
-- 程序执行结束，输出结果：`1 9 14 10 15 2 3 6 8 11 12 4 7 13 5` 
+- 程序执行结束，输出结果：`15 17 16 18 1 2 4 14 3 5 6 13 7 8 10 12 9 11`
 
 
 ![](./noderesult.png)
@@ -322,3 +360,5 @@ new Promise(function(resolve) { console.log('14'); resolve() })
 [深入分析Node.js事件循环与消息队列](https://blog.csdn.net/i10630226/article/details/81369841)
 
 [剖析nodejs的事件循环](https://juejin.im/post/5af1413ef265da0b851cce80)
+
+[Node中的事件循环和异步API](https://segmentfault.com/a/1190000012648569)
