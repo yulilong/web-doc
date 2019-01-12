@@ -23,7 +23,6 @@ setTimeout(function () {
 复杂的：
 
 ```javascript
-// a.js
 setTimeout(() => {
   console.log('1')
   new Promise((resolve) => { console.log('2'); resolve(); })
@@ -87,8 +86,6 @@ Nodejs 为了防止某个 阶段 任务太多, 导致后续的 阶段 发生饥�
 这些回调被保存在一个最小堆(min heap) 中. 这样引擎只需要每次判断头元素, 如果符合条件就拿出来执行, 直到遇到一个不符合条件或者队列空了, 才结束 Timer Phase.
 
 Timer 阶段中判断某个回调是否符合条件的方法也很简单. 消息循环每次进入 Timer 的时候都会保存一下当时的系统时间,然后只要看上述最小堆中的回调函数设置的启动时间是否超过进入 Timer 时保存的时间, 如果超过就拿出来执行.
-
-
 
 ### 3.2 Pending I/O Callback 阶段
 
@@ -262,7 +259,9 @@ require('fs').readFile('my-file-path.txt', () => {
 
 再从执行时机上讲. setTimeout(..., 0) 和 setImmediate 完全属于两个阶段.
 
-## 5. 一个JavaScript代码在nodejs中执行流程
+## 5. 一个实际例子演示
+
+下面以一段代码来说明nodejs运行JavaScript的机制。
 
 如下面一段代码：
 
