@@ -43,7 +43,7 @@ JavaScript是单线程的，那么这个单线程就成为主线程。而事件�
 
 ### 2.4 事件循环
 
-![](./js_EventLoop.jpg)
+![](./image/js_EventLoop.jpg)
 
 
 
@@ -69,7 +69,7 @@ setTimeout(function(){
 console.log(4);
 ```
 
-
+https://html.spec.whatwg.org/multipage/webappapis.html#event-loops
 
 ## 3. 宏任务和微任务
 
@@ -88,9 +88,9 @@ console.log(4);
 - 然后再从**macrotask queue**（宏任务队列）中取下一个，执行完毕后，再次将**microtask queue**（微任务队列）中的全部取出；
 - 循环往复，直到两个queue中的任务都取完。
 
-![](./hong.png)
+![](./image/hong.png)
 
-
+https://html.spec.whatwg.org/multipage/timers-and-user-prompts.html#microtask-queuing
 
 ## 4. 以实际代码讲解JavaScript执行流程
 

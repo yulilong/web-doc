@@ -348,7 +348,7 @@ new Promise((resolve) => { console.log('17'); resolve() })        // Promise2
 - 程序执行结束，输出结果：`15 17 16 18 1 2 4 14 3 5 6 13 7 8 10 12 9 11`
 
 
-![](./noderesult.png)
+![](./image/noderesult.png)
 
 
 
@@ -361,3 +361,6 @@ new Promise((resolve) => { console.log('17'); resolve() })        // Promise2
 [剖析nodejs的事件循环](https://juejin.im/post/5af1413ef265da0b851cce80)
 
 [Node中的事件循环和异步API](https://segmentfault.com/a/1190000012648569)
+
+[Node.js Event Loop nodejs官网](https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/#process-nexttick)
+
