@@ -187,3 +187,7 @@ https://html.spec.whatwg.org/multipage/timers-and-user-prompts.html#timers
 
 [Node中的事件循环和异步API segmentfault](https://segmentfault.com/a/1190000012648569)
 
+[【翻译】Promises/A+规范 图灵](http://www.ituring.com.cn/article/66566)
+
+[Promise 对象 阮一峰](http://es6.ruanyifeng.com/#docs/promise)
+
