@@ -255,7 +255,6 @@ function timeout(flag) {
     else { reject('报错'); }
   });
 }
-
 var a = timeout(true)
 a.then((value) => { console.log('一号：', value); });
 timeout(false)
@@ -266,6 +265,104 @@ timeout(false)
 // 一号： 正常返回结果
 // 二号： 报错
 ```
+
+`resolve`函数的参数除了正常的值以外，还可能是另一个 Promise 实例，比如像下面这样:
+
+```javascript
+const p1 = new Promise(function (resolve, reject) {
+  // ...
+});
+const p2 = new Promise(function (resolve, reject) {
+  // ...
+  resolve(p1);
+})
+```
+
+上面代码中,一个异步操作的结果是返回另一个异步操作。注意，这时`p1`的状态就会传递给`p2`，也就是说，`p1`的状态决定了`p2`的状态。如果`p1`的状态是`pending`，那么`p2`的回调函数就会等待`p1`的状态改变；如果`p1`的状态已经是`resolved`或者`rejected`，那么`p2`的回调函数将会立刻执行。
+
+### 4.3 Promise.prototype.then()
+
+Promise 实例具有`then`方法，它的作用是为 Promise 实例添加状态改变时的回调函数。前面说过，`then`方法的第一个参数是`resolved`状态的回调函数，第二个参数（可选）是`rejected`状态的回调函数。`then`方法返回的是一个新的`Promise`实例（注意，不是原来那个`Promise`实例）。因此可以采用链式写法，即`then`方法后面再调用另一个`then`方法。
+
+```javascript
+new Promise(function (resolve) {
+  console.log(1)
+  resolve(2)
+})
+.then((res) => { console.log(res); return 3; })
+.then((res) => { console.log(res); return 4; })
+.then((res) => { console.log(res) })
+// 输出结果：1 2 3 4
+```
+
+采用链式的`then`，可以指定一组按照次序调用的回调函数。这时，前一个回调函数，有可能返回的还是一个`Promise`对象（即有异步操作），这时后一个回调函数，就会等待该`Promise`对象的状态发生变化，才会被调用。
+
+### 4.4 Promise.prototype.catch()
+
+`.catch`方法是`.then(null, rejection)`或`.then(undefined, rejection)`的别名，用于指定发生错误时的回调函数。`catch`方法返回的还是一个 Promise 对象，因此后面还可以接着调用`then`方法。后面的方法报错需要在后面的catch去处理。
+
+调用`.catch`方法的情况：
+
+> 1、 `Promise`对象异步操作抛出错误，状态就会变成`rejected`，就会调用`catch`方法指定的回调函数
+>
+> 2、`then`方法指定的回调函数在运行中抛出错误
+
+```javascript
+new Promise(function (resolve, rejected) {
+  rejected(2)
+})
+.catch(function(err){
+  console.log('出错了：', err);
+})
+```
+
+如果 Promise 状态已经变成`resolved`，再抛出错误是无效的。
+
+```javascript
+new Promise(function (resolve, reject) {
+  resolve('ok');
+  throw new Error('test');
+})
+  .then(function (value) { console.log(value) })
+  .catch(function (error) { console.log(error) });
+// 没有报错，输出了ok
+```
+
+Promise 对象的错误具有“冒泡”性质，会一直向后传递，直到被捕获为止。也就是说，错误总是会被下一个`catch`语句捕获。
+
+```javascript
+new Promise(function (resolve, reject) {
+  reject('出错误了');
+})
+  .then(function (value) { console.log(value); return 'ok1';})
+  .then(function (value) { console.log(value) })
+  .catch(function (error) { console.log(error) });
+// 出错误了
+```
+
+跟传统的`try/catch`代码块不同的是，如果没有使用`catch`方法指定错误处理的回调函数，Promise 对象抛出的错误不会传递到外层代码，即不会有任何反应。
+
+```javascript
+new Promise(function (resolve, reject) {
+  resolve(x + 2);	// 这个会报错： Uncaught (in promise) ReferenceError: x is not defined
+})
+  .then(function (value) { console.log(value)})
+console.log('我执行了')
+```
+
+上面的代码运行Promise时，内部有语法错误，浏览器运行到这一行会报错，但不会退出程序，会继续执行，最终输出了`我执行了`,这说明Promise 内部的错误不会影响到 Promise 外部的代码，通俗的说法就是“Promise 会吃掉错误”。
+
+这个脚本放在服务器执行，退出码就是`0`（即表示执行成功）。不过，Node 有一个`unhandledRejection`事件，专门监听未捕获的`reject`错误，上面的脚本会触发这个事件的监听函数，可以在监听函数里面抛出错误。
+
+```javascript
+process.on('unhandledRejection', function (err, p) {
+  throw err;
+});
+```
+
+上面代码中，`unhandledRejection`事件的监听函数有两个参数，第一个是错误对象，第二个是报错的 Promise 实例，它可以用来了解发生错误的环境信息。
+
+注意，Node 有计划在未来废除`unhandledRejection`事件。如果 Promise 内部有未捕获的错误，会直接终止进程，并且进程的退出码不为 0。
 
 
 
