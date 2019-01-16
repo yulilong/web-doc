@@ -73,12 +73,12 @@ https://html.spec.whatwg.org/multipage/webappapis.html#event-loops
 
 ## 3. 宏任务和微任务
 
-出现**Promises**后，JavaScript对于任务的定义除了广义的同步任务和异步任务，又对任务做了更精细的定义，macrotask（宏任务）和 microtask（微任务）：
+出现**Promise**后，JavaScript对于任务的定义除了广义的同步任务和异步任务，又对任务做了更精细的定义，macrotask（宏任务）和 microtask（微任务）：
 
 - **macrotask**（按优先级顺序排列）: `script`(你的全部JS代码，“同步代码”）, `setTimeout`, `setInterval`, `setImmediate(node的)`, `I/O`,`UI rendering`
-- **microtask**（按优先级顺序排列）:`process.nextTick(node的)`,`Promises`（这里指浏览器原生实现的 Promise）, `Object.observe`, `MutationObserver`
+- **microtask**（按优先级顺序排列）:`process.nextTick(node的)`,`Promise`（这里指浏览器原生实现的 Promise）, `Object.observe`, `MutationObserver`
 
-***注意：***宏任务、微任务中出现的nodejs中的方法是nodejs专有的，浏览器的JavaScript环境没有。
+***注意：***宏任务、微任务中出现的nodejs中的方法是nodejs专有的，浏览器的JavaScript环境暂时没有支持。
 
 ### 3.1 事件循环对宏任务和微任务的处理
 
@@ -94,7 +94,7 @@ https://html.spec.whatwg.org/multipage/timers-and-user-prompts.html#microtask-qu
 
 ## 4. 以实际代码讲解JavaScript执行流程
 
-知道了上面的流程后，如下代码：
+如下代码：
 
 ```javascript
 console.log('1');
@@ -123,7 +123,7 @@ console.log('9');
 上面代码执行过程：
 
 - 第一轮事件循环
-  - 整体script代码作为第一个宏任务进入主线程，遇到`console.log`，输出1
+  - 整体script代码(同步代码)作为第一个宏任务进入主线程，遇到`console.log`，输出1
   - 遇到`setTimeout`,其回调函数被放到`宏任务队列`中，暂记为`setTmineout1`
   - 遇到`console.log`，输出5
   - 遇到`setTimeout`,其回调函数被放到`宏任务队列`中，暂记为`setTmineout2`
