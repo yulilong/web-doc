@@ -404,7 +404,30 @@ Promise.all([a, b, c])
 // res:  [ 2, 5, 2 ]
 ```
 
+注意，如果作为参数的 Promise 实例，自己定义了`catch`方法，那么它一旦被`rejected`，并不会触发`Promise.all()`的`catch`方法。
 
+```javascript
+var a = new Promise(function (resolve) { resolve(2);	 })
+var b = new Promise(function (resolve, reject) { reject(5); }).catch(() => {console.log(123)})
+var c = new Promise(function (resolve) { resolve(2); })
+Promise.all([a, b, c])
+.then( function(res) { console.log('res: ', res) })
+.catch( function(err){ console.log('err:', err) })
+// 123
+// res:  [ 2, undefined, 2 ]
+```
+
+上面代码，a会resolve，b首先会rejected，但b有自己的catch方法，该方法返回一个新的Promise实例，b指向的实际上是这个实例。该实例执行完catch后，也会变成resolved，导致Promise.all()方法参数里面的两个实例都会resolved，因此会调用all后面的then方法指定的回调函数。
+
+如果`b`没有自己的`catch`方法，就会调用`Promise.all()`的`catch`方法。
+
+### 4.7 Promise.race()
+
+`Promise.race`方法同样是将多个 Promise 实例，包装成一个新的 Promise 实例。
+
+race参数用多个实例有率先改变状态，Promise.race的状态就跟着改变。那个率先改变的实例的返回值，就是Promise.race的回调函数的参数。
+
+`Promise.race`方法的参数与`Promise.all`方法一样，如果不是 Promise 实例，就会先调用下面讲到的`Promise.resolve`方法，将参数转为 Promise 实例，再进一步处理。
 
 
 
