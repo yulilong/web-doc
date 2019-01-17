@@ -364,6 +364,48 @@ process.on('unhandledRejection', function (err, p) {
 
 注意，Node 有计划在未来废除`unhandledRejection`事件。如果 Promise 内部有未捕获的错误，会直接终止进程，并且进程的退出码不为 0。
 
+### 4.5 Promise.prototype.finally()
+
+`finally`方法用于指定不管 Promise 对象最后状态如何，都会执行的操作。该方法是 ES2018 引入标准的。
+
+```javascript
+new Promise(function (resolve, reject) {
+  resolve(2);	
+})
+  .then(function (value) { console.log(value)})
+  .finally(function() {
+    console.log('finally')
+  })
+```
+
+上面代码中，不管`promise`最后的状态，在执行完`then`或`catch`指定的回调函数以后，都会执行`finally`方法指定的回调函数。
+
+`finally`方法的回调函数不接受任何参数，这意味着没有办法知道，前面的 Promise 状态到底是`fulfilled`还是`rejected`。这表明，`finally`方法里面的操作，应该是与状态无关的，不依赖于 Promise 的执行结果。
+
+### 4.6 Promise.all()
+
+`Promise.all`方法用于将多个 Promise 实例，包装成一个新的 Promise 实例。
+
+`Promise.all`方法接受一个数组作为参数，`p1`、`p2`、`p3`都是 Promise 实例，如果不是，就会先调用下面讲到的`Promise.resolve`方法，将参数转为 Promise 实例，再进一步处理。（`Promise.all`方法的参数可以不是数组，但必须具有 Iterator 接口，且返回的每个成员都是 Promise 实例。）
+
+`p`的状态由`p1`、`p2`、`p3`决定，分成两种情况
+
+> 1、只有`p1`、`p2`、`p3`的状态都变成`fulfilled`，`p`的状态才会变成`fulfilled`，此时`p1`、`p2`、`p3`的返回值组成一个数组，传递给`p`的回调函数。
+>
+> 2、只要`p1`、`p2`、`p3`之中有一个被`rejected`，`p`的状态就变成`rejected`，此时第一个被`reject`的实例的返回值，会传递给`p`的回调函数。
+
+```javascript
+var a = new Promise(function (resolve) { resolve(2);	 })
+var b = new Promise(function (resolve, reject) { resolve(5); })
+var c = new Promise(function (resolve) { resolve(2); })
+Promise.all([a, b, c])
+.then( function(res) { console.log('res: ', res) })
+.catch( function(err){ console.log(err) })
+// res:  [ 2, 5, 2 ]
+```
+
+
+
 
 
 ## 参考资料
