@@ -321,7 +321,7 @@ new Promise((resolve) => { console.log('17'); resolve() })        // Promise2
     - 按顺序执行2个微任务，输出3、5
     - 此阶段输出结果：`1 2 4 14 3 5`
   - Pending I/O Callback阶段没有任务，略过
-  - 进入Pol阶段
+  - 进入 Poll 阶段
     - 检查是否存在尚未完成的回调，此时有2个回调：settimeout3、settimeout4
     - 执行settimeout3回调
       - 输出6

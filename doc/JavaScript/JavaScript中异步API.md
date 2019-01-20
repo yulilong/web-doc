@@ -151,25 +151,76 @@ process.nextTick方法指定的回调函数，总是在**当前执行队列**的
 一个例子：
 
 ```javascript
-setTimeout(() => {
-  process.nextTick(() => console.log('nextTick1'))
-  setTimeout(() => {
+setTimeout(() => {                                      // settimeout1
+  process.nextTick(() => console.log('nextTick1'))      // nextTick1
+  setTimeout(() => {                                    // settimeout2
     console.log('setTimout1')
-    process.nextTick(() => {
+    process.nextTick(() => {                            // nextTick2
       console.log('nextTick2')
-      setImmediate(() => console.log('setImmediate1'))
-      process.nextTick(() => console.log('nextTick3'))
+      setImmediate(() => console.log('setImmediate1'))  // check2
+      process.nextTick(() => console.log('nextTick3'))  // nextTick4
     })
-    setImmediate(() => console.log('setImmediate2'))
-    process.nextTick(() => console.log('nextTick4'))
+    setImmediate(() => console.log('setImmediate2'))    // check1
+    process.nextTick(() => console.log('nextTick4'))    // nextTick3
     console.log('sync2')
-    setTimeout(() => console.log('setTimout2'), 0)
+    setTimeout(() => console.log('setTimout2'), 0)      // settimeout3
   }, 0)
   console.log('sync1')
 }, 0)
 
 // sync1 nextTick1 setTimout1 sync2 nextTick2 nextTick4 nextTick3 setImmediate2 setImmediate1 setTimout2
 ```
+
+上面的代码执行过程：
+
+- node初始化
+  - 执行JavaScript代码
+    - 遇到`setTimeout`, 把回调函数放到`Timer`队列中，记为settimeout1
+  - 没有`process.nextTick`回调，略过
+  - 没有微任务，略过
+- 进入第一次事件循环
+  - 进入timer阶段
+    - 检查Timer队列是否有可执行的回调，此时队列有一个回调：settimeout1
+    - 执行settimeout1回调：
+      - 遇到process.nextTick，把回调加入到nextTick队列，记为nextTick1
+      - 遇到setTimeout，把回调加入到Timer队列，记为settimeout2
+      - 遇到console，输出：sync1
+    - 检查`process.nextTick`队列，发现有一个回调nextTick1，执行，输出：nextTick1
+    - 检查微任务队列，没有略过
+    - Timer阶段执行结束，此阶段输出：`sync1 nextTick1`
+  - Pending I/O Callback阶段没有任务，略过
+  - 进入 Poll 阶段
+    - 检查是否存在尚未完成的回调,此时有一个Timer回调待执行：settimeout2
+    - 执行settimeout2回调
+      - 遇到console，输出：setTimout1
+      - 遇到process.nextTick，把回调加入到nextTick队列，记为nextTick2
+      - 遇到setImmediate，把回调加入到Check队列，记为check1
+      - 遇到process.nextTick，把回调加入到nextTick队列，记为nextTick3
+      - 遇到console，输出：sync2
+      - 遇到setTimeout，把回调加入到Timer队列，记为settimeout3
+    - 检查`process.nextTick`队列，发现有两个回调：nextTick2，nextTick3
+      - 执行nextTick2
+        - 遇到console，输出：nextTick2
+        - 遇到setImmediate，把回调加入到Check队列，记为check2
+        - 遇到process.nextTick，把回调加入到nextTick队列，记为nextTick4
+      - 执行nextTick3，输出：nextTick4
+      - 由于又加了nextTick4，在nextTick队列后面执行，输出：nextTick3
+    - 检查微任务队列，没有略过
+    - Poll 阶段执行结束，此阶段输出：`setTimout1 sync2 nextTick2 nextTick4 nextTick3`
+  - 进入check 阶段
+    - 检查check队列是否有可执行的回调，此时队列有两个回调：check1、check2
+    - 执行check1回调，输出：setImmediate2
+    - 执行check2回调，输出：setImmediate1
+    - check 阶段执行结束，此阶段输出：`setImmediate2 setImmediate1`
+  - closing阶段没有任务，略过
+  - 检查是否还有活跃的`handles(定时器、IO等事件句柄)`,有，继续下一轮事件循环
+- 进入第二次事件循环
+  - 进入Timer阶段
+    - 检查Timer队列是否有可执行的回调，此时队列有一个回调：settimeout3
+    - 执行settimeout3回调，输出：setTimout2
+    - Pending I/O Callback、Poll、check、closing阶段没有任务，略过
+    - 检查是否还有活跃的`handles(定时器、IO等事件句柄)`,没有了，结束事件循环，退出程序
+- 程序执行结束，输出结果：`sync1 nextTick1 setTimout1 sync2 nextTick2 nextTick4 nextTick3 setImmediate2 setImmediate1 setTimout2`
 
 ## 4. Promise
 
@@ -428,6 +479,101 @@ Promise.all([a, b, c])
 race参数用多个实例有率先改变状态，Promise.race的状态就跟着改变。那个率先改变的实例的返回值，就是Promise.race的回调函数的参数。
 
 `Promise.race`方法的参数与`Promise.all`方法一样，如果不是 Promise 实例，就会先调用下面讲到的`Promise.resolve`方法，将参数转为 Promise 实例，再进一步处理。
+
+```javascript
+var a = new Promise(function (resolve) { resolve(2);	 })
+var b = new Promise(function (resolve, reject) { reject(5); }).catch(() => {console.log(123)})
+var c = new Promise(function (resolve) { resolve(2); })
+Promise.race([a, b, c])
+.then( function(res) { console.log('res: ', res) })
+.catch( function(err){ console.log('err:', err) })
+```
+
+### 4.8 Promise.resolve()
+
+`Promise.resolve`方法会将现有对象转为Promise对象。
+
+```javascript
+Promise.resolve('foo')
+// 等价于
+new Promise(resolve => resolve('foo'))
+```
+
+`Promise.resolve`方法的参数分四中情况：
+
+- 参数是一个Promise实例
+
+  如果参数是Promise实例，那么`resolve`将不做任何修改直接返回这个实例
+
+- 参数是一个`thenable`对象
+
+  `thenable`对象指的是具有`then`方法的对象，比如下面的例子：
+
+  ```javascript
+  let thenable = {
+    then: function(resolve, reject) {
+      resolve(42);
+    }
+  };
+  let p1 = Promise.resolve(thenable);
+  p1.then(function(value) {
+    console.log(value);  // 42
+  });
+  ```
+
+  `Promise.resolve`方法会将`thenable`对象转为 Promise 对象，然后就立即执行`thenable`对象的`then`方法。`thenable`对象的`then`方法执行后，对象`p1`的状态就变为`resolved`，从而立即执行最后那个`then`方法指定的回调函数，输出 42。
+
+- 参数不是具有`then`方法的对象，或根本就不是对象
+
+  如果参数是一个原始值，或者是一个不具有`then`方法的对象，则`Promise.resolve`方法返回一个新的 Promise 对象，状态为`resolved`，resolved参数就是传入的参数。
+
+  ```javascript
+  Promise.resolve('Hello')
+  .then(function(res){ console.log('res:', res); })
+  Promise.resolve({a:'wer', b:'123'})
+  .then(function(res){ console.log('res:', res); })
+  // res: Hello
+  // res: { a: 'wer', b: '123' }
+  ```
+
+  上面的例子中，由于传入的参数不属于异步操作（判断方法是对象不具有then方法），返回Promise实例的状态从一生成就是`resolved`，所以回调函数会立即执行，`Promise.resolve`方法的参数，会同时传给回调函数。
+
+- 不带任何参数
+
+  `Promise.resolve`方法允许调用时不带参数，直接返回一个`resolved`状态的 Promise 对象。
+
+  ```javascript
+  const p = Promise.resolve();
+  p.then(function () {
+    console.log('ttttt')
+  });
+  ```
+
+### 4.9 Promise.reject()
+
+`Promise.reject(reason)`方法也会返回一个新的 Promise 实例，该实例的状态为`rejected`。
+
+```javascript
+const p = Promise.reject('出错了');
+// 等同于
+const q = new Promise((resolve, reject) => reject('出错了'))
+
+q.then(null, function (s) {
+  console.log(s)
+});
+```
+
+***注意***，`Promise.reject()`方法的参数，会原封不动地作为`reject`的理由，变成后续方法的参数。这一点与`Promise.resolve`方法不一致。
+
+```javascript
+const thenable = {
+  then(resolve, reject) { reject('出错了'); }
+};
+
+Promise.reject(thenable)
+.catch(e => { console.log(e === thenable) })
+// true
+```
 
 
 
