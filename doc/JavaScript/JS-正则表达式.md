@@ -413,6 +413,24 @@ var reg = /\d*[\u4e00-\u9fa5]\/[\u4e00-\u9fa5]\,/	// 匹配（10元/斤,）
 
 
 
+## 5. 实际使用例子
+
+### 5.1 获取URL中hash的值，不包括参数
+
+
+
+```javascript
+// 想要 home1
+var t1 = "https://yulilong.github.io/docsify/#/home1";
+// 想要 bar/
+var t = "https://yulilong.github.io/docsify/#/bar/?id=_11-%e6%a0%87%e9%a2%9811";
+var reg4 = /#\/(.*?)([?]|$)/;
+console.log(t1.match(reg4)[1]);
+console.log(t.match(reg4)[1]);
+```
+
+
+
 ## 参考资料
 
 - 饥人谷课件
