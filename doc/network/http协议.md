@@ -15,6 +15,10 @@ HTTP是一个应用层协议，由请求和响应构成，是一个标准的客�
 
 如果在以上过程中的某一步出现错误，那么产生错误的信息将返回到客户端，有显示屏输出。对于用户来说，这些过程是由HTTP自己完成的，用户只要用鼠标点击，等待信息显示就可以了。
 
+
+
+
+
 docsify主题：
 
 https://jhildenbiddle.github.io/docsify-themeable/#/customization
@@ -36,4 +40,6 @@ https://jhildenbiddle.github.io/docsify-themeable/#/customization
 [HTTP协议详解 segmentfault](https://segmentfault.com/a/1190000004457479)
 
 [HTTP 协议入门 阮一峰](http://www.ruanyifeng.com/blog/2016/08/http.html)
+
+[关于HTTP请求报文和响应报文学习笔记](https://www.cnblogs.com/xiongmao-cpp/p/6265407.html)
 
