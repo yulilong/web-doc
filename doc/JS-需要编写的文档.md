@@ -1,3 +1,7 @@
+URL中hash和history和监听
+
+https://juejin.im/post/5c2708cd6fb9a049f06a5744#comment
+
 
 
 [分享前端开发常用代码片段-值得收藏](https://segmentfault.com/a/1190000014700549)
