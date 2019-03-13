@@ -1,3 +1,11 @@
+1、BOM与文件编码
+
+[BOM与文件编码的识别](https://blog.csdn.net/Boboma_dut/article/details/79639306)
+
+https://www.jianshu.com/p/7797946c71e3
+
+
+
 URL中hash和history和监听
 
 https://juejin.im/post/5c2708cd6fb9a049f06a5744#comment
