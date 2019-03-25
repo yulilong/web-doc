@@ -429,6 +429,12 @@ console.log(t1.match(reg4)[1]);
 console.log(t.match(reg4)[1]);
 ```
 
+### 5.2 只能输入字母、数字、汉字
+
+```javascript
+/^[A-Za-z0-9\u4e00-\u9fa5]+$/.test('123we@#')
+```
+
 
 
 ## 参考资料
