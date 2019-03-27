@@ -7,7 +7,8 @@
 `document`对象有不同的办法可以获取。
 
 - 正常的网页，直接使用`document`或`window.document`。
-- `iframe`框架里面的网页，使用`iframe`节点的`contentDocument`属性。
+- `iframe`框架里面的
+- 网页，使用`iframe`节点的`contentDocument`属性。
 - Ajax 操作返回的文档，使用`XMLHttpRequest`对象的`responseXML`属性。
 - 内部节点的`ownerDocument`属性。
 
@@ -284,3 +285,4 @@ document.referrer
 ## 参考资料
 
 [document 对象  阮一峰](https://javascript.ruanyifeng.com/dom/document.html)
+

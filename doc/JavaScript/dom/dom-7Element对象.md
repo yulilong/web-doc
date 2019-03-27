@@ -1005,7 +1005,7 @@ HTML代码中行内元素行数，加上实际网页行数减一，
 
 这个方法主要用于判断行内元素是否换行，以及行内元素的每一行的位置偏移。
 
-## 2.12 Element.insertAdjacentElement()
+### 2.12 Element.insertAdjacentElement()
 
 `Element.insertAdjacentElement`方法在相对于当前元素的指定位置，插入一个新的节点。该方法返回被插入的节点，如果插入失败，返回`null`。
 

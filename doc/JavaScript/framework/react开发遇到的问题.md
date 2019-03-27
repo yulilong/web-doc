@@ -1,6 +1,6 @@
 [TOC]
 
-### 1. Module build failed: SyntaxError: Missing class properties transform.
+## 1. Module build failed: SyntaxError: Missing class properties transform.
 
 在react中遇到报错信息：
 
@@ -44,7 +44,7 @@ https://github.com/babel/babel/issues/2729
 
 
 
-### 2.  Cannot update during an existing state transition 
+## 2.  Cannot update during an existing state transition 
 
 具体的报错信息：
 
@@ -64,10 +64,6 @@ Warning: Cannot update during an existing state transition (such as within `rend
 解决方法：
 在调用方法时创建一个匿名函数，再调用。
 <Button onPress={()=>{hideMessage('隐藏信息')}}>隐藏信息</Button>
-
-作者：阿波罗程序猿
-链接：https://www.jianshu.com/p/9780a302e509
-來源：简书
-简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。
 ```
 
+参考资料：https://www.jianshu.com/p/9780a302e509
