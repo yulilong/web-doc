@@ -304,3 +304,44 @@ class ShowIncomeTable extends React.Component {
 
 参考资料：http://react.yubolun.com/docs/context.html
 
+## 5. react中引入图片
+
+在react中，如果在样式文件中使用背景图片格式：
+
+```
+background: url('./../../../assets/images/arrow-up.png') no-repeat center;
+```
+
+这样使用是没问题的。
+
+但是在react中HTML里面的img标签引入图片路径时：
+
+```
+<img src="./../../../../assets/images/arrow-up.png" alt=""/>
+```
+
+这样引入在本地开发时可以看见图片，但是一旦项目部署后，会发现找不到图片。
+
+这是由于打包工具不会处理react中img标签中路径，所以会导致部署上线后找不到路片问题，因此可使用如下几种方式，可解决问题。
+
+- 第一种，使用import导入图片路径
+
+  ```react
+  import Img from "./images/1.png"
+  <img src={Img} alt=""/>
+  ```
+
+-  第二种，使用require方式直接获取图片
+
+   ```react
+   <img src={require("./images/1.png")} alt=""/>
+   ```
+
+-  如果是北京图的话操作style
+
+   ```react
+   style={{background:`url(${require("./images/1.png")})` }}
+   ```
+
+   > ${} 为字符串模板,要用反引号``
+
