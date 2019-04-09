@@ -344,3 +344,20 @@ background: url('./../../../assets/images/arrow-up.png') no-repeat center;
    ```
 
    > ${} 为字符串模板,要用反引号``
+
+
+
+## 6. 把数组数据渲染到HTML中
+
+
+
+```jsx
+let businessLine = [1, 2, 3];
+{businessLine.length > 0 && businessLine.map((item, index) => (
+  <Option key={index.toString()} value={item.code}>{item.name}</Option>
+  <span key={index.toString()}> item </span>
+))}
+```
+
+
+
