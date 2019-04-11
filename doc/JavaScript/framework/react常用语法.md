@@ -350,8 +350,6 @@ background: url('./../../../assets/images/arrow-up.png') no-repeat center;
 
 ## 6. 把数组数据渲染到HTML中
 
-
-
 ```jsx
 let businessLine = [1, 2, 3];
 {businessLine.length > 0 && businessLine.map((item, index) => (
@@ -362,3 +360,24 @@ let businessLine = [1, 2, 3];
 
 注意：箭头函数体是用`()`包围的，不是`{}`。
 
+## 7. HTML点击事件中获取数据
+
+一个数组数据，在HTML中渲染，点击元素时，获取到数据：
+
+```jsx
+
+<div className="edit-item-content">
+  {bussinessType.map( (item, index) => (
+    <span
+      key={index.toString()}
+      onClick={(e) => {this.selectQuery(item, e)} }
+      >{item.name}</span>
+  ))}
+</div>
+```
+
+正产一个点击事件是`onClick={this.fuc}`，默认的参数是event事件。
+
+而想要在点击事件的时候，把数据也传到方法中，就要在HTML中的`onClik`事件里面使用箭头函数，
+
+箭头函数里面去直接调用这个方法，同时把参数传过去，如果需要点击事件，则在箭头函数中传参数，然后该参数传给方法即可。
