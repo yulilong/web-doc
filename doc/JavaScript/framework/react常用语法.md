@@ -52,6 +52,12 @@ ReactDOM.render(<HelloWorld/>,document.getElementById("app"))
 
 ## 2. 生命周期（Lifecycle）
 
+https://segmentfault.com/a/1190000004168886
+
+https://segmentfault.com/a/1190000018490987
+
+
+
 React 的生命周期包括三个阶段：mount（挂载）、update（更新）和 unmount（移除）
 
 ### 2.1 mount
