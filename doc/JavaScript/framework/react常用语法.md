@@ -48,6 +48,36 @@ ReactDOM.render(<HelloWorld/>,document.getElementById("app"))
 </div>
 ```
 
+### 1.2 多个类样式根据不同条件来显示
+
+可使用npm包工具来实现：<https://www.npmjs.com/package/classnames>
+
+或者自己根据条件来拼字符串：
+
+```jsx
+setClassNames = (obj) => {
+  if ( typeof obj !== 'object') {
+    return '';
+  }
+  let key;
+  let str = '';
+  for (key in obj) {
+    if(obj[key]) {
+      str += ' ' + key;
+    }
+  }
+  return str;
+}
+return (
+<span
+   className={this.setClassNames({
+       'active': this.state[e.key] === item.value,
+       'forbidden': this.state.dimensional === e.value,
+   })}
+>{item.name}</span>
+)
+```
+
 
 
 ## 2. 生命周期（Lifecycle）
