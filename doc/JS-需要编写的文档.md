@@ -1,3 +1,13 @@
+1、十进制的0.1转换成二级制：
+
+<https://zhidao.baidu.com/question/693903632703084164.html>
+
+[【转】为什么0.1无法被二进制小数精确表示？](https://www.cnblogs.com/scecit/p/5276943.html)
+
+[关于js浮点数计算精度不准确问题的解决办法](https://www.cnblogs.com/xinggood/p/6639022.html)
+
+
+
 1、BOM与文件编码
 
 [BOM与文件编码的识别](https://blog.csdn.net/Boboma_dut/article/details/79639306)
@@ -6,7 +16,7 @@ https://www.jianshu.com/p/7797946c71e3
 
 
 
-URL中hash和history和监听
+2. URL中hash和history和监听
 
 https://juejin.im/post/5c2708cd6fb9a049f06a5744#comment
 
@@ -14,9 +24,7 @@ https://juejin.im/post/5c2708cd6fb9a049f06a5744#comment
 
 [分享前端开发常用代码片段-值得收藏](https://segmentfault.com/a/1190000014700549)
 
-CSS 定位
 
-函数
 
 webpack 、npm、package.json文件介绍
 
