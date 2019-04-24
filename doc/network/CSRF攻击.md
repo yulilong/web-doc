@@ -79,6 +79,86 @@ CSRF的两个特点：
   - CSRF Token
   - 双重Cookie验
 
+### 2.1 阻止不明外域的访问
+
+#### 2.1.1 同源检测
+
+既然CSRF大多来自第三方网站，那么我们就直接禁止外域（或者不受信任的域名）对我们发起请求。
+
+那么问题来了，我们如何判断请求是否来自外域呢？
+
+在HTTP协议中，每一个异步请求都会携带两个Header，用于标记来源域名：
+
+- Origin Header
+- Referer Header
+
+![](./../../img/CSRF-001.png)
+
+截图的是Google翻译网站：https://translate.google.cn/
+
+这两个Header在浏览器发起请求时，大多数情况会自动带上，并且不能由前端自定义内容。
+服务器可以通过解析这两个Header中的域名，确定请求的来源域。
+
+##### 2.1.1.1 使用Origin Header确定来源域名
+
+在部分与CSRF有关的请求中，请求的Header中会携带Origin字段。字段内包含请求的域名（不包含path及query）。
+如果Origin存在，那么直接使用Origin中的字段确认来源域名就可以。
+但是Origin在以下两种情况下并不存在：
+
+- **IE11同源策略：** IE 11 不会在跨站CORS请求上添加Origin标头，Referer头将仍然是唯一的标识。最根本原因是因为IE 11对同源的定义和其他浏览器有不同，有两个主要的区别，可以参考[MDN Same-origin_policy#IE_Exceptions](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy#IE_Exceptions)
+- **302重定向：** 在302重定向之后Origin不包含在重定向的请求中，因为Origin可能会被认为是其他来源的敏感信息。对于302重定向的情况来说都是定向到新的服务器上的URL，因此浏览器不想将Origin泄漏到新的服务器上。
+
+##### 2.1.1.2 使用Referer Header确定来源域名
+
+根据HTTP协议，在HTTP头中有一个字段叫Referer，记录了该HTTP请求的来源地址。
+对于Ajax请求，图片和script等资源请求，Referer为发起请求的页面地址。对于页面跳转，Referer为打开页面历史记录的前一个页面地址。因此我们使用Referer中链接的Origin部分可以得知请求的来源域名。
+
+这种方法并非万无一失，Referer的值是由浏览器提供的，虽然HTTP协议上有明确的要求，但是每个浏览器对于Referer的具体实现可能有差别，并不能保证浏览器自身没有安全漏洞。使用验证 Referer 值的方法，就是把安全性都依赖于第三方（即浏览器）来保障，从理论上来讲，这样并不是很安全。在部分情况下，攻击者可以隐藏，甚至修改自己请求的Referer。
+
+2014年，W3C的Web应用安全工作组发布了Referrer Policy草案，对浏览器该如何发送Referer做了详细的规定。截止现在新版浏览器大部分已经支持了这份草案，我们终于可以灵活地控制自己网站的Referer策略了。新版的Referrer Policy规定了五种Referer策略：No Referrer、No Referrer When Downgrade、Origin Only、Origin When Cross-origin、和 Unsafe URL。之前就存在的三种策略：never、default和always，在新标准里换了个名称。他们的对应关系如下：
+
+| 策略名称                   | 属性值（新）                     | 属性值（旧） |
+| :------------------------- | :------------------------------- | :----------- |
+| No Referrer                | no-Referrer                      | never        |
+| No Referrer When Downgrade | no-Referrer-when-downgrade       | default      |
+| Origin Only                | (same or strict) origin          | origin       |
+| Origin When Cross Origin   | (strict) origin-when-crossorigin | -            |
+| Unsafe URL                 | unsafe-url                       | always       |
+
+根据上面的表格因此需要把Referrer Policy的策略设置成same-origin，对于同源的链接和引用，会发送Referer，referer值为Host不带Path；跨域访问则不携带Referer。例如：`aaa.com`引用`bbb.com`的资源，不会发送Referer。
+
+设置Referrer Policy的方法有三种：
+
+1. 在CSP设置
+2. 页面头部增加meta标签
+3. a标签增加referrerpolicy属性
+
+上面说的这些比较多，但我们可以知道一个问题：攻击者可以在自己的请求中隐藏Referer。如果攻击者将自己的请求这样填写：
+
+```html
+<img src="http://bank.example/withdraw?amount=10000&for=hacker" referrerpolicy="no-referrer">
+```
+
+那么这个请求发起的攻击将不携带Referer。
+
+另外在以下情况下Referer没有或者不可信：
+
+1、IE6、7下使用window.location.href=url进行界面的跳转，会丢失Referer。
+
+2、IE6、7下使用window.open，也会缺失Referer。
+
+3、HTTPS页面跳转到HTTP页面，所有浏览器Referer都丢失。
+
+4、点击Flash上到达另外一个网站的时候，Referer的情况就比较杂乱，不太可信。
+
+#### 2.1.2 无法确认来源域名情况
+
+当Origin和Referer头文件不存在时该怎么办？如果Origin和Referer都不存在，建议直接进行阻止，特别是如果您没有使用随机CSRF Token（参考下方）作为第二次检查。
+
+#### 2.1.3 阻止外域请求
+
+
+
 
 
 
