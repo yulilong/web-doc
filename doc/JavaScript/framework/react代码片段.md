@@ -53,3 +53,78 @@ return (
 )
 ```
 
+### 4. react中引入图片
+
+在react中，如果在样式文件中使用背景图片格式：
+
+```
+background: url('./../../../assets/images/arrow-up.png') no-repeat center;
+```
+
+这样使用是没问题的。
+
+但是在react中HTML里面的img标签引入图片路径时：
+
+```
+<img src="./../../../../assets/images/arrow-up.png" alt=""/>
+```
+
+这样引入在本地开发时可以看见图片，但是一旦项目部署后，会发现找不到图片。
+
+这是由于打包工具不会处理react中img标签中路径，所以会导致部署上线后找不到路片问题，因此可使用如下几种方式，可解决问题。
+
+- 第一种，使用import导入图片路径
+
+  ```react
+  import Img from "./images/1.png"
+  <img src={Img} alt=""/>
+  ```
+
+- 第二种，使用require方式直接获取图片
+
+  ```react
+  <img src={require("./images/1.png")} alt=""/>
+  ```
+
+- 如果是北京图的话操作style
+
+  ```react
+  style={{background:`url(${require("./images/1.png")})` }}
+  ```
+
+  > ${} 为字符串模板,要用反引号``
+
+
+
+### 5. 把数组数据渲染到HTML中
+
+```jsx
+let businessLine = [1, 2, 3];
+{businessLine.length > 0 && businessLine.map((item, index) => (
+  <Option key={index.toString()} value={item.code}>{item.name}</Option>
+  <span key={index.toString()}> item </span>
+))}
+```
+
+注意：箭头函数体是用`()`包围的，不是`{}`。
+
+### 6. HTML点击事件中获取数据
+
+一个数组数据，在HTML中渲染，点击元素时，获取到数据：
+
+```jsx
+<div className="edit-item-content">
+  {bussinessType.map( (item, index) => (
+    <span
+      key={index.toString()}
+      onClick={(e) => {this.selectQuery(item, e)} }
+      >{item.name}</span>
+  ))}
+</div>
+```
+
+正产一个点击事件是`onClick={this.fuc}`，默认的参数是event事件。
+
+而想要在点击事件的时候，把数据也传到方法中，就要在HTML中的`onClik`事件里面使用箭头函数，
+
+箭头函数里面去直接调用这个方法，同时把参数传过去，如果需要点击事件，则在箭头函数中传参数，然后该参数传给方法即可。

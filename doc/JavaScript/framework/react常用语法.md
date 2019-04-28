@@ -341,79 +341,78 @@ class ShowIncomeTable extends React.Component {
 
 参考资料：http://react.yubolun.com/docs/context.html
 
-## 5. react中引入图片
+## 5. setState()说明
 
-在react中，如果在样式文件中使用背景图片格式：
+`setState()`将对组件状态的改变排队，并告诉该组件及其子组件需要用已经更新的状态来重新渲染。这个方法主要是用来更新用户界面以响应事件处理和服务器响应。
 
-```
-background: url('./../../../assets/images/arrow-up.png') no-repeat center;
-```
-
-这样使用是没问题的。
-
-但是在react中HTML里面的img标签引入图片路径时：
-
-```
-<img src="./../../../../assets/images/arrow-up.png" alt=""/>
-```
-
-这样引入在本地开发时可以看见图片，但是一旦项目部署后，会发现找不到图片。
-
-这是由于打包工具不会处理react中img标签中路径，所以会导致部署上线后找不到路片问题，因此可使用如下几种方式，可解决问题。
-
-- 第一种，使用import导入图片路径
-
-  ```react
-  import Img from "./images/1.png"
-  <img src={Img} alt=""/>
-  ```
-
--  第二种，使用require方式直接获取图片
-
-   ```react
-   <img src={require("./images/1.png")} alt=""/>
-   ```
-
--  如果是北京图的话操作style
-
-   ```react
-   style={{background:`url(${require("./images/1.png")})` }}
-   ```
-
-   > ${} 为字符串模板,要用反引号``
-
-
-
-## 6. 把数组数据渲染到HTML中
+1、`setState()`不总是立刻更新组件。其可能是成批处理或推迟更新。这使得在调用`setState()`后立刻读取`this.state`变成一个潜在陷阱。
 
 ```jsx
-let businessLine = [1, 2, 3];
-{businessLine.length > 0 && businessLine.map((item, index) => (
-  <Option key={index.toString()} value={item.code}>{item.name}</Option>
-  <span key={index.toString()}> item </span>
-))}
+this.setState({ tt: 20}, () => { console.log('tt: ', this.state.tt) });
+this.setState({ tt: 50}, () => { console.log('tt: ', this.state.tt) });
 ```
 
-注意：箭头函数体是用`()`包围的，不是`{}`。
+上面代码执行后，输出`50 50`, 说明方法合并到一起执行了
 
-## 7. HTML点击事件中获取数据
+2、`setState()`永远都会导致重新渲染，除非`shouldComponentUpdate()` 返回`false`。所以和渲染无关的状态不要放在state中。
 
-一个数组数据，在HTML中渲染，点击元素时，获取到数据：
+3、`setState()`的第二个参数是一个可选的回调函数，其执行将是在一旦`setState`完成，并且组件被重新渲染之后。通常，对于这类逻辑，我们推荐使用`componentDidUpdate`。
+
+由于使用setState()更新了值后，不会立刻就能使用`this.state`看到最新的值，如：
 
 ```jsx
-
-<div className="edit-item-content">
-  {bussinessType.map( (item, index) => (
-    <span
-      key={index.toString()}
-      onClick={(e) => {this.selectQuery(item, e)} }
-      >{item.name}</span>
-  ))}
-</div>
+constructor(props, context) {
+  super(props, context)
+  this.state = {
+    value: 1,
+  };
+}
+// 第一次render后的生命周期
+componentDidMount () {
+  let value = 10;
+  this.setState({tt: 10,})
+  console.log('tt: ', this.state.tt);	// 此时输出的是1
+}
 ```
 
-正产一个点击事件是`onClick={this.fuc}`，默认的参数是event事件。
+### 5.1 执行setState()后this.state立即获取到更新方法
 
-而想要在点击事件的时候，把数据也传到方法中，就要在HTML中的`onClik`事件里面使用箭头函数，
+`setState()`的第二个参数是一个可选的回调函数，其执行将是在一旦`setState`完成，并且组件被重新渲染之后。可用如下方法：
 
-箭头函数里面去直接调用这个方法，同时把参数传过去，如果需要点击事件，则在箭头函数中传参数，然后该参数传给方法即可。
+```jsx
+componentDidMount () {
+  this.setState({ tt: 20}, () => {
+    this.pp();
+  });
+  // this.setState({tt: 30}, this.pp ) 此方法也可以
+}
+pp = () => { console.log('tt: ', this.state.tt) }
+```
+
+或者使用**setTimeout**异步函数。
+
+```jsx
+componentDidMount () {
+ this.setState({tt: 40})
+ setTimeout(this.pp, 0);	// 40
+}
+pp = () => { console.log('tt: ', this.state.tt) }
+```
+
+或者需要实时的变量类变量里面：
+
+```jsx
+constructor(props, context) {
+  super(props, context)
+  this.state = {
+    value: 1,
+  };
+  this.value = 1; // 直接把变量放在这里
+}
+```
+
+参考资料：
+
+https://www.cnblogs.com/feiyu6/p/9202873.html
+
+https://react.docschina.org/docs/react-component.html#setstate
