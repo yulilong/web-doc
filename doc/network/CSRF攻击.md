@@ -186,6 +186,34 @@ GET https://example.com/addComment?comment=XXX&dest=orderId
 
 ### 2.2 请求提交时要求附加本域才能获取的信息
 
+#### 2.2.1 CSRF Token
+
+前面讲到CSRF的另一个特征是，攻击者无法直接窃取到用户的信息（Cookie，Header，网站内容等），仅仅是冒用Cookie中的信息。
+
+而CSRF攻击之所以能够成功，是因为服务器误把攻击者发送的请求当成了用户自己的请求。那么我们可以要求所有的用户请求都携带一个CSRF攻击者无法获取到的Token。服务器通过校验请求是否携带正确的Token，来把正常的请求和攻击的请求区分开，也可以防范CSRF的攻击。
+
+CSRF Token的防护策略分为三个步骤：
+
+1、将CSRF Token输出到页面中
+
+用户打开页面的时候，服务器会生成一个token，该token不能放在cookie中，否则又会被攻击者冒用，为了安全，token最好还是放在session中，之后再每次加载页面时，先用API请求到token，然后使用JS遍历整个DOM树，对于DOM中所有的a和form标签后加入token，这样可以解决大部分请求，但对于页面加载后动态生成的HTML代码，这种方法没用，还需要程序员在编码是手动添加token。
+
+2、页面提交的请求携带这个Token
+
+对于GET请求，Token将附在请求地址之后，这样URL 就变成 [http://url?csrftoken=tokenvalue](http://url/?csrftoken=tokenvalue)。 而对于 POST 请求来说，要在 form 的最后加上：
+
+```html
+<input type=”hidden” name=”csrftoken” value=”tokenvalue”/>
+```
+
+这样，就把Token以参数的形式加入请求了。
+
+3、服务器验证Token是否正确
+
+当用户从客户端得到了Token，再次提交给服务器的时候，服务器需要判断Token的有效性，验证过程是先解密Token，对比加密字符串以及时间戳，如果加密字符串一致且时间未过期，那么这个Token就是有效的。
+
+这种方法要比之前检查Referer或者Origin要安全一些，Token可以在产生并放于Session之中，然后在每次请求时把Token从Session中拿出，与请求中的Token进行比对，但这种方法的比较麻烦的在于如何把Token以参数的形式加入请求。
+
 
 
 
