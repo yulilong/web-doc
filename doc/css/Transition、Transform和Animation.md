@@ -379,17 +379,12 @@ function isValidAnimationName(animationName: string): boolean{
 
 创建动画序列，需要使用[`animation`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation)属性或其子属性，该属性允许配置动画时间、时长以及其他动画细节，但该属性不能配置动画的实际表现，动画的实际表现是由 [`@keyframes`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@keyframes)规则实现， 
 
-```less
-<css-selector> {
-  animation: <animation-name>
-             <animation-duration>
-             <animation-timing-function>
-             <animation-delay>
-             <animation-iteration-count>
-             <animation-direction>
-             <animation-fill-mode>
-             <animation-play-state>;
-}
+```
+animation:
+[animation-name] [animation-duration] // 动画的名称、持续时间
+[animation-timing-function][animation-delay] // 关于时间的函数(properties/t)、延迟时间
+[animation-iteration-count] [animation-direction] // 播放次数、播放顺序
+[animation-fill-mode] [animation-play-state]; // 播放前或停止后设置相应样式、控制动画运行或暂停
 ```
 
 示例：
@@ -408,7 +403,7 @@ function isValidAnimationName(animationName: string): boolean{
 
 
 
-## 参考资料
+## 4. 参考资料
 
 [深入理解CSS过渡属性transition 简书](https://www.jianshu.com/p/5dbeeb2159e8)
 
