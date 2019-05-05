@@ -14,7 +14,7 @@ Safari 支持替代的 -webkit-transition 属性。
 
 ### 1.1 transition-property:过渡的属性
   过渡的属性的名称，比如 transition-property:backgrond 就是指 backgound 参与这个过渡
-  值：none(没有指定任何样式)、 all(默认值，指定元素所有支持transition-property属性的样式) ||` <transition-property>`(可选过度样式)
+  值：none(没有指定任何样式)、 all(默认值，指定元素所有支持transition-property属性的样式)、` <transition-property>`(可选过度样式)
   适用于：所有元素
   继承性：无
 
@@ -82,8 +82,8 @@ Safari 支持替代的 -webkit-transition 属性。
 
 其他用法
 
-```css
-// 设置不同的transition-property，对应的transition-delay，transition-timing-function，transition-duration的属性相同时，设置一个即可。
+```less
+/* 设置不同的transition-property，对应的transition-delay，transition-timing-function，transition-duration的属性相同时，设置一个即可。*/
 .test1 {
   transition-property:width,background;
   transition-duration:3s;
@@ -95,7 +95,7 @@ Safari 支持替代的 -webkit-transition 属性。
   transition:width 3s ease 500ms,background 3s ease 500ms;
 }
 
-// 当transition-property的值的个数多余对应的其他属性时（属性值大于1个），则按顺序取值。
+/* 当transition-property的值的个数多余对应的其他属性时（属性值大于1个），则按顺序取值。*/
 .test{
   transition-property:width,background,opacity;
   transition-duration:2s,500ms;
@@ -156,6 +156,8 @@ Safari 支持替代的 -webkit-transition 属性。
 只能转换由盒子模型定位的元素。根据经验，如果元素具有`display: block`，则由盒模型定位元素。
 
 `skew`是倾斜，`scale`是缩放，`rotate`是旋转，`translate`是平移。最后需要说明一点，transform 支持综合变换。
+
+以如下代码为例，讲解这几个属性作用：
 
 ```html
 <style>
@@ -300,32 +302,107 @@ Safari 支持替代的 -webkit-transition 属性。
 }
 ```
 
-如果多个关键帧使用同一个名称，以最后一次定义的为准。
 
-如果一个@keyframes 里的关键帧的百分比存在重复的情况，以最后一次定义的关键帧为准。 因为`@keyframes` 的规则不存在层叠样式(cascade)的情况，即使多个关键帧设置相同的百分值也不会全部执行。
 
-如果某一个关键帧出现了重复的定义，且重复的关键帧中的css属性值不同，以最后一次定义的属性为准。
+1、`<Animation Name>`的命名规范
 
-######## 3.2 配置动画效果
+```javascript
+// 命名需要遵循以下规则
+const rIsInvalid = /^--|^[0-9]+-|^(?:unset|initial|inherit|none)$/
+    , rIsValid = /^[0-9a-z-_\\]+$/i
+function isValidAnimationName(animationName: string): boolean{
+  return !rIsInvalid.test(animationName) && rIsValid(animationName)
+}
+```
+
+2、`<Animation Time Offset>`取值
+`0-100%`、`from`，等价与`0%`、 `to`，等价与`100%`。
+3、`<Animation Name>`重复怎么办
+@keyframes CSS规则不支持层叠样式，因此当出现多个同名keyframes，那么仅最后出现的那个有效。
+
+```css
+/* 无效 */
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+/* 生效 */
+@keyframes rotate {
+  from { transform: rotate(90deg); }
+  to { transform: rotate(-360deg); }
+}
+```
+
+4、`<Animation Time Offset>`重复怎么办
+与@keyframes CSS规则一样，标准规定相同的关键帧不产生层叠，仅最后出现的认定为有效。
+但实际上FireFox14+和Chrome均将关键帧设计为可层叠的。
+
+```css
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  from { background: red; }
+  /* 上述两条time offset实际上等价于
+   * from { transform: rotate(0deg); background: red; }
+   */
+  to {
+    transform: rotate(360deg);
+    background: yellow;
+  }
+}
+```
+
+5、`!important`导致属性失效
+一般情况下使用`!important`会让CSS属性获得最高权重，但在@keyframes下却会导致该CSS属性失效。
+
+```less
+@keyframes rotate {
+  from {
+    transform: rotate(90deg);
+    background: red!important; /* background属性无效 */
+  }
+  to { transform: rotate(-360deg); }
+}
+```
+
+6、必须提供至少两个关键帧
+
+```less
+/* 不会根据缓动函数产生动画效果，而是在动画持续时间的最后瞬间移动过去 */
+@keyframes move-left{
+   to {
+       left: 100px;
+   }
+}
+```
+
+### 3.2 配置动画效果
 
 创建动画序列，需要使用[`animation`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation)属性或其子属性，该属性允许配置动画时间、时长以及其他动画细节，但该属性不能配置动画的实际表现，动画的实际表现是由 [`@keyframes`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@keyframes)规则实现， 
 
+```less
+<css-selector> {
+  animation: <animation-name>
+             <animation-duration>
+             <animation-timing-function>
+             <animation-delay>
+             <animation-iteration-count>
+             <animation-direction>
+             <animation-fill-mode>
+             <animation-play-state>;
+}
 ```
-animation: [name/动画名称] [duration/动画时间] [timing-function/动画周期(ease)] delay[动画延时] [iteration-count/动画播放次数] [direction/指定是否应该轮流反向播放动画] [fill-mode/规定当动画不播放时（当动画完成时，或当动画有一个延迟未开始播放时），要应用到元素的样式] [play-state/指定动画是否正在运行或已暂停];
+
+示例：
+
+```less
+.box.rotate {
+  animation: rotate 10s infinite alternate;
+}
 ```
 
 
 
-| 属性 | 属性单独使用 | 属性作用 | 属性可选值  |
-| ---------- | ------------- | ------------------ | ------------- |
-| name            | *animation-name*            | 动画名称(@keyframes name)                                    | @keframes name                                               |
-| duration        | *animation-duration*        | 动画运行时间(1s)                                             | 参数num(1s or 0.5s)                                          |
-| timing-function | *animation-timing-function* | 设置动画将如何完成一个周期                                   | - linear [动画从头到尾的速度是相同的]   - ease [默认。动画以低速开始，然后加快，在结束前变慢]   - ease-in [动画以低速开始]   - ease-out [动画以低速结束]   - ease-in-out [动画以低速开始和结束]   - cubic-bezier(n,n,n,n) [在 cubic-bezier 函数中自己的值。可能的值是从 0 到 1 的数值] |
-| delay           | *animation-delay*           | 设置动画在启动前的延迟间隔                                   | time [可选。定义动画开始前等待的时间，以秒或毫秒计。默认值为0] |
-| iteration-count | *animation-iteration-count* | 定义动画的播放次数                                           | - n [一个数字，定义应该播放多少次动画]   - infinite [指定动画应该播放无限次（永远] |
-| direction       | *animation-direction*       | 指定是否应该轮流反向播放动画                                 | - normal [默认值。动画按正常播放]   - reverse [动画反向播放]   - alternate [动画在奇数次（1、3、5...）正向播放，在偶数次（2、4、6...）反向播放]   - alternate-reverse [动画在奇数次（1、3、5...）反向播放，在偶数次（2、4、6...）正向播放]   - initial [置该属性为它的默认值。请参阅[*initial*](https://link.jianshu.com?t=http://www.runoob.com/cssref/css-initial.html)]   - inherit [从父元素继承该属性。请参阅[*inherit*](https://link.jianshu.com?t=http://www.runoob.com/cssref/css-inherit.html)] |
-| fill-mode       | *animation-fill-mode*       | 规定当动画不播放时（当动画完成时，或当动画有一个延迟未开始播放时），要应用到元素的样式 |                                                              |
-| play-state      | *animation-play-state*      | 指定动画是否正在运行或已暂停                                 |                                                              |
+
 
 
 
@@ -333,11 +410,17 @@ animation: [name/动画名称] [duration/动画时间] [timing-function/动画�
 
 ## 参考资料
 
-[CSS3动画相关属性详解 CSDN](https://blog.csdn.net/lyznice/article/details/54575905)
+[深入理解CSS过渡属性transition 简书](https://www.jianshu.com/p/5dbeeb2159e8)
 
 [CSS3属性transform详解](https://www.cnblogs.com/aspnetjia/p/5139020.html)
+
+[CSS3（三）Animation 入门详解 CSDN](https://blog.csdn.net/u013243347/article/details/79976352)
+
+[CSS Animations MDN](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Animations)
 
 [使用 CSS 动画 MDN](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Animations/Using_CSS_animations)
 
 [CSS3中的关键帧 MDN](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@keyframes)
+
+[CSS魔法堂：更丰富的前端动效by CSS Animation 来自segmentfault](https://segmentfault.com/a/1190000015588193)
 
