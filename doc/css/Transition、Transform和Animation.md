@@ -400,7 +400,47 @@ function isValidAnimationName(animationName: string): boolean{
 
   默认值为0s，代表动画在应用到元素上后立即开始执行。
 
-https://jsbin.com/kegefuh/3/edit?html,css,output
+```html
+<style>
+    @keyframes move {
+        from { left: 0; }
+        to { left: 200px; }
+    }
+    .test {
+        width: 100px; height: 100px; border: 1px solid; background: red;
+        position: absolute;
+        animation-name: move;
+        animation-duration: 3s;
+        animation-delay: 1s;
+        animation-iteration-count: infinite;	/**/
+    }
+</style>
+<div class="test"></div>
+```
+
+https://jsbin.com/kegefuh/5/edit?html,output
+
+![](./../../img/006.gif)
+
+#### 3.2.2 animation-timing-function
+
+animation-timing-function: 用于设置缓动函数类型，值为`ease | ease-in | ease-out | ease-in-out | linear | step-start | step-end | steps(<integer>, <flag>) | frames(<integer>) | cubic-bezier(<number>,<number>,<number>,<number>)`。
+
+[animation-timing-function知识点以及属性值steps()详解](https://blog.csdn.net/qq_23269747/article/details/76152689)
+
+[timing-function](https://developer.mozilla.org/zh-CN/docs/Web/CSS/timing-function)
+
+#### 3.2.3 animation-iteration-count、animation-fill-mode
+
+`<animation-iteration-count>`，动画重复播放次数，默认为1，infinite表示无限循环
+
+`<animation-fill-mode>`，可选值为`none | forwards | backwards | both`，用于设置动画开始前和结束后是否应用`0%`和`100%`的样式对元素上。分别表示`不应用`，`应用100%的样式`，`延迟播放期间应用0%的样式`和`0%和100%的样式均应用`。
+
+#### 3.2.4 animation-direction、animation-play-state
+
+`<animation-direction>`，可选值为`normal | reverse | alternate | alternate-reverse`，分别表示动画播放顺序是`从from到to`，`从to到from`，`从from到to再从to到from`和`从to到from再从from到to`。**注意：设置alternate|alternate-reverse时，animation-iteration-count必须大于1才能看到效果**
+
+`<animation-play-state>`，可选值`running | paused`，获取和设置播放状态。**注意：通过这个属性，我们仅能实现暂停和继续播放的效果，无法实现重播，更别说回放了**
 
 #### 3.2.1 animation
 
