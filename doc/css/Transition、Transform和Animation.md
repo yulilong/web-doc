@@ -278,20 +278,18 @@ Safari 支持替代的 -webkit-transition 属性。
 
 [CSS3中的关键帧 MDN](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@keyframes)
 
-@keyframes是定义动画的表现，通过使用[`@keyframes`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@keyframes)建立两个或两个以上关键帧来实现。每一个关键帧都描述了动画元素在给定的时间点上应该如何渲染。
+@keyframes是定义动画的表现。
+要使用关键帧, 先创建一个带名称的`@keyframes`规则，以便后续使用 [`animation-name`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-name) 这个属性来将一个动画同其关键帧声明匹配。每个`@keyframes` 规则包含多个关键帧，也就是一段样式块语句，每个关键帧有一个百分比值作为名称，代表在动画进行中，在哪个阶段触发这个帧所包含的样式。
+您可以按任意顺序列出关键帧百分比；他们将按照其应该发生的顺序来处理。
 
-因为动画的时间设置是通过CSS样式定义的，关键帧使用百分比来指定动画发生的时间点。`0%`表示动画的第一时刻，`100%`表示动画的最终时刻。因为这两个时间点十分重要，所以还有特殊的别名：`from`和`to`。这两个都是可选的，若`from/0%`或`to/100%`未指定，则浏览器使用计算值开始或结束动画。
-
-也可包含额外可选的关键帧，描述动画开始和结束之间的状态。您可以按任意顺序列出关键帧百分比；他们将按照其应该发生的顺序来处理。
+例子：
 
 ```css
 @keyframes slidein {
-  from {
-    margin-left: 100%; width: 300%;
+  from { 
+    margin-left: 100%; width: 300%; 
   }
-  to {
-    margin-left: 0%; width: 100%;
-  }
+  to { margin-left: 0%; width: 100%; }
 }
 /* 如果一个关键帧中没有出现其他关键帧中的属性，那么这个属性将使用插值(不能使用插值的属性除外, 这些属性会被忽略掉)。例如： */
 @keyframes identifier {
@@ -302,9 +300,9 @@ Safari 支持替代的 -webkit-transition 属性。
 }
 ```
 
+1、命名规范
 
-
-1、`<Animation Name>`的命名规范
+由大小写不敏感的字母a-z、数字0-9、下划线(_)和/或横线(-)组成。第一个非横线字符必须是字母，数字不能在字母前面，不允许两个横线出现在开始位置。来自 [animation-name MDN](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-name)
 
 ```javascript
 // 命名需要遵循以下规则
@@ -315,9 +313,11 @@ function isValidAnimationName(animationName: string): boolean{
 }
 ```
 
-2、`<Animation Time Offset>`取值
-`0-100%`、`from`，等价与`0%`、 `to`，等价与`100%`。
-3、`<Animation Name>`重复怎么办
+2、`<Animation Time Offset>` 关键帧时间点的取值
+
+关键帧使用百分比来指定动画发生的时间点。`0%`表示动画的第一时刻，`100%`表示动画的最终时刻。因为这两个时间点十分重要，所以还有特殊的别名：`from(0%)`和`to(100%)`。这两个都是可选的，若`from`或`to`未指定，则浏览器使用计算值开始或结束动画。也可包含额外可选的关键帧，描述动画开始和结束之间的状态。
+
+3、@keyframes的名字重复怎么办
 @keyframes CSS规则不支持层叠样式，因此当出现多个同名keyframes，那么仅最后出现的那个有效。
 
 ```css
@@ -333,17 +333,16 @@ function isValidAnimationName(animationName: string): boolean{
 }
 ```
 
-4、`<Animation Time Offset>`重复怎么办
+4、关键帧时间点重复怎么办
 与@keyframes CSS规则一样，标准规定相同的关键帧不产生层叠，仅最后出现的认定为有效。
 但实际上FireFox14+和Chrome均将关键帧设计为可层叠的。
+为避免出错，最好不好写重复的关键帧时间点。
 
 ```css
 @keyframes rotate {
   from { transform: rotate(0deg); }
   from { background: red; }
-  /* 上述两条time offset实际上等价于
-   * from { transform: rotate(0deg); background: red; }
-   */
+  /* 上述两条time offset实际上等价于  from { transform: rotate(0deg); background: red; } */
   to {
     transform: rotate(360deg);
     background: yellow;
