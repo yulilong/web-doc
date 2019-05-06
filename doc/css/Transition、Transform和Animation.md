@@ -304,6 +304,8 @@ Safari 支持替代的 -webkit-transition 属性。
 
 由大小写不敏感的字母a-z、数字0-9、下划线(_)和/或横线(-)组成。第一个非横线字符必须是字母，数字不能在字母前面，不允许两个横线出现在开始位置。来自 [animation-name MDN](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-name)
 
+命名尽量不要与animation其他属性的变量重名，否则在使用时候会和其他属性冲突。
+
 ```javascript
 // 命名需要遵循以下规则
 const rIsInvalid = /^--|^[0-9]+-|^(?:unset|initial|inherit|none)$/
@@ -377,6 +379,34 @@ function isValidAnimationName(animationName: string): boolean{
 ### 3.2 配置动画效果
 
 创建动画序列，需要使用[`animation`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation)属性或其子属性，该属性允许配置动画时间、时长以及其他动画细节，但该属性不能配置动画的实际表现，动画的实际表现是由 [`@keyframes`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@keyframes)规则实现， 
+
+#### 3.2.1 animation-name、animation-duration、animation-delay
+
+- animation-name
+
+  属性指定应用的一系列动画，每个名称代表一个由[`@keyframes`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@keyframes)定义的动画序列。
+
+  默认值为none
+
+- animation-duration
+
+  一个动画周期的时长，单位为秒(s)或者毫秒(ms)，无单位值无效。
+
+  默认值为0s，表示无动画。
+
+- animation-delay
+
+  定义动画于何时开始，即从动画应用在元素上到动画开始的这段时间的长度。该值可用单位为秒(s)和毫秒(ms)。如果未设置单位，定义无效。
+
+  默认值为0s，代表动画在应用到元素上后立即开始执行。
+
+https://jsbin.com/kegefuh/3/edit?html,css,output
+
+#### 3.2.1 animation
+
+ **animation** 属性是 [`animation-name`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-name)，[`animation-duration`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-duration), [`animation-timing-function`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-timing-function)，[`animation-delay`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-delay)，[`animation-iteration-count`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-iteration-count)，[`animation-direction`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-direction)，[`animation-fill-mode`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-fill-mode) 和 [`animation-play-state`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-play-state) 属性的一个简写属性形式。
+
+`animation` 属性用来指定一组或多组动画，每组之间用逗号相隔。
 
 ```
 animation:
