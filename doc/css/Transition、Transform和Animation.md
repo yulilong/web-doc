@@ -488,3 +488,7 @@ animation:
 
 [CSS魔法堂：更丰富的前端动效by CSS Animation 来自segmentfault](https://segmentfault.com/a/1190000015588193)
 
+[时间函数 `cubic-bezier` 在线网站](https://cubic-bezier.com/)
+
+[`cubic-bezier` 中文版在线网站](http://yisibl.github.io/cubic-bezier/#.55,.49,.83,.67)
+
