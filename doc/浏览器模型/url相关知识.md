@@ -1,3 +1,5 @@
+[TOC]
+
 ## 1. 对URL进行转码、解码
 
 ### 1.1 encodeURIComponent、decodeURIComponent
@@ -60,9 +62,15 @@ document.referrer
 
 ***注意：***如果用户直接打开了这个页面（不是通过页面跳转，而是通过地址栏或者书签等打开的），则该属性为空字符串。由于该属性只是返回一个字符串，所以不能够通过该属性引用页面的 DOM。
 
+## 4. URLSearchParams:处理URL的查询字符串
 
+注意：此方法在IE浏览器和Edge Mobile端不支持。
 
+参考资料：
 
+https://developer.mozilla.org/zh-CN/docs/Web/API/URLSearchParams
+
+https://segmentfault.com/a/1190000019099536
 
 
 
