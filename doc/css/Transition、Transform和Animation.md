@@ -429,12 +429,9 @@ https://jsbin.com/kegefuh/5/edit?html,output
 animation-timing-function属性定义CSS动画在每一动画周期中执行的节奏。
 
 可选的值：
-linear: 从开始到结束都是匀速运动
-ease:开始慢，中间块，最后慢，ease-in:动画以低速开始，ease-out:动画以低速结束
-ease-in-out:动画以低速开始和结束
-cubic-bezier(0.1, 0.7, 1.0, 0.1)：贝塞尔曲线方式运动
-step-start:直接在终点不变，step-end:直接在开始不变
-steps(4, end):分4次跳跃
+linear、ease、ease-in、ease-ou、ease-in-ou、
+steps(4, end)、step-start、step-end
+cubic-bezier(0.1, 0.7, 1.0, 0.1)
 
 代码示例：
 
@@ -446,15 +443,15 @@ steps(4, end):分4次跳跃
         animation-name: move; animation-duration: 3s; color: red;
         animation-delay: 2s; animation-iteration-count: infinite;
     }
-    .timing1 {animation-timing-function: linear        }
-    .timing2 {animation-timing-function: ease          }
-    .timing3 {animation-timing-function: ease-in       }
-    .timing4 {animation-timing-function: ease-out      }
-    .timing5 {animation-timing-function: ease-in-out   }
+    .timing1 {animation-timing-function: linear        } /*从开始到结束都是匀速运动*/
+    .timing2 {animation-timing-function: ease          } /*开始慢，中间块，最后慢*/
+    .timing3 {animation-timing-function: ease-in       } /*动画以低速开始*/
+    .timing4 {animation-timing-function: ease-out      } /*动画以低速结束*/
+    .timing5 {animation-timing-function: ease-in-out   } /*动画以低速开始和结束*/
     .timing6 {animation-timing-function: cubic-bezier(0.1, 0.7, 1.0, 0.1)}
-    .timing7 {animation-timing-function: step-start    }
-    .timing8 {animation-timing-function: step-end      }
-    .timing9 {animation-timing-function: steps(4, end) }
+    .timing7 {animation-timing-function: step-start    } /*直接在终点不变*/
+    .timing8 {animation-timing-function: step-end      } /*直接在开始不变*/
+    .timing9 {animation-timing-function: steps(4, end) } /*分4次跳跃*/
 </style>
 <div class="test timing1">linear       </div> <br><br>
 <div class="test timing2">ease         </div> <br><br>
@@ -470,6 +467,40 @@ steps(4, end):分4次跳跃
 ![](./../../img/007.gif)
 
 在线代码查看：https://jsbin.com/kegefuh/8/edit?html,output
+
+- 关于cubic-bezier(0.1, 0.7, 1.0, 0.1)
+
+  cubic-bezier定义了一条立方贝塞尔曲线，这些曲线是连续的，一般用于动画的平滑变换，也被称为缓动函数（*easing functions*）。
+
+  一条立方贝塞尔曲线需要四个点来定义，如下图，P0 、P1 、P2 和 P3。P0 和 P3 是起点和终点，这两个点被作为比例固定在坐标系上，横轴为时间比例，纵轴为完成状态。P0 是 `(0, 0)，表示初始时间和初始状态。`P3 是 `(1, 1)` ，表示终止时间和终止状态。
+
+  P1的坐标(x,y)对应了`cubic-bezier(n,n,n,n)`的前两个n值，P2坐标对应了后两个n值。cubic-bezier函数根据P1、P2两个点就能画出一条曲线，这条曲线就是动画运动的轨迹。
+
+  cubic-bezier的几个特定值：
+
+  cubic-bezier(.25, .1, .25, 1): ease
+
+  cubic-bezier(0, 0, 1, 1)      :liner (或者cubic-bezier(1, 1, 0, 0))
+
+  cubic-bezier(.42, 0, 1, 1)   : ease-in
+
+  cubic-bezier(0, 0, .58, 1)   : ease-out
+
+  cubic-bezier(.42, 0, .58, 1) : ease-in-out
+
+  linear、ease、ease-in、ease-ou、ease-in-ou这些变量是cubic-bezier的特定值下的表现。
+
+  ***注意：***P1、P2的横坐标都在[0,1]范围内时，三次贝塞尔曲线才是是有效的。
+
+  一个在线网站可以在线画出曲线测试，方便自定义动画运动轨迹：https://cubic-bezier.com/
+
+  ![](./../../img/008.png)
+
+- 关于steps(4,end)
+
+  
+
+
 
 [animation-timing-function知识点以及属性值steps()详解](https://blog.csdn.net/qq_23269747/article/details/76152689)
 
@@ -537,3 +568,4 @@ animation:
 
 [`cubic-bezier` 中文版在线网站](http://yisibl.github.io/cubic-bezier/#.55,.49,.83,.67)
 
+[【译】css动画里的steps()用法详解](https://segmentfault.com/a/1190000007042048)
