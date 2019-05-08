@@ -400,6 +400,8 @@ function isValidAnimationName(animationName: string): boolean{
 
   默认值为0s，代表动画在应用到元素上后立即开始执行。
 
+上面三个属性代码例子：
+
 ```html
 <style>
     @keyframes move {
@@ -412,7 +414,7 @@ function isValidAnimationName(animationName: string): boolean{
         animation-name: move;
         animation-duration: 3s;
         animation-delay: 1s;
-        animation-iteration-count: infinite;	/**/
+        animation-iteration-count: infinite;	/*无限循环播放动画，下面有讲解*/
     }
 </style>
 <div class="test"></div>
@@ -424,7 +426,50 @@ https://jsbin.com/kegefuh/5/edit?html,output
 
 #### 3.2.2 animation-timing-function
 
-animation-timing-function: 用于设置缓动函数类型，值为`ease | ease-in | ease-out | ease-in-out | linear | step-start | step-end | steps(<integer>, <flag>) | frames(<integer>) | cubic-bezier(<number>,<number>,<number>,<number>)`。
+animation-timing-function属性定义CSS动画在每一动画周期中执行的节奏。
+
+可选的值：
+linear: 从开始到结束都是匀速运动
+ease:开始慢，中间块，最后慢，ease-in:动画以低速开始，ease-out:动画以低速结束
+ease-in-out:动画以低速开始和结束
+cubic-bezier(0.1, 0.7, 1.0, 0.1)：贝塞尔曲线方式运动
+step-start:直接在终点不变，step-end:直接在开始不变
+steps(4, end):分4次跳跃
+
+代码示例：
+
+```html
+<style>
+    @keyframes move { from { left: 0; } to { left: 400px; } }
+    .test {
+        width: 80px; height: 20px;  background: #ccc; position: absolute;
+        animation-name: move; animation-duration: 3s; color: red;
+        animation-delay: 2s; animation-iteration-count: infinite;
+    }
+    .timing1 {animation-timing-function: linear        }
+    .timing2 {animation-timing-function: ease          }
+    .timing3 {animation-timing-function: ease-in       }
+    .timing4 {animation-timing-function: ease-out      }
+    .timing5 {animation-timing-function: ease-in-out   }
+    .timing6 {animation-timing-function: cubic-bezier(0.1, 0.7, 1.0, 0.1)}
+    .timing7 {animation-timing-function: step-start    }
+    .timing8 {animation-timing-function: step-end      }
+    .timing9 {animation-timing-function: steps(4, end) }
+</style>
+<div class="test timing1">linear       </div> <br><br>
+<div class="test timing2">ease         </div> <br><br>
+<div class="test timing3">ease-in      </div> <br><br>
+<div class="test timing4">ease-out     </div> <br><br>
+<div class="test timing5">ease-in-out  </div> <br><br>
+<div class="test timing6">cubic-bezier </div> <br><br>
+<div class="test timing7">step-start   </div> <br><br>
+<div class="test timing8">step-end     </div> <br><br>
+<div class="test timing9">steps(4,end) </div> <br><br>
+```
+
+![](./../../img/007.gif)
+
+在线代码查看：https://jsbin.com/kegefuh/8/edit?html,output
 
 [animation-timing-function知识点以及属性值steps()详解](https://blog.csdn.net/qq_23269747/article/details/76152689)
 
