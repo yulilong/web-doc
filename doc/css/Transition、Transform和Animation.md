@@ -424,7 +424,7 @@ https://jsbin.com/kegefuh/5/edit?html,output
 
 ![](./../../img/006.gif)
 
-#### 3.2.2 animation-timing-function
+#### 3.2.2 animation-timing-function:动画运动的节奏
 
 animation-timing-function属性定义CSS动画在每一动画周期中执行的节奏。
 
@@ -488,8 +488,6 @@ cubic-bezier(0.1, 0.7, 1.0, 0.1)
 
   cubic-bezier(.42, 0, .58, 1) : ease-in-out
 
-  linear、ease、ease-in、ease-ou、ease-in-ou这些变量是cubic-bezier的特定值下的表现。
-
   ***注意：***P1、P2的横坐标都在[0,1]范围内时，三次贝塞尔曲线才是是有效的。
 
   一个在线网站可以在线画出曲线测试，方便自定义动画运动轨迹：https://cubic-bezier.com/
@@ -504,27 +502,118 @@ cubic-bezier(0.1, 0.7, 1.0, 0.1)
 
   第一个参数(number_of_steps):一个正整数，表示一个动画周期分割的段数
 
-  第二个参数(direction):表示在一个分割的段数时间内，物体应该在的位置，该参数有2个选项，`start`、`end`，默认值是`end`，
+  第二个参数(direction):表示在一个分割的段数时间内，物体应该在的位置，该参数有2个选项，`start`、`end`，默认值是`end`。
 
-  `start`表示在动画开始时，动画的第一段将会马上完成。以左侧端点为起点，立即跳到第一个step的结尾处。它会立即跳到第一段的结束并且保持这样的状态直到第一步的持续时间结束。后面的每一帧都将按照此模式来完成动画。
+  `start`表示在动画开始时，动画的第一段将会马上完成。它会立即跳到第一段的结束位置并且保持这样的状态直到第一步的持续时间结束。后面的每一帧都将按照此模式来完成动画。
 
-  `end`表示动画执行时，在每一帧里，动画保持当前状态直到这一段的持续时间完成，才会跳到下一步的起点，后面的每一帧都按照这个模式来进行，在最后一帧的起点，等到这一帧的持续时间结束，整个动画的执行也已经结束，执行动画的元素来不及跳到这一帧的终点，直接回到了整个动画起点，
+  `end`表示动画执行时，在每一帧里，动画保持当前状态直到这一段的持续时间完成，才会跳到下一步的起点，后面的每一帧都按照这个模式来进行，在最后一帧的起点，等到这一帧的持续时间结束，整个动画的执行也已经结束，执行动画的元素来不及跳到这一帧的终点，直接回到了整个动画起点。
+
+  在持续运动状态中，在一段时间内，动画会运动一段距离，在这段距离里会有一个起点和终点，由于steps函数是一段时间才跳一次，那么在这一段时间里是应该在起点等待(end)，还是在终点等待(start)。第二个参数就是表示每段等待时间内，物体应该处于的位置。
+
+  ```html
+  <style>
+      .content {
+          position: absolute; width: 1px; height: 200px;
+          background: #000; top: 0;
+      }
+      @keyframes move { from { left: 0px; } to { left: 400px; } }
+      .test {
+          height: 20px;  background: #ccc; position: absolute;
+          animation-name: move; animation-duration: 4s; color: red;
+          animation-delay: 2s; animation-iteration-count: infinite;
+      }
+      .timing1 {animation-timing-function: step-end;      top: 30px; }
+      .timing2 {animation-timing-function: steps(4, end); top: 60px; }
+      .timing3 {animation-timing-function: steps(4,start);top: 90px; }
+      .timing4 {animation-timing-function: step-start;    top: 120px; }
+  </style>
+  <div class="test timing1">steps-end     </div>
+  <div class="test timing2">steps(4,end)  </div>
+  <div class="test timing3">steps(4,start)</div>
+  <div class="test timing4">steps-start   </div>
+  
+  <div class="content" style="left: 0">0px</div>
+  <div class="content" style="left: 100px">100px</div>
+  <div class="content" style="left: 200px">200px</div>
+  <div class="content" style="left: 300px">300px</div>
+  ```
+
+  ![](./../../img/009.gif)
 
   https://jsbin.com/kegefuh/14/edit?html,output
 
-  
+  参考资料：
 
+  [animation-timing-function知识点以及属性值steps()详解](https://blog.csdn.net/qq_23269747/article/details/76152689)
 
-
-[animation-timing-function知识点以及属性值steps()详解](https://blog.csdn.net/qq_23269747/article/details/76152689)
-
-[timing-function](https://developer.mozilla.org/zh-CN/docs/Web/CSS/timing-function)
+  [timing-function](https://developer.mozilla.org/zh-CN/docs/Web/CSS/timing-function)
 
 #### 3.2.3 animation-iteration-count、animation-fill-mode
 
-`<animation-iteration-count>`，动画重复播放次数，默认为1，infinite表示无限循环
+- animation-iteration-count
 
-`<animation-fill-mode>`，可选值为`none | forwards | backwards | both`，用于设置动画开始前和结束后是否应用`0%`和`100%`的样式对元素上。分别表示`不应用`，`应用100%的样式`，`延迟播放期间应用0%的样式`和`0%和100%的样式均应用`。
+  定义动画重复播放的次数，可选的值：
+
+  整数(3):重复播放3次
+
+  小数(3.6)：重复播放3次，然后在播放60%的动画
+
+  infinite：无限循环
+
+  默认值是1
+
+  ```css
+  animation-iteration-count: infinite;
+  animation-iteration-count: 3;
+  animation-iteration-count: 2.3;
+  animation-iteration-count: 2, 0, infinite;
+  ```
+
+- animation-fill-mode
+
+  用于设置动画开始前和结束后是否应@keyframes关键帧中`0%`和`100%`的样式。
+
+  可选的值：
+
+  `none`：默认值，不应用任何样式，动画结束后，恢复到最初样式
+
+  `forwards`: 动画结束后，应用@keyframes关键帧中`100%`的样式
+
+  `backwards`:在动画执行开始前，也就是有等待时间，应用@keyframes关键帧中`0%`的样式
+
+  `both`:同时拥有`forwards`和`backwards`两个作用。
+
+  
+
+   ```html
+  <style>
+      html,body {padding:0;margin:0;}
+      @keyframes move { 
+          from { left: 0px; background: blue; }
+          to { left: 400px; background: yellow;  } 
+      }
+      .test {
+          width: 50px; height: 50px; line-height: 50px; color: red;
+          border-radius:50%; position: absolute; border: 1px  solid;
+          animation-name: move; animation-duration: 3s;
+          animation-delay: 2s; animation-iteration-count: 2;
+          animation-fill-mode:none;
+      }
+      .test1 {animation-fill-mode:forwards; top: 70px;}
+      .test2 {animation-fill-mode:backwards; top: 140px;}
+      .test3 {animation-fill-mode:both; top: 210px;}
+  </style>
+  <div class="test">none</div>
+  <div class="test test1">forwards</div>
+  <div class="test test2">backwards</div>
+  <div class="test test3">both</div>
+   ```
+
+  https://jsbin.com/sebesep/3/edit?html,output
+
+  ![](./../../img/010.gif)
+
+
 
 #### 3.2.4 animation-direction、animation-play-state
 
