@@ -510,7 +510,7 @@ cubic-bezier(0.1, 0.7, 1.0, 0.1)
 
   `end`表示动画执行时，在每一帧里，动画保持当前状态直到这一段的持续时间完成，才会跳到下一步的起点，后面的每一帧都按照这个模式来进行，在最后一帧的起点，等到这一帧的持续时间结束，整个动画的执行也已经结束，执行动画的元素来不及跳到这一帧的终点，直接回到了整个动画起点，
 
-  https://jsbin.com/kegefuh/11/edit?html,output
+  https://jsbin.com/kegefuh/14/edit?html,output
 
   
 
