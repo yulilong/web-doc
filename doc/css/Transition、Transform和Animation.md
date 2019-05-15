@@ -583,7 +583,11 @@ cubic-bezier(0.1, 0.7, 1.0, 0.1)
 
   `both`:同时拥有`forwards`和`backwards`两个作用。
 
-  
+  注意：
+
+  1、默认值，动画结束后会恢复到动画前的样式
+
+  2、设置backwards时，<animation-delay>值大于0才能看到效果
 
    ```html
   <style>
@@ -615,11 +619,84 @@ cubic-bezier(0.1, 0.7, 1.0, 0.1)
 
 
 
-#### 3.2.4 animation-direction、animation-play-state
+#### 3.2.4 animation-direction
 
-`<animation-direction>`，可选值为`normal | reverse | alternate | alternate-reverse`，分别表示动画播放顺序是`从from到to`，`从to到from`，`从from到to再从to到from`和`从to到from再从from到to`。**注意：设置alternate|alternate-reverse时，animation-iteration-count必须大于1才能看到效果**
+表示动画的播放顺序，多用于重复动画时的效果。
 
-`<animation-play-state>`，可选值`running | paused`，获取和设置播放状态。**注意：通过这个属性，我们仅能实现暂停和继续播放的效果，无法实现重播，更别说回放了**
+可选值：
+
+`normal`: 默认值，正向播放，从起点到终点，关键帧从from到to，如果是循环，动画重置到起点重新开始
+
+`reverse`: 反向播放，从终点到起点，关键帧从to到from，如果是循环，动画重置到终点重新开始
+
+`alternate`: 第一次运行时是正向的，然后下一次是反向的，后面依次循环。关键帧from到to，to到from。同时，运动时间函数也相应改变，from到to是ease-in，to到from是ease-out。
+
+`alternate-reverse`:跟alternate相反，第一次运行时是反向的，然后下一次是正向，后面依次循环。关键帧to到from，from到to。
+
+```html
+<style>
+    html,body {padding:0;margin:0;}
+    @keyframes move { 
+        from { left: 0px; background: blue; }
+        to { left: 400px; background: yellow;  } 
+    }
+    .test {
+        height: 50px; line-height: 50px; color: red;
+        border-radius:50%; position: absolute; border: 1px  solid;
+        animation-name: move; animation-duration: 3s;
+        animation-delay: 7s; animation-iteration-count: infinite;
+        animation-direction: normal;
+    }
+    .test1 {animation-direction: reverse; top: 70px;}
+    .test2 {  top: 140px;}
+    .test3 {animation-direction: alternate-reverse; top: 210px;}
+</style>
+<div class="test">none</div>
+<div class="test test1">reverse</div>
+<div class="test test2">alternate</div>
+<div class="test test3">alternate-reverse</div>
+```
+
+https://jsbin.com/sebesep/5/edit?html,output
+
+![](./../../img/011.gif)
+
+#### 3.2.5 animation-play-state
+
+定义一个动画是否运行或者暂停。可以通过查询它来确定动画是否正在运行。另外，它的值可以被设置为暂停和恢复的动画的重放。
+
+**注意：通过这个属性，我们仅能实现暂停和继续播放的效果，无法实现重播，更别说回放了**
+
+可选值：
+
+`running`:动画正在运行。
+
+`paused`：动画被暂停。
+
+```html
+<style>
+    html,body {padding:0;margin:0;}
+    @keyframes move { 
+        from { left: 0px; background: blue; }
+        to { left: 400px; background: yellow;  } 
+    }
+    .test {
+        height: 50px; line-height: 50px; color: red;
+        border-radius:50%; position: absolute; border: 1px  solid;
+        animation-name: move; animation-duration: 3s;
+        animation-iteration-count: infinite; top: 60px;
+        animation-direction: alternate;
+    }
+    .test:hover {
+        animation-play-state: paused;
+    }
+</style>
+<div class="test">animation-play-state</div>
+```
+
+https://jsbin.com/sebesep/7/edit?html,output
+
+![](./../../img/012.gif)
 
 #### 3.2.1 animation
 
