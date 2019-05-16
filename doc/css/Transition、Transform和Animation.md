@@ -698,19 +698,20 @@ https://jsbin.com/sebesep/7/edit?html,output
 
 ![](./../../img/012.gif)
 
-#### 3.2.1 animation
+#### 3.2.6 animation
 
  **animation** 属性是 [`animation-name`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-name)，[`animation-duration`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-duration), [`animation-timing-function`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-timing-function)，[`animation-delay`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-delay)，[`animation-iteration-count`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-iteration-count)，[`animation-direction`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-direction)，[`animation-fill-mode`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-fill-mode) 和 [`animation-play-state`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-play-state) 属性的一个简写属性形式。
 
 `animation` 属性用来指定一组或多组动画，每组之间用逗号相隔。
 
-```
-animation:
-[animation-name] [animation-duration] // 动画的名称、持续时间
-[animation-timing-function][animation-delay] // 关于时间的函数(properties/t)、延迟时间
-[animation-iteration-count] [animation-direction] // 播放次数、播放顺序
-[animation-fill-mode] [animation-play-state]; // 播放前或停止后设置相应样式、控制动画运行或暂停
-```
+在`animation`的一组动画里：
+
+不需要的属性可以不写，系统会取默认值。
+
+`animation`中对于时间参数有顺序要求，第一个时间值会被分配给animation-duratio，第二个时间值分配给animation-delay，其他参数顺序可以打乱。
+
+动画名animation-name的命名要与animation其他属性的关键字区分开。免得产生混乱。
+
 
 示例：
 
