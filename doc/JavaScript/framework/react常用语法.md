@@ -416,3 +416,119 @@ constructor(props, context) {
 https://www.cnblogs.com/feiyu6/p/9202873.html
 
 https://react.docschina.org/docs/react-component.html#setstate
+
+
+
+## 6. 无状态组件SFC
+
+无状态组件顾名思义就是没有状态的组件，如果一个组件不需要管理 state 只是纯的展示，那么就可以定义成无状态组件。无状态组件是在 React 在 v0.14 之后推出的
+
+无状态组件是没有 refs 属性的。
+
+无状态的函数创建的组件是无状态组件，它是一种只负责展示的纯组件：
+
+```jsx
+function HelloComponent(props) {
+    return <div>Hello {props.name}</div>
+}
+ReactDOM.render(<HelloComponent name="marlon" />, mountNode)
+```
+
+对于这种无状态的组件，使用函数式的方式声明，会使得代码的可读性更好，并能大大减少代码量，箭头函数则是函数式写法的最佳搭档：
+
+```jsx
+const Todo = (props) => (
+    <li
+        onClick={props.onClick}
+        style={{textDecoration: props.complete ? "line-through" : "none"}}
+    >
+        {props.text}
+    </li>
+)
+```
+
+上面定义的 `Todo` 组件，输入输出数据完全由`props`决定，而且不会产生任何副作用。对于`props`为 `Object` 类型时，我们还可以使用 ES6 的解构赋值：
+
+```jsx
+const Todo = ({ onClick, complete, text, ...props }) => (
+    <li
+        onClick={onClick}
+        style={{textDecoration: complete ? "line-through" : "none"}}
+        {...props}
+    >
+        {props.text}
+    </li>
+)
+```
+
+**优点**：
+
+- 适当减少代码量，可读性增强；
+
+- 无状态，统一移交给高阶组件（HOC）或者 Redux 进行管理；
+
+  这种模式在大型项目或者组件中经常被使用，未来 React 也会对 SFC 做一些专门的优化；
+
+这种模式被鼓励在大型项目中尽可能以简单的写法 来分割原本庞大的组件，而未来 React 也会面向这种无状态的组件进行一些专门的优化，比如避免无意义的检查或内存分配。所以建议大家尽可能在项目中使用无状态组件。
+
+无状态组件内部其实是可以使用`ref`功能的，虽然不能通过`this.refs`访问到，但是可以通过将`ref`内容保存到无状态组件内部的一个本地变量中获取到。
+
+例如下面这段代码可以使用`ref`来获取组件挂载到DOM中后所指向的DOM元素:
+
+```jsx
+function TestComp(props){
+    let ref;
+    return (
+        <div ref={(node) => ref = node}></div>
+    )
+}
+```
+
+参考资料：
+
+https://www.w3cplus.com/react/stateful-vs-stateless-components.html
+
+## 7. PureComponent 纯组件
+
+> PureComponent 的作用：用来提升性能，因为它减少了应用中的渲染次数。
+
+React15.3 中新加了一个 `PureComponent` 类，它是优化 React 应用程序最重要的方法之一。
+
+在简单组件（纯展示组件）上的性能可以高出 `React.Component` 几十倍，所以性能还是很可观的~
+
+### 7.1 原理
+
+当组件更新时，如果组件的 `props` 和 `state` 都没发生改变，`render` 方法就不会触发，省去 **Virtual DOM** 的「生成」和「比对」过程，达到提升性能的目的。
+
+React 做了如下判断：
+
+```js
+if (this._compositeType === CompositeTypes.PureClass) {
+  shouldUpdate = !shallowEqual(prevProps, nextProps)
+  || !shallowEqual(inst.state, nextState);
+}
+```
+
+这里的 `shallowEqual` 会比较 `Object.keys(state | props)` 的**长度是否一致**，每一个 `key` 是否**两者都有**，并且**是否是一个引用**，也就是只比较了**第一层的值**，确实很浅，所以深层的嵌套数据是对比不出来的。
+
+### 7.2 注意点
+
+1. 如果 `PureComponent` 里有 `shouldComponentUpdate` 函数的话，React 会直接使用 shouldComponentUpdate 的结果作为是否更新的依据；
+
+   只有**不存在** `shouldComponentUpdate` 函数，React 才会去判断是不是 `PureComponent`，是的话再去做 `shallowEqual` 浅比较。
+
+   也因为可以少写 `shouldComponentUpdate` 函数，倒也节省了点代码。
+
+2. 因为只做了浅比较，所以需要注意 state 或 props 中修改前后的对象引用是否一致；
+
+3. 由于是 React15.3 之后才有的，所以可能需要进行兼容操作；
+
+   ```js
+   import React { PureComponent, Component } from 'react';
+   
+   class Foo extends (PureComponent || Component) {
+     //...
+   }
+   ```
+
+参考资料：https://blog.lbinin.com/frontEnd/React/React-SFC.html
