@@ -532,3 +532,48 @@ if (this._compositeType === CompositeTypes.PureClass) {
    ```
 
 参考资料：https://blog.lbinin.com/frontEnd/React/React-SFC.html
+
+
+
+## 8. 使用prop-types检测props数据类型
+
+在多人开发时，当被人使用自己定义的组件时，有可能出现类型传错的情况，而在自己的组件上加上prop-types，他可以对父组件传来的props进行检查，加入父组件中想传递的是字符串类型‘3’，而传递了一个数字类型3，如果没有类型检查系统不会给与提示，但是有了类型检查以后，再控制台会给你一个类型传递错误的提示。这样在工作中可以快速找到错误。
+
+https://www.npmjs.com/package/prop-types
+
+ES6类的使用法法：
+
+```jsx
+import React from 'react';
+import PropTypes from 'prop-types';
+class App extends React.Component {
+  static propTypes = {
+    children: PropTypes.element.isRequired,
+  };
+  render() {
+    const {children} = this.props;
+    return (
+      <div> {children} </div>
+    )
+  }
+}
+```
+
+纯函数的用法：
+
+```jsx
+import PropTypes from 'prop-types';
+
+const FundManagement = props => {
+    const {children} = props;
+    return (
+        <div className="statistics">
+            {children}
+        </div>
+    );
+};
+FundManagement.propTypes = {
+    children: PropTypes.element.isRequired,
+};
+```
+
