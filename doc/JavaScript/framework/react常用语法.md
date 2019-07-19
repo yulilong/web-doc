@@ -417,6 +417,16 @@ https://www.cnblogs.com/feiyu6/p/9202873.html
 
 https://react.docschina.org/docs/react-component.html#setstate
 
+### 5.2 在setState里面使用state的变量
+
+```jsx
+this.setState(prevState => ({
+  collapsed: !prevState.collapsed
+}));
+```
+
+
+
 
 
 ## 6. 无状态组件SFC
