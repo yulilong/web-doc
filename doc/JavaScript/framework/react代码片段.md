@@ -128,3 +128,25 @@ let businessLine = [1, 2, 3];
 而想要在点击事件的时候，把数据也传到方法中，就要在HTML中的`onClik`事件里面使用箭头函数，
 
 箭头函数里面去直接调用这个方法，同时把参数传过去，如果需要点击事件，则在箭头函数中传参数，然后该参数传给方法即可。
+
+### 7. 当props属性变化时，组件做一些操作
+
+```jsx
+// props数据更新前调用的生命周期
+    componentWillReceiveProps(nextProps) {
+        const {showRangePicker} = this.props;
+        const {selectDateBtn} = this.state;
+        // 自定义时间组件显示与隐藏切换，主要是在读人次组件中用到
+        if (nextProps.showRangePicker !== showRangePicker) {
+            if (selectDateBtn === 0 && !nextProps.showRangePicker) {
+                // 选择的是自定义时间组件，并且需要隐藏自定义时间组件，则时间组件选择月组件
+                this.setState({selectDateBtn: DATATYPE.month});
+                this.returnDateTypeRange(DATATYPE.month);
+            }
+            else {
+                this.returnDateTypeRange(selectDateBtn);
+            }
+        }
+    }
+```
+
